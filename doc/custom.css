@@ -1,0 +1,27 @@
+:root {
+    --sidebar-width: 200px;
+    --content-max-width: 800px;
+    --menu-bar-height: 40px;
+}
+
+html {
+    font-family: "Lato", "Open Sans", "Source Han Sans CN", "Microsoft YaHei", sans-serif;
+}
+
+code {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    font-size: 1em;
+}
+
+.menu-title {
+    color: black;
+}
+
+.blue {
+    color: rgb(0, 4, 255);
+}
+
+.red {
+    color: rgb(184, 31, 31);
+}

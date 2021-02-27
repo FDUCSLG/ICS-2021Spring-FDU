@@ -600,7 +600,7 @@ typedef struct packed {
 <li><code>size</code> 始终为 <code>MSIZE4</code>。</li>
 <li>写操作时 <code>strobe</code> 为 <code>4'b1111</code> 或 <code>4'hf</code>。</li>
 </ul>
-<p>你可能会注意到还有一个 IBus 接口。IBus 接口是 DBus 接口的子集，只保留了读取数据所需要的信号。此外，你的流水线部分的顶层模块文件应该是 <code>source/mycpu/MyCore.sv</code>。我们建议你将你的流水线分为多个模块了实现。你可以在 <code>source/mycpu</code> 这个目录下新建文件或者子目录。</p>
+<p>你可能会注意到还有一个 IBus 接口。IBus 接口是 DBus 接口的子集，只保留了读取数据所需要的信号。此外，你的流水线部分的顶层模块文件应该是 <code>source/mycpu/MyCore.sv</code>。我们建议你将你的流水线分为多个模块来实现。你可以在 <code>source/mycpu</code> 这个目录下新建文件或者子目录。</p>
 <p>你可以选择在模块 <code>SRAMTop</code> 中做地址翻译，或是在模块 <code>MyCore</code> 中做地址翻译。</p>
 <h3><a class="header" href="#1211-连接-debug_-信号" id="1211-连接-debug_-信号">1.2.11 连接 <code>debug_*</code> 信号</a></h3>
 <p>龙芯杯的测试会进行 trace 的比对。这需要从你的流水线中读取一些数据。我们在 1.2.10 一节中已经看到 <code>mycpu_top</code> 最后有四个 <code>debug_*</code> 信号了。为了避免增加下层模块的接口，我们建议你使用跨模块引用来连接这些 <code>debug_*</code> 信号。例如：</p>
@@ -1031,21 +1031,6 @@ page_divisor 4
 
         </div>
 
-        
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         
 
         

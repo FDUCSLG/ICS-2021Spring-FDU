@@ -1,4 +1,0 @@
--xc++
--std=c++17
--I/usr/share/verilator/include/
--I/usr/share/verilator/include/vltstd/

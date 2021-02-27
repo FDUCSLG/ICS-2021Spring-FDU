@@ -173,7 +173,7 @@
 <ul>
 <li>实验课时间：<i class="fa fa-calendar"></i> 每周一，15:25-17:05 p.m.</li>
 <li>GitHub 仓库：<i class="fa fa-github"></i> <a href="https://github.com/FDUCSLG/ICS-2021Spring-FDU">FDUCSLG/ICS-2021Spring-FDU</a></li>
-<li>课程首页：<i class="fa fa-link"></i>（待定）</li>
+<li>课程首页：<i class="fa fa-link"></i> <a href="https://fducslg.github.io/ICS-2021Spring-FDU/">https://fducslg.github.io/ICS-2021Spring-FDU/</a></li>
 <li>答疑平台：<i class="fa fa-slack"></i> <a href="https://fducslg.slack.com">FDUCSLG Slack</a>，#sig-architecture</li>
 </ul>
 <p>体系结构部分的实验安排：</p>
@@ -1031,6 +1031,21 @@ page_divisor 4
 
         </div>
 
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
 
         

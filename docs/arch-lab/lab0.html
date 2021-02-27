@@ -1,0 +1,377 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>实验 0 - Introduction to NSCSCC</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="../favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="../favicon.png">
+        
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+        <link rel="stylesheet" href="../custom.css">
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../arch-lab/lab0.html" class="active">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="../arch-lab/lab2.html">实验 2</a></li><li class="chapter-item "><a href="../arch-lab/lab3.html">实验 3</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="../arch-lab/lab5.html">实验 5</a></li><li class="chapter-item "><a href="../arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="../sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="../misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Introduction to NSCSCC</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<h1><a class="header" href="#实验-0开发环境" id="实验-0开发环境">实验 0：开发环境</a></h1>
+<p>这个实验将指导你们准备后续实验的开发环境，并且运行我们提供的标准 CPU 实现（RefCPU），以方便大家熟悉开发和测试的流程。<strong>本实验无需提交</strong>。</p>
+<h2><a class="header" href="#安装-vivado" id="安装-vivado">安装 Vivado</a></h2>
+<p><strong>本学期的实验要求统一使用 Vivado 2019.2</strong>。</p>
+<p>Vivado 可以在 Windows 环境和 Linux 环境<sup class="footnote-reference"><a href="#vivado-linux">1</a></sup>下安装。请参见<a href="../misc/external.html#2020-%E5%B9%B4%E9%BE%99%E8%8A%AF%E6%9D%AF%E6%96%87%E6%A1%A3">龙芯杯的资料</a>中的 “<i class="fa fa-file-pdf-o"></i> A6 - Vivado 安装说明” 来完成 Vivado 的安装。安装完成后，启动 Vivado 后应该能看到类似于下面的窗口：</p>
+<p><img src="../asset/lab0/vivado.png" alt="Vivado 启动界面" /></p>
+<h3><a class="header" href="#对于-linux-环境" id="对于-linux-环境">对于 Linux 环境</a></h3>
+<p>如果你不想折腾 Vivado 的安装，可以找助教索要打包好的 Vivado 文件 “<i class="fa fa-file-zip-o"></i> xilinx.tar” 来省去下载和安装的步骤。</p>
+<p>Linux 下 Vivado 的安装器不会安装 cable driver。我们需要手动安装 cable driver 后才能将 FPGA 开发板连接到 Vivado 上。请在终端中执行下面的命令来安装 cable driver：</p>
+<pre><code class="language-shell">export VIVADO_ROOT=/opt/xilinx/Vivado/2019.2
+cd $VIVADO_ROOT/data/xicom/cable_drivers/lin64/install_script/install_drivers
+sudo ./install_drivers
+</code></pre>
+<p><code>VIVADO_ROOT</code> 是 Vivado 的安装位置。如果在安装时没有改动安装位置，默认位置是 <code>/opt/xilinx/Vivado/2019.2</code>。</p>
+<p>如果你安装完成后找不到 Vivado 的启动项，可以在终端中启动 Vivado：</p>
+<pre><code class="language-shell">cd $VIVADO_ROOT
+source ./settings64.sh
+vivado
+</code></pre>
+<p>此外你可以考虑<a href="https://forums.xilinx.com/t5/Design-Entry/Can-t-launch-vivado-2018-3-in-ubuntu/m-p/935365/highlight/true#M23934">制作一个桌面启动项</a>。</p>
+<h2><a class="header" href="#安装-verilator" id="安装-verilator">安装 Verilator</a></h2>
+<p>本学期的实验会引入 Verilator 作为 Vivado 外的另一个仿真器。除了 Verilator 本身外，我们还需要一些其它的软件包才能进行完整的仿真和调试的流程。请参考课程的 GitHub 仓库首页的 “<i class="fa fa-file"></i> README.md” 中的指示来安装这些软件包。</p>
+<h2><a class="header" href="#下载-git-仓库" id="下载-git-仓库">下载 Git 仓库</a></h2>
+<p>本学期的实验将会使用 Git 来做版本管理。你们的所有代码都将放在 Git 仓库中的指定位置，然后通过我们提供的脚本和 Vivado 工程文件（.xpr）来进行仿真和上板测试。因此，你需要在你的系统上安装 Git。想必很多同学都已经接触过 Git 了，因此这里就不再赘述 Git 的安装和配置流程了。</p>
+<p>实验内容将在后续陆续放出。为了避免与你的工作 Git 分支有冲突，请避免直接在 master/main 分支以及 lab0、lab1、lab2、... 这些分支上做改动。我们建议你新建一个 dev 分支来编写你的代码：</p>
+<pre><code class="language-shell">git checkout -b dev
+</code></pre>
+<p>当有新的实验内容放出时（例如布置了实验 2），将你的 dev 分支 rebase 到新的实验的分支上：</p>
+<pre><code class="language-shell">git fetch origin
+git checkout dev
+git rebase origin/lab2
+</code></pre>
+<p>如果在 rebase 时发生冲突，请阅读 Git 输出的消息，并根据 Git 的指示解决冲突后，再使用 <code>git rebase --continue</code> 恢复 rebase 流程。直到没有冲突产生并且 rebase 完成为止。</p>
+<h2><a class="header" href="#refcpu" id="refcpu">RefCPU</a></h2>
+<p>在 Git 仓库的 <code>source/refcpu</code> 目录下，有我们提供的标准 CPU（RefCPU）的源代码。RefCPU 是一个多周期 CPU，其可以通过龙芯杯的所有功能测试和性能测试。我们本学期的测试主要是龙芯杯的功能测试和性能测试，因此你可以用 RefCPU 来作为你的流水线 CPU 的对照。当然，我们不能保证 RefCPU 完全没有 BUG。如果 RefCPU 有不符合 <a href="../misc/external.html#mips-%E6%9E%B6%E6%9E%84">MIPS 标准</a>的行为，请以 MIPS 标准为准，并且可以向助教反馈。</p>
+<p>接下来将使用 RefCPU 来运行一些测试，方便大家熟悉开发流程。</p>
+<h3><a class="header" href="#运行测试-1" id="运行测试-1">运行测试 1</a></h3>
+<p>在仓库的 <code>vivado</code> 目录下有来自龙芯杯的测试。以测试 1 为例，在 Vivado 中打开文件 <code>vivado/test1/soc_axi_func/run_vivado/mycpu_prj1/mycpu.xpr</code>。然后点击顶部菜单栏的 “Tools” → “Run Tcl Script...”：</p>
+<p><img src="../asset/lab0/vivado-refcpu-test1-2.png" alt="“Run Tcl Script...”" /></p>
+<p>在弹出的对话框中选择 Git 仓库中的文件 <code>source/refcpu/add_sources.tcl</code>。这个 Tcl 脚本会将所有的 RefCPU 的源代码加入到 Vivado 的工程中。你可能注意到 <code>source/mycpu</code> 目录下也有个 <code>add_sources.tcl</code>，这个 Tcl 脚本就是以后加入你自己的 CPU 的源码时会用到的。源码加入后等待 Vivado 处理完成，就能在 “Sources” 窗口里看到新加入的源码/模块：</p>
+<p><img src="../asset/lab0/vivado-refcpu-test1-4.png" alt="“Sources” 窗口" /></p>
+<p>之后在左侧的 “Flow Navigator” 里面点击 “Run Simulation” → “Run Behavioral Simulation” 启动仿真。第一次仿真前因为需要综合 IP 核，所以可能比较慢，需要等待若干分钟才能启动<sup class="footnote-reference"><a href="#generate-ip">2</a></sup>。之后仿真的启动速度会快很多。</p>
+<p><img src="../asset/lab0/vivado-refcpu-test1-simulation.gif" alt="启动仿真" /></p>
+<p>点击界面下侧的 “Tcl Console” 可以看到仿真测试的输出。如果测试通过，最后应该能在这里看到类似于下面的输出：</p>
+<pre><code class="language-plaintext">        [17532000 ns] Test is running, debug_wb_pc = 0xbfc100d8
+        [17542000 ns] Test is running, debug_wb_pc = 0xbfc10178
+        [17552000 ns] Test is running, debug_wb_pc = 0xbfc10218
+        [17562000 ns] Test is running, debug_wb_pc = 0xbfc102bc
+----[17563425 ns] Number 8'd29 Functional Test Point PASS!!!
+        [17572000 ns] Test is running, debug_wb_pc = 0xbfc008f4
+==============================================================
+Test end!
+----PASS!!!
+$finish called at time : 17579574500 ps : File &quot;/home/riteme/Downloads/ICS-2021Spring-FDU/vivado/test1/soc_axi_func/testbench/mycpu_tb.v&quot; Line 269
+run: Time (s): cpu = 00:00:17 ; elapsed = 00:03:32 . Memory (MB): peak = 7061.156 ; gain = 0.000 ; free physical = 3362 ; free virtual = 19061
+</code></pre>
+<h3><a class="header" href="#测试-1-上板" id="测试-1-上板">测试 1 上板</a></h3>
+<p>想必你们在上学期已经学习过如何生成比特流文件并且将其烧录到 FPGA 开发板上了。在测试 1 的工程中直接生成比特流，然后上板运行，最终应该能看到下面的效果：</p>
+<p><img src="../asset/lab0/refcpu-test1-on-board.jpg" alt="上板效果" /></p>
+<p>（NOTE：这是一张老图，最新的测试 1 的数码管两侧应该显示 “1c”）</p>
+<h3><a class="header" href="#verilator-仿真" id="verilator-仿真">Verilator 仿真</a></h3>
+<p>本学期会使用 Verilator 做一些额外的测试。你可以阅读附加资料中的 <a href="../misc/verilate.html">Verilator 仿真</a>来了解一些基本的注意事项。</p>
+<p>首先在 Git 仓库根目录打开一个终端，使用以下命令来用 RefCPU 跑龙芯杯的功能测试：</p>
+<pre><code class="language-shell">make vsim -j
+</code></pre>
+<p>最后应该能看到类似于下面的输出：</p>
+<pre><code class="language-plaintext">CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: load: ignored unknown destination 0x8ffc.
+(info) #77 completed.
+(info) #78 completed.
+(info) #79 completed.
+(info) #80 completed.
+(info) #81 completed.
+(info) #82 completed.
+(info) #83 completed.
+(info) #84 completed.
+(info) #85 completed.
+(info) #86 completed.
+(info) #87 completed.
+(info) #88 completed.
+(info) #89 completed.
+(info) testbench finished in 905987 cycles (599.199 KHz).
+(warn) TextDiff: 7 error(s) suppressed.
+</code></pre>
+<p>然后用 RefCPU 运行龙芯杯性能测试中的 CoreMark：</p>
+<pre><code>make vsim -j VSIM_ARGS='--force-diff -m &quot;./misc/nscscc/coremark.coe&quot; -r &quot;./misc/std/coremark.txt&quot;'
+</code></pre>
+<p>最后应该能看到如下的输出：</p>
+<pre><code class="language-plaintext">./build/gcc/refcpu/VTop/vmain --force-diff -m &quot;./misc/nscscc/coremark.coe&quot; -r &quot;./misc/std/coremark.txt&quot;
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: load: ignored unknown destination 0x8ffc.
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: store: ignored unknown destination 0x8ffc.
+CONFREG: load: ignored unknown destination 0x8ffc.
+coremark test begin.
+arg : 0, 0, 102, 1, 7, 1, 2000
+test start
+computation done
+2K performance run parameters for coremark.
+CoreMark Size    : 666
+Total ns : 24578460
+Iterations/Sec : 40
+COREMARK/MHZ = (1000000.0/CPU_COUNT_PER_US)*NSEC_PER_USEC*results[0].iterations/total_ns
+It equals to 1000*1000*iteration/total_ns
+In this run, iterate=1, total_ns=24578460
+
+Total ticks      : 0
+Total time (secs): 0
+Iterations       : 1
+Compiler version : GCC4.3.0
+Compiler flags   :
+Memory location  : Please put data memory location here
+                        (e.g. code in flash, data on heap etc)
+seedcrc          : 0xe9f5
+[0]crclist       : 0xe714
+[0]crcmatrix     : 0x1fd7
+[0]crcstate      : 0x8e3a
+[0]crcfinal      : 0xe714
+Correct operation validated. See readme.txt for run and reporting rules.
+coremark PASS!
+coremark: Total Count(SoC count) = 0x2903e1
+coremark: Total Count(CPU count) = 0x290399
+(info) testbench finished in 2709066 cycles (612.085 KHz).
+</code></pre>
+<h3><a class="header" href="#使用-gtkwave" id="使用-gtkwave">使用 GTKWave</a></h3>
+<p>Verilator 仿真可以生成 FST 格式的波形图，需要使用一个上古开源软件 <a href="https://github.com/gtkwave/gtkwave"><i class="fa fa-github"></i> GTKWave</a> 来查看。我们提供了 <code>misc/demo.fst</code> 和 <code>misc/demo.gtkw</code> 作为样例波形图文件，供大家体验 GTKWave 的使用。GTKWave 的基本操作请参阅<a href="../misc/gtkwave.html"> “使用 GTKWave”</a>。</p>
+<hr />
+<div class="footnote-definition" id="vivado-linux"><sup class="footnote-definition-label">1</sup>
+<p>虽然 Xilinx 官方声明中只支持 Ubuntu，但实际上其它大多数 Linux 发行版都能正常安装和使用 Vivado。</p>
+</div>
+<div class="footnote-definition" id="generate-ip"><sup class="footnote-definition-label">2</sup>
+<p>你也可以在 “Sources” 的 “IP Sources” 一栏里面提前生成所有的 IP 核（选中所有 IP 核，右键并点击 “Generate Output Products”）。这样可以同时综合多个 IP 核，速度更快，并且不用综合完就可以仿真。</p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../arch-lab/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../arch-lab/lab1.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="../arch-lab/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a rel="next" href="../arch-lab/lab1.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

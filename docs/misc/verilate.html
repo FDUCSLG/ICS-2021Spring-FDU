@@ -191,7 +191,7 @@
 <p>如果在综合时出现错误或者警告，请按照错误消息进行修正。你需要确保<strong>你的代码没有任何错误和警告</strong>。Verilator 报告的大部分警告都是有意义的，并且 Verilator 在有警告的时候也会视为综合失败。当你发现有不太明白原因的警告时，请先查看 <a href="https://www.veripool.org/projects/verilator/wiki/Manual-verilator">Verilator 手册</a>中对于该警告的描述，确认其原因。如果你确认这个警告不会有影响，可以考虑忽略这个警告。</p>
 <p>下面举一个实际的例子。例如，对于下面这个简单的 SR 锁存器的 Verilog 描述：</p>
 <pre><code class="language-verilog">module SRLatch (
-    input logic  S, R,
+    input  logic S, R,
     output logic Q, Qn
 );
     assign Q  = ~(Qn | R);
@@ -272,7 +272,7 @@ endmodule
 <li><code>VSIM_OPT</code>：是否开启编译器优化？默认为 <code>0</code>。注意，<code>VSIM_OPT</code> 为 <code>0</code> 的时候，由 Verilator 生成的 C++ 代码依然会开启优化。这个参数只控制我们的仿真框架的代码。</li>
 <li><code>VSIM_SANITIZE</code>：是否开启编译器的 address sanitizer 和 undefined behavior sanitizer？默认为 <code>0</code>。</li>
 </ul>
-<p>为了加速 C++ 代码的编译，我们建议在 <code>make</code> 的时候加上 <code>-j</code> 选项，例如</p>
+<p>为了加速 C++ 代码的编译，我们建议在 <code>make</code> 的时候加上 <code>-j</code> 选项，允许 make 多进程并行编译 C++ 代码。例如</p>
 <pre><code class="language-shell">make vsim -j TARGET=mycpu/VTop USE_CLANG=1
 </code></pre>
 <h2><a class="header" href="#波形图记录" id="波形图记录">波形图记录</a></h2>

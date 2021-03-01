@@ -222,6 +222,7 @@ vivado
 <p>此外你可以考虑<a href="https://forums.xilinx.com/t5/Design-Entry/Can-t-launch-vivado-2018-3-in-ubuntu/m-p/935365/highlight/true#M23934">制作一个桌面启动项</a>。</p>
 <h2><a class="header" href="#安装-verilator" id="安装-verilator">安装 Verilator</a></h2>
 <p>本学期的实验会引入 Verilator 作为 Vivado 外的另一个仿真器。除了 Verilator 本身外，我们还需要一些其它的软件包才能进行完整的仿真和调试的流程。请参考课程的 GitHub 仓库首页的 “<i class="fa fa-file"></i> README.md” 中的指示来安装这些软件包。</p>
+<p>我们建议你在 Linux 环境下使用 Verilator。我们会保证 Verilator 的测试至少能够在 Ubuntu 20.04 上工作。其它版本的 Linux 的发行版（例如 Ubuntu 18.04、Manjaro、ArchLinux）理论上也是可以无障碍使用 Verilator 仿真的。如果你想在 Windows 上进行实验，我们建议你使用 WSL2 或者运行一个虚拟机。</p>
 <h2><a class="header" href="#下载-git-仓库" id="下载-git-仓库">下载 Git 仓库</a></h2>
 <p>本学期的实验将会使用 Git 来做版本管理。你们的所有代码都将放在 Git 仓库中的指定位置，然后通过我们提供的脚本和 Vivado 工程文件（.xpr）来进行仿真和上板测试。因此，你需要在你的系统上安装 Git。想必很多同学都已经接触过 Git 了，因此这里就不再赘述 Git 的安装和配置流程了。</p>
 <p>实验内容将在后续陆续放出。为了避免与你的工作 Git 分支有冲突，请避免直接在 master/main 分支以及 lab0、lab1、lab2、... 这些分支上做改动。我们建议你新建一个 dev 分支来编写你的代码：</p>
@@ -636,8 +637,8 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 </ul>
 <h3><a class="header" href="#143-提交文件格式" id="143-提交文件格式">1.4.3 提交文件格式</a></h3>
 <pre><code class="language-plaintext">18307130024/
-├── report/（源文件所在目录）
-└── source/（报告所在目录）
+├── report/（报告所在目录）
+└── source/（源文件所在目录）
 </code></pre>
 <p>用 <code>zip -r 18307130024.zip 18307130024/</code> 打包。用 <code>unzip 18307130024.zip</code> 检查，应在当前目录下有学号目录。</p>
 <h3><a class="header" href="#144-评分" id="144-评分">1.4.4 评分</a></h3>
@@ -804,7 +805,7 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <p>如果在综合时出现错误或者警告，请按照错误消息进行修正。你需要确保<strong>你的代码没有任何错误和警告</strong>。Verilator 报告的大部分警告都是有意义的，并且 Verilator 在有警告的时候也会视为综合失败。当你发现有不太明白原因的警告时，请先查看 <a href="https://www.veripool.org/projects/verilator/wiki/Manual-verilator">Verilator 手册</a>中对于该警告的描述，确认其原因。如果你确认这个警告不会有影响，可以考虑忽略这个警告。</p>
 <p>下面举一个实际的例子。例如，对于下面这个简单的 SR 锁存器的 Verilog 描述：</p>
 <pre><code class="language-verilog">module SRLatch (
-    input logic  S, R,
+    input  logic S, R,
     output logic Q, Qn
 );
     assign Q  = ~(Qn | R);
@@ -885,7 +886,7 @@ endmodule
 <li><code>VSIM_OPT</code>：是否开启编译器优化？默认为 <code>0</code>。注意，<code>VSIM_OPT</code> 为 <code>0</code> 的时候，由 Verilator 生成的 C++ 代码依然会开启优化。这个参数只控制我们的仿真框架的代码。</li>
 <li><code>VSIM_SANITIZE</code>：是否开启编译器的 address sanitizer 和 undefined behavior sanitizer？默认为 <code>0</code>。</li>
 </ul>
-<p>为了加速 C++ 代码的编译，我们建议在 <code>make</code> 的时候加上 <code>-j</code> 选项，例如</p>
+<p>为了加速 C++ 代码的编译，我们建议在 <code>make</code> 的时候加上 <code>-j</code> 选项，允许 make 多进程并行编译 C++ 代码。例如</p>
 <pre><code class="language-shell">make vsim -j TARGET=mycpu/VTop USE_CLANG=1
 </code></pre>
 <h2><a class="header" href="#波形图记录" id="波形图记录">波形图记录</a></h2>

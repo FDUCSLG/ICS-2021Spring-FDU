@@ -35,7 +35,7 @@ make verilate TARGET=refcpu/VTop
 
 ```verilog
 module SRLatch (
-    input logic  S, R,
+    input  logic S, R,
     output logic Q, Qn
 );
     assign Q  = ~(Qn | R);
@@ -142,7 +142,7 @@ make vsim TARGET=refcpu/VTop
 * `VSIM_OPT`：是否开启编译器优化？默认为 `0`。注意，`VSIM_OPT` 为 `0` 的时候，由 Verilator 生成的 C++ 代码依然会开启优化。这个参数只控制我们的仿真框架的代码。
 * `VSIM_SANITIZE`：是否开启编译器的 address sanitizer 和 undefined behavior sanitizer？默认为 `0`。
 
-为了加速 C++ 代码的编译，我们建议在 `make` 的时候加上 `-j` 选项，例如
+为了加速 C++ 代码的编译，我们建议在 `make` 的时候加上 `-j` 选项，允许 make 多进程并行编译 C++ 代码。例如
 
 ```shell
 make vsim -j TARGET=mycpu/VTop USE_CLANG=1

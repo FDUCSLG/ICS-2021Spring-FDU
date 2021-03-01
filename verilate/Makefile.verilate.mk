@@ -3,10 +3,10 @@ SV = verilator
 TARGET ?= refcpu/VTop
 
 SV_PREFIX = VModel
-SV_BUILD = $(BUILD_ROOT)/$(TARGET)/verilated# # build/refcpu/VTop/verilated
+SV_BUILD = $(BUILD_ROOT)/$(TARGET)/verilated# # build/gcc/refcpu/VTop/verilated
 SV_ROOT := $(shell dirname $(TARGET))#        # refcpu. NOTE: builtin $(dir ...) will leave the final "/".
 SV_NAME := $(notdir $(TARGET))#               # VTop
-SV_MKFILE = $(SV_BUILD)/$(SV_PREFIX).mk#      # build/refcpu/VTop/verilated/VTop.mk
+SV_MKFILE = $(SV_BUILD)/$(SV_PREFIX).mk#      # build/gcc/refcpu/VTop/verilated/VTop.mk
 SV_VTOP = source/$(TARGET).sv#                # source/refcpu/VTop.sv
 
 SV_FILES := \

@@ -2,13 +2,13 @@ VERILATOR_ROOT = /usr/share/verilator/include
 
 SV_READY = $(SV_MKFILE)
 
-VMAIN = $(BUILD_ROOT)/$(TARGET)/vmain#      # build/refcpu/VTop/vmain
+VMAIN = $(BUILD_ROOT)/$(TARGET)/vmain#      # build/gcc/refcpu/VTop/vmain
 VROOT = $(TARGET)#                          # refcpu/VTop
-VLIBRARY = $(SV_BUILD)/$(SV_PREFIX)__ALL.a# # build/verilated/refcpu/VTop/VTop__ALL.a
+VLIBRARY = $(SV_BUILD)/$(SV_PREFIX)__ALL.a# # build/gcc/verilated/refcpu/VTop/VTop__ALL.a
 VINCLUDE = verilate/include
 VSOURCE = verilate/source
 
-CXX_BUILD = $(BUILD_ROOT)/$(TARGET)/obj#    # build/refcpu/VTop/obj
+CXX_BUILD = $(BUILD_ROOT)/$(TARGET)/obj#    # build/gcc/refcpu/VTop/obj
 
 CXX_TARGET_FILES := $(wildcard $(VSOURCE)/$(VROOT)/*.cpp)
 CXX_FILES := \

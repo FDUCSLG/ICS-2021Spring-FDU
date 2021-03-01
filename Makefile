@@ -1,7 +1,14 @@
 .PHONY: help clean
 
 help:
-	@echo 'Hello, world!'
+	@echo 'Available commands:'
+	@echo '  make verilate: synthesize your RTL code with Verilator.'
+	@echo '  make vbuild: compile Verilator simulation sources into executable file "vmain".'
+	@echo '  make vsim: "make vbuild" first and then execute "vmain".'
+	@echo '  make doc-build: build documents into "doc/book", i.e., run "mdbook build".'
+	@echo '  make doc-serve: run "mdbook serve".'
+	@echo '  make doc-sync: upload webpages onto "riteme.site" (requires authentication).'
+	@echo '  make misc-sync: upload "misc/doc" onto "riteme.site" (requires authentication).'
 
 clean:
 	@rm -rf ./build/*

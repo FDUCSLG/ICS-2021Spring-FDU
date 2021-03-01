@@ -24,7 +24,7 @@ SV_INCLUDES = \
 	-y source/$(SV_ROOT)/*/
 
 SV_WARNINGS = \
-	-Wall -Wpedantic \
+	-Wall \
 	-Wno-IMPORTSTAR
 	# add warnings that you wanna ignore.
 

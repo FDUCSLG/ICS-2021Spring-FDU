@@ -41,6 +41,11 @@ CXX_WARNINGS = \
 	-Wno-unused-const-variable
 
 CXX_LINKS = -lz
+
+ifeq ($(USE_CLANG), 0)
+CXX_LINKS += -lstdc++fs
+endif
+
 CXXFLAGS += \
 	-std=c++17 -g \
 	$(CXX_INCLUDES) \

@@ -57,6 +57,20 @@ NOTE: there's no GCC 9 officially on Ubuntu 18.04, so we installed clang instead
 make vsim -j USE_CLANG=1
 ```
 
+### Debian 10
+
+You have to download a newer version of Verilator as in the previous section “Ubuntu 18.04”, and save it to `verilator4.deb`.
+
+```shell
+apt update
+apt install gdb gtkwave build-essential zlib1g-dev systemd-coredump
+# wget -O verilator4.deb https://github.com/sifive/verilator/releases/download/4.036-0sifive2/verilator_4.036-0sifive2_amd64.deb
+dpkg -i verilator4.deb
+ln -s /usr/local/share/verilator /usr/share/
+```
+
+NOTE: only GCC 8 is available on Debian 10. However, Verilator simulation can still be compiled successfully as long as you don't use the C++ library `nameof`, which is located at `verilate/include/thirdparty/nameof`.
+
 ### ArchLinux/Manjaro
 
 ```

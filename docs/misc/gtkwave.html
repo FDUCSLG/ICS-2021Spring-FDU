@@ -221,6 +221,9 @@ color_umark f9fd01
 enable_horiz_grid 0
 page_divisor 4
 </code></pre>
+<h2><a class="header" href="#示例" id="示例">示例</a></h2>
+<p><img src="../asset/misc/gtkwave-navigate.gif" alt="浏览波形图的简单示例" /></p>
+<p>（上面演示中使用的是 GTK3 版本的 GTKWave）</p>
 <h2><a class="header" href="#为什么要用-gtkwave" id="为什么要用-gtkwave">为什么要用 GTKWave？</a></h2>
 <p>GTKWave 看起来挺土的，而且貌似有很多 BUG...</p>
 <p>因为没有其它软件了。开源的波形图浏览器只有这一个能打的 <code>:)</code></p>
@@ -262,6 +265,21 @@ page_divisor 4
 
         </div>
 
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
 
         

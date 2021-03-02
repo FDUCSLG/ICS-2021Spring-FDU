@@ -78,9 +78,15 @@ pacman -Sy
 pacman -S verilator gdb gtkwave base-devel zlib
 ```
 
+### Notes on Verilator
+
+Please use `verilator --version` to ensure that the version of Verilator installed is actually ≥ 4.028. We have found that some Ubuntu 20.04 on WSL2 only provides Verilator 4.016, which is incapable of compiling RefCPU, although the package manager claims it's 4.028.
+
+If you need more recent version of Verilator, please refer to <https://www.veripool.org/projects/verilator/wiki/Installing> and manually build & install from source.
+
 ## NSCSCC Performance Test
 
-By default, `make vsim` will simulate RefCPU with NSCSCC functional test. We provide memory initialization files (`.coe`) of performance test from NSCSCC. For example, if you want to run CoreMark on verilated models, you can specify the `--memfile` (or `-m` for short) and set `--ref-trace` (or `-r` for short) to empty string to disable text trace diff.
+By default, `make vsim` will simulate RefCPU with NSCSCC functional test. We provide memory initialization files (`.coe`) of performance tests from NSCSCC. For example, if you want to run CoreMark on verilated models, you can specify the `--memfile`/`-m` and set `--ref-trace`/`-r` to empty string to disable text trace diff.
 
 ```shell
 make vsim -j VSIM_ARGS='--no-status -m ./misc/nscscc/coremark.coe -r ""'

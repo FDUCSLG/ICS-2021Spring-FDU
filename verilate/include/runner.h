@@ -47,6 +47,9 @@ public:
 
         top->run();
 
+        // destruct verilated model first to prevent segmentation fault.
+        top.release();
+
         return 0;
     }
 

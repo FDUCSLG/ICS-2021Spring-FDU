@@ -42,7 +42,11 @@ CXX_WARNINGS = \
 
 CXX_LINKS = -lz
 
-ifeq ($(USE_CLANG), 0)
+# link to filesystem library to make legacy compilers happy.
+ifeq ($(USE_CLANG), 1)
+# TODO: auto-detect libc++fs.
+# CXX_LINKS += -lc++fs
+else
 CXX_LINKS += -lstdc++fs
 endif
 

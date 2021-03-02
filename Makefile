@@ -21,7 +21,7 @@ VSIM_OPT ?= 0
 VSIM_SANITIZE ?= 0
 
 ifeq ($(USE_CLANG), 1)
-ifeq ($(shell where 'clang++-10' 2> /dev/null),)
+ifeq ($(shell which 'clang++-10' 2> /dev/null),)
 CXX=clang++
 else
 # for Ubuntu 18.04

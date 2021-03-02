@@ -76,6 +76,12 @@ enable_horiz_grid 0
 page_divisor 4
 ```
 
+## 示例
+
+![浏览波形图的简单示例](../asset/misc/gtkwave-navigate.gif)
+
+（上面演示中使用的是 GTK3 版本的 GTKWave）
+
 ## 为什么要用 GTKWave？
 
 GTKWave 看起来挺土的，而且貌似有很多 BUG...

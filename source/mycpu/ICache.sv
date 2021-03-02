@@ -8,7 +8,7 @@ module ICache (
     output cbus_req_t  creq,
     input  cbus_resp_t cresp
 );
-    // simply use DCache as a ICache
+    // simply use DCache as ICache
     DCache proxy(
         .dreq(`IREQ_TO_DREQ(ireq)),
         .dresp(iresp),

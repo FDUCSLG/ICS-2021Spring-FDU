@@ -28,22 +28,23 @@ module LUTRAM #(
     localparam int NUM_LANES  = WORD_WIDTH / LANE_WIDTH,
     localparam int NUM_BITS   = NUM_BYTES * BYTE_WIDTH,
 
-    localparam type addr_t   = logic  [ADDR_WIDTH - 1:0],
-    localparam type strobe_t = logic  [NUM_LANES  - 1:0],
-    localparam type word_t   = logic  [WORD_WIDTH - 1:0],
-    localparam type lane_t   = logic  [LANE_WIDTH - 1:0],
-    localparam type bundle_t = lane_t [NUM_LANES  - 1:0],
-    localparam type view_t   = union packed {
-        word_t   word;
-        bundle_t lanes;
+    // FIXME: Verilator 4.028 does not allow parameter type's name overrides outer types.
+    localparam type raddr_t   = logic  [ADDR_WIDTH - 1:0],
+    localparam type rstrobe_t = logic  [NUM_LANES  - 1:0],
+    localparam type rword_t   = logic  [WORD_WIDTH - 1:0],
+    localparam type rlane_t   = logic  [LANE_WIDTH - 1:0],
+    localparam type rbundle_t = rlane_t [NUM_LANES  - 1:0],
+    localparam type rview_t   = union packed {
+        rword_t   word;
+        rbundle_t lanes;
     }
 ) (
     input logic clk, en,
 
-    input  addr_t   addr,
-    input  strobe_t strobe,
-    input  view_t   wdata,
-    output word_t   rdata
+    input  raddr_t   addr,
+    input  rstrobe_t strobe,
+    input  rview_t   wdata,
+    output rword_t   rdata
 );
     /* verilator tracing_off */
 
@@ -54,7 +55,7 @@ module LUTRAM #(
 
 if (BACKEND == "behavioral") begin: behavioral
 
-    view_t [NUM_WORDS - 1:0] mem = 0;
+    rview_t [NUM_WORDS - 1:0] mem = 0;
 
     assign rdata = mem[addr];
 
@@ -62,7 +63,7 @@ if (BACKEND == "behavioral") begin: behavioral
     if (en) begin
         for (int i = 0; i < NUM_WORDS; i++)
         for (int j = 0; j < NUM_LANES; j++) begin
-            if (addr == addr_t'(i) && strobe[j])
+            if (addr == raddr_t'(i) && strobe[j])
                 mem[i].lanes[j] <= wdata.lanes[j];
         end
     end

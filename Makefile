@@ -2,19 +2,28 @@
 
 help:
 	@echo 'Available commands:'
-	@echo '  make verilate: synthesize your RTL code with Verilator.'
+	@echo '  make verilate: synthesize/compile your RTL code with Verilator.'
 	@echo '  make vbuild: compile Verilator simulation sources into executable file "vmain".'
 	@echo '  make vsim: "make vbuild" first and then execute "vmain".'
+	@echo '  make vsim-gdb: run "vmain" with GDB.'
 	@echo '  make doc-build: build documents into "doc/book", i.e., run "mdbook build".'
 	@echo '  make doc-serve: run "mdbook serve".'
 	@echo '  make doc-sync: upload webpages onto "riteme.site" (requires authentication).'
 	@echo '  make misc-sync: upload "misc/doc" onto "riteme.site" (requires authentication).'
+	@echo ''
+	@echo 'Available parameters:'
+	@echo '  TARGET: e.g. refcpu/VTop, mycpu/VCacheTop.'
+	@echo '  USE_CLANG: use LLVM clang and libc++.'
+	@echo '  VSIM_ARGS: pass command line arguments to "vmain".'
+	@echo '  VSIM_OPT: set to 1 to enable compiler optimization. ("-O2 -march=native -flto")'
+	@echo '  VSIM_SANITIZE: set to 1 to enable address sanitizer and undefined behavior sanitizer.'
 
 clean:
 	@rm -rf ./build/*
 	@touch ./build/.gitkeep
 
 # make arguments
+TARGET ?= refcpu/VTop
 USE_CLANG ?= 0
 VSIM_ARGS ?=
 VSIM_OPT ?= 0

@@ -1,3 +1,6 @@
+VERILATOR = verilator
+GTKWAVE = gtkwave
+
 .PHONY: help clean
 
 help:
@@ -10,6 +13,7 @@ help:
 	@echo '  make doc-serve: run "mdbook serve".'
 	@echo '  make doc-sync: upload webpages onto "riteme.site" (requires authentication).'
 	@echo '  make misc-sync: upload "misc/doc" onto "riteme.site" (requires authentication).'
+	@echo '  make system-info: print information about installed system packages.'
 	@echo ''
 	@echo 'Available parameters:'
 	@echo '  TARGET: e.g. refcpu/VTop, mycpu/VCacheTop.'
@@ -59,3 +63,15 @@ include verilate/Makefile.verilate.mk
 include verilate/Makefile.vsim.mk
 include doc/Makefile.doc.mk
 include misc/Makefile.misc.mk
+
+system-info:
+	-uname -a
+	-$(VERILATOR) --version
+	-$(MAKE) --version
+	-$(GTKWAVE) --version
+	-$(CXX) --version
+	-which g++
+	-which g++-9
+	-which clang++
+	-which clang++-10
+	-ls /usr/share/verilator/include

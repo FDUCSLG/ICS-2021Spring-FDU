@@ -1,5 +1,3 @@
-SV = verilator
-
 SV_PREFIX = VModel
 SV_BUILD = $(BUILD_ROOT)/$(TARGET)/verilated# # build/gcc/refcpu/VTop/verilated
 SV_ROOT := $(shell dirname $(TARGET))#        # refcpu. NOTE: builtin $(dir ...) will leave the final "/".
@@ -43,7 +41,7 @@ endif
 
 $(SV_MKFILE): $(SV_FILES)
 	@mkdir -p $(SV_BUILD)
-	$(SV) $(SV_FLAGS) $(SV_VTOP)
+	$(VERILATOR) $(SV_FLAGS) $(SV_VTOP)
 	@touch $@
 
 .PHONY: verilate

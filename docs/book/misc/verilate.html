@@ -1,0 +1,353 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Verilator 仿真 - Introduction to NSCSCC</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="../favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="../favicon.png">
+        
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+        <link rel="stylesheet" href="../custom.css">
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="../arch-lab/lab2.html">实验 2</a></li><li class="chapter-item "><a href="../arch-lab/lab3.html">实验 3</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="../arch-lab/lab5.html">实验 5</a></li><li class="chapter-item "><a href="../arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="../sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item expanded "><a href="../misc/verilate.html" class="active">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Introduction to NSCSCC</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<h1 id="verilator-仿真"><a class="header" href="#verilator-仿真">Verilator 仿真</a></h1>
+<p>在本学期的实验中，除了 Vivado 外，我们会引入 <a href="https://www.veripool.org/wiki/verilator">Verilator</a> 来进行仿真。Verilator 是一个支持 Verilog/SystemVerilog 的周期精确（cycle-accurate）开源仿真器。Verilator 将用 Verilog/SystemVerilog 的 RTL 级描述的模块（module）综合为一个 C++ 模型。这个 C++ 模型一般称为 verilated model，在本学期的实验中是一个叫做 <code>VModel</code> 的 C++ class。然后再通过编写 C++ 代码来提供模型的输入，以及检查模型的输出。在开源领域，特别是与 RISC-V 相关的开源芯片项目，普遍使用 Verilator 进行整个 CPU 的仿真，例如东京大学的 <a href="https://github.com/rsd-devel/rsd">RSD</a>。</p>
+<p>使用 Verilator 进行仿真有两个优点。首先，仿真速度一般比 Vivado 更快。以龙芯杯性能测试中的 CoreMark 为例，在 Vivado 上仿真一次通常需要十多分钟，而在 Verilator 上只用一分钟。如果不进行波形图的记录，最快只需要 3 秒就可以完成仿真。其次，使用 C++ 编写测试相比使用 SystemVeriog 而言更具灵活性，例如我们可以很方便的在 C++ 中模拟随机访存的效果，或者是将 VGA 模块的输出可视化。</p>
+<p>Verilator 目前依然有许多不足之处。首先 Verilator 对 SystemVerilog 的语言支持还非常不完整，比如 unpacked 结构体是不支持的。此外 <code>interface</code>、<code>package</code> 这些关键字虽然支持，但是在功能上还不够完善。为了避免你的 SystemVerilog 代码不能通过 Verilator 的综合和不正确的仿真行为，请<strong>尽量避免</strong>以下事项：</p>
+<ul>
+<li>不可综合的语法，例如延时。</li>
+<li><code>initial</code> 语句。</li>
+<li>unpacked 数组、结构体。</li>
+<li><code>interface</code>、<code>package</code>、<code>class</code>。</li>
+<li>小端序位标号，如 <code>[0:31]</code>。</li>
+<li>锁存器。</li>
+<li><code>logic</code> 类型的 <code>X</code> 状态和高阻抗 <code>Z</code> 状态。</li>
+<li>使用时钟下降沿触发。</li>
+<li>异步 reset 和跨时钟域。</li>
+<li>尝试屏蔽全局时钟信号。</li>
+</ul>
+<p>此外，我们建议每个 SystemVerilog 文件只放一个模块，并且文件名和模块名保持一致。例如，<code>SRLatch.sv</code> 里面只放模块 <code>SVLatch</code> 的定义。更详细的内容可以参见 <a href="https://www.veripool.org/projects/verilator/wiki/Manual-verilator#LANGUAGE-LIMITATIONS">Verilator 手册中的 “语言限制” 一节</a>。</p>
+<h2 id="综合"><a class="header" href="#综合">综合</a></h2>
+<p>Verilator 只负责将 RTL 代码综合为 <code>VModel</code>。我们已经提供好了 <code>make verilate</code> 来进行综合。例如， 如果要综合 RefCPU，其顶层模块为 <code>VTop</code>（定义在 <code>source/refcpu/VTop.sv</code> 中），则可以使用下面的命令：</p>
+<pre><code class="language-shell">make verilate TARGET=refcpu/VTop
+</code></pre>
+<p>综合后的文件会放在 <code>build</code> 文件夹下。</p>
+<p>如果在综合时出现错误或者警告，请按照错误消息进行修正。你需要确保<strong>你的代码没有任何错误和警告</strong>。Verilator 报告的大部分警告都是有意义的，并且 Verilator 在有警告的时候也会视为综合失败。当你发现有不太明白原因的警告时，请先查看 <a href="https://www.veripool.org/projects/verilator/wiki/Manual-verilator">Verilator 手册</a>中对于该警告的描述，确认其原因。如果你确认这个警告不会有影响，可以考虑忽略这个警告。</p>
+<p>下面举一个实际的例子。例如，对于下面这个简单的 SR 锁存器的 Verilog 描述：</p>
+<pre><code class="language-verilog">module SRLatch (
+    input  logic S, R,
+    output logic Q, Qn
+);
+    assign Q  = ~(Qn | R);
+    assign Qn = ~(Q  | S);
+endmodule
+</code></pre>
+<p>将其保存到 <code>SVLatch.sv</code>。当我们使用 <code>verilator --cc SVLatch.sv</code> 命令来综合时，会得到类似于下面的警告：</p>
+<pre><code class="language-plaintext">%Warning-UNOPT: SRLatch.sv:3:21: Signal unoptimizable: Feedback to public clock or circular logic: 'Qn'
+    3 |     output logic Q, Qn
+      |                     ^~
+                ... Use &quot;/* verilator lint_off UNOPT */&quot; and lint_on around source to disable this message.
+                SRLatch.sv:3:21:      Example path: Qn
+                SRLatch.sv:5:15:      Example path: ASSIGNW
+                SRLatch.sv:3:18:      Example path: Q
+                SRLatch.sv:6:15:      Example path: ASSIGNW
+                SRLatch.sv:3:21:      Example path: Qn
+%Error: Exiting due to 1 warning(s)
+</code></pre>
+<p>在第一行，我们可以看到警告的类型是 <code>UNOPT</code>。在警告消息里面有一个对该警告的简短的描述。我们可以前往 <a href="https://www.veripool.org/projects/verilator/wiki/Manual-verilator#ERRORS-AND-WARNINGS">Verilator 中 “警告和错误” 的文档</a>搜索关于 <code>UNOPT</code> 的详细描述：</p>
+<blockquote>
+<p>UNOPT</p>
+<p>Warns that due to some construct, optimization of the specified signal or block is disabled. The construct should be cleaned up to improve simulation performance.</p>
+<p>A less obvious case of this is when a module instantiates two submodules. Inside submodule A, signal I is input and signal O is output. Likewise in submodule B, signal O is an input and I is an output. A loop exists and a UNOPT warning will result if AI &amp; AO both come from and go to combinatorial blocks in both submodules, even if they are unrelated always blocks. This affects performance because Verilator would have to evaluate each submodule multiple times to stabilize the signals crossing between the modules.</p>
+<p>Ignoring this warning will only slow simulations, it will simulate correctly.</p>
+</blockquote>
+<p>事实上就是锁存器的描述中有组合回路。可以通过在代码附近加上 <code>/* verilator lint_off UNOPT */</code> 来消除 <code>UNOPT</code> 警告，即</p>
+<pre><code class="language-verilog">    /* verilator lint_off UNOPT */
+    assign Q  = ~(Qn | R);
+    assign Qn = ~(Q  | S);
+    /* verilator lint_on UNOPT */
+</code></pre>
+<p>这样上述两行 <code>assign</code> 就不会再报告 <code>UNOPT</code> 了。如果想要消除所有文件的 <code>UNOPT</code> 警告，需要前往 <code>verilate/Makefile.verilate.mk</code> 文件，在 <code>SV_WARNINGS</code> 变量后面添加 <code>-Wno-UNOPT</code>：</p>
+<pre><code class="language-makefile">SV_WARNINGS = \
+	-Wall -Wpedantic \
+	-Wno-IMPORTSTAR \
+    -Wno-UNOPT
+	# add warnings that you wanna ignore.
+</code></pre>
+<p>当然，请注意在你的 SystemVerilog 代码里面应该<strong>避免组合回路</strong>而不是单纯地消除这个警告！</p>
+<h2 id="周期精确仿真"><a class="header" href="#周期精确仿真">周期精确仿真</a></h2>
+<p>所谓周期精确仿真，是在确定模块输入的情况下，计算出模块在足够长时间后的输出。因此在周期精确仿真中没有延时的概念。可以理解为每次更新都是计算模块在无穷久后处于稳态时的输出。对于 CPU 这种由一个时钟信号驱动的设计，外层代码（C++ 代码）可以通过反复变动时钟信号的值（从 <code>0</code> 变 <code>1</code>，再从 <code>1</code> 变 <code>0</code>），就能得到每个周期内 CPU 的状态。</p>
+<p>在 <code>VModel</code> 中，其核心的函数是 <code>eval</code>，它负责计算输入更新后模块的输出。如果 <code>VModel</code> 的时钟信号名为 <code>clk</code>，并且是在时钟上升沿时触发，则我们可以使用类似于下面的 C++ 代码来更新一个周期：</p>
+<pre><code class="language-c++">void tick() {
+    /**
+     *          +--1--+     +--1--+     +--1--+
+     *       A  |  B  |  A  |  B  |  A  |  B  |  A
+     * clk --0--+     +--0--+     +--0--+     +--0--
+     *     ----------&gt;|----------&gt;|----------&gt;|----&gt;
+     *      tick()      tick()      tick()      ...
+     *     ----------------------------------&gt;| ...
+     *      ticks(3)
+     */
+
+    clk = 0;
+    // 更新内存部分的反馈
+    // oresp = ...
+    eval();
+
+    // A：此时是在时钟上升沿之前
+
+    clk = 1;
+    eval();
+
+    // B：此时是时钟上升沿触发后
+}
+</code></pre>
+<p>具体的例子可以参见 <code>verilate/source/refcpu/VTop/refcpu.cpp</code> 中的 <code>RefCPU::tick</code> 函数的实现。</p>
+<h2 id="仿真框架"><a class="header" href="#仿真框架">仿真框架</a></h2>
+<p>在本学期的实验中，我们已经提供了 Verilator 下 C++ 仿真的代码框架。代码位于 <code>verilate/source</code> 和 <code>verilate/include</code> 两个文件夹下面。仿真框架已经有内存部分和龙芯杯的 CONFREG 部分的仿真代码。<strong>你只需要按照实验文档的指示提供与你的 CPU 相关的部分的交互代码即可</strong>。仿真的命令为 <code>make vsim</code>。</p>
+<p>以 RefCPU 为例，如果想要对 <code>source/refcpu/VTop.sv</code> 进行仿真，只需要指定 <code>TARGET=refcpu/VTop</code>，即</p>
+<pre><code class="language-shell">make vsim TARGET=refcpu/VTop
+</code></pre>
+<p>上面的命令将会把 <code>verilate/source/refcpu/VTop</code> 下的 C++ 代码连同我们提供的仿真框架一起编译，得到一个可执行文件 <code>vmain</code>。这个可执行文件 <code>vmain</code> 是放在 <code>build</code> 文件夹下的。之后运行 <code>vmain</code> 进行正式的仿真。</p>
+<p><code>make vsim</code> 命令有如下的参数：</p>
+<ul>
+<li><code>USE_CLANG</code>：是否使用 LLVM clang 编译？默认为 <code>0</code>，表示使用 GNU G++ 编译。使用 Ubuntu 18.04 的同学需要指定 <code>USE_CLANG=1</code>。</li>
+<li><code>VSIM_ARGS</code>：用于指定传给可执行文件 <code>vmain</code> 的参数。例如，<code>make vsim VSIM_ARGS='-h'</code> 可以查看 <code>vmain</code> 支持哪些参数。</li>
+<li><code>VSIM_OPT</code>：是否开启编译器优化？默认为 <code>0</code>。注意，<code>VSIM_OPT</code> 为 <code>0</code> 的时候，由 Verilator 生成的 C++ 代码依然会开启优化。这个参数只控制我们的仿真框架的代码。</li>
+<li><code>VSIM_SANITIZE</code>：是否开启编译器的 address sanitizer 和 undefined behavior sanitizer？默认为 <code>0</code>。</li>
+</ul>
+<p>为了加速 C++ 代码的编译，我们建议在 <code>make</code> 的时候加上 <code>-j</code> 选项，允许 make 多进程并行编译 C++ 代码。例如</p>
+<pre><code class="language-shell">make vsim -j TARGET=mycpu/VTop USE_CLANG=1
+</code></pre>
+<h2 id="波形图记录"><a class="header" href="#波形图记录">波形图记录</a></h2>
+<p>当仿真出现问题时，我们可以使用输出调试和 GDB 来寻找出错的原因。但是这对于 SystemVerilog 代码的调试并不方便，此时我们可能需要波形图来方便调试。</p>
+<p><code>make vsim</code> 在默认情况下不会记录波形图。仿真程序 <code>vmain</code> 是支持记录波形图的。可以用 <code>--fst-trace</code>/<code>-f</code> 选项来指定保存波形图文件的位置。例如</p>
+<pre><code class="language-shell">make vsim VSIM_ARGS='-f build/trace.fst'
+</code></pre>
+<p>将会把波形图保存到当前目录下的 <code>build</code> 文件夹中，波形图文件名为 <code>trace.fst</code>。之后我们可以使用 GTKWave 来查看 FST 格式的波形图。</p>
+<p>请注意，开启波形图记录后的仿真速度大约会慢 10 倍。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../misc/instruction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../misc/gtkwave.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="../misc/instruction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a rel="next" href="../misc/gtkwave.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

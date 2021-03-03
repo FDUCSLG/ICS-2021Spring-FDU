@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>仓库目录结构 - Introduction to NSCSCC</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="favicon.png">
+        
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        
+        <link rel="stylesheet" href="css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+        <link rel="stylesheet" href="custom.css">
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="arch-lab/lab2.html">实验 2</a></li><li class="chapter-item "><a href="arch-lab/lab3.html">实验 3</a></li><li class="chapter-item "><a href="arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="arch-lab/lab5.html">实验 5</a></li><li class="chapter-item "><a href="arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="misc/external.html">外部资料</a></li><li class="chapter-item "><a href="misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="directory-structure.html" class="active">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="contributors.html">贡献者</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Introduction to NSCSCC</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<h1 id="仓库目录结构"><a class="header" href="#仓库目录结构">仓库目录结构</a></h1>
+<p>为了方便大家了解和浏览整个 Git 仓库，这里提供一个对仓库中目录结构和文件的说明。</p>
+<h2 id="build"><a class="header" href="#build"><code>build</code></a></h2>
+<p><code>build</code> 文件夹下用于放置编译后的文件，包括 Verilator 的综合结果和 C++ 编译过程中的生成物以及最终的可执行文件。这个文件夹下有一个 <code>.gitkeep</code> 文件，用于确保 Git 会记录这个文件夹。使用 <code>make clean</code> 命令会清空 <code>build</code> 文件夹。</p>
+<p>根据 Make 的参数，编译过程中会在 <code>build</code> 文件夹下建立不同的子目录。例如 <code>build/gcc+optimized</code> 表示使用 GNU G++ 编译并且参数 <code>VSIM_OPT=1</code>（开启编译优化），而 <code>build/clang+sanitizer</code> 表示使用 LLVM clang 编译（<code>USE_CLANG=1</code>）并且参数 <code>VSIM_SANITZE=1</code>。具体的规则参见文件 <code>Makefile</code> 中变量 <code>BUILD_ROOT</code> 的设置。</p>
+<h2 id="doc"><a class="header" href="#doc"><code>doc</code></a></h2>
+<p>本学期实验的所有文档都位于此目录下。<code>doc/src</code> 内是文档的原始 Markdown 文件，<code>doc/book</code> 是使用 mdBook 编译后得到的网页文件。文档中使用的图片均放在 <code>doc/src/asset</code> 目录下。</p>
+<h2 id="misc"><a class="header" href="#misc"><code>misc</code></a></h2>
+<p>放置各种各样的资源文件，比如测试的内存加载文件（.coe）。龙芯杯的性能测试的内存文件放在 <code>misc/nscscc</code> 目录下，以方便 Verilator 仿真。</p>
+<h2 id="source"><a class="header" href="#source"><code>source</code></a></h2>
+<p>RTL 源代码所在的文件夹。</p>
+<h3 id="sourceinclude"><a class="header" href="#sourceinclude"><code>source/include</code></a></h3>
+<p>所有的 SystemVerilog 头文件（.svh）都放在这个文件下。<code>source/include/common.svh</code> 内包含一些通用的定义。<code>source/include/refcpu</code> 下放的是和 RefCPU 相关的头文件。如果你需要使用头文件，可以放在 <code>source/include/mycpu</code> 目录下。</p>
+<h3 id="sourcemycpu"><a class="header" href="#sourcemycpu"><code>source/mycpu</code></a></h3>
+<p>你的 SystemVerilog 源代码文件夹。这个文件夹一开始已经包含了一些模块的定义和实现：</p>
+<ul>
+<li><code>add_sources.tcl</code>：用于将你的 CPU 的源代码加入到 Vivado 工程中的 Tcl 脚本。</li>
+<li><code>DCache.sv</code>、<code>ICache.sv</code>：数据缓存和指令缓存。这两个文件会在实验 3 的时候用到。一开始是直接用数据缓存当指令缓存用，并没有分别实现。</li>
+<li><code>MyArbiter.sv</code>：你的访存仲裁器。这个文件将会在实验 2 用到。</li>
+<li><code>MyCore.sv</code>：你的流水线部分。<code>MyCore</code> 这个模块一共有 6 个接口：<code>clk</code>、<code>resetn</code>、<code>ireq</code>、<code>iresp</code>、<code>dreq</code>、<code>dresp</code>，分别表示时钟信号、复位信号、指令访存请求、指令访存回复、数据访存请求和数据访存回复。其中指令访存和数据访存涉及到的结构体的定义都位于 <code>source/include/common.svh</code> 中。</li>
+<li><code>mycpu_top.sv</code>：接入龙芯杯的测试的顶层模块。</li>
+<li><code>SRAMTop.sv</code>：使用类 SRAM 接口时 CPU 的顶层模块。</li>
+<li><code>VTop.sv</code>：使用 AXI 接口时或者进行 Verilator 仿真时 CPU 的顶层模块。</li>
+</ul>
+<h3 id="sourcerefcpu"><a class="header" href="#sourcerefcpu"><code>source/refcpu</code></a></h3>
+<p>RefCPU 的源代码。目录结构和 <code>source/mycpu</code> 是类似的。</p>
+<h3 id="sourceram"><a class="header" href="#sourceram"><code>source/ram</code></a></h3>
+<p>存放 BRAM 和 LUTRAM 模块和它们的测试文件。</p>
+<h3 id="sourceutil"><a class="header" href="#sourceutil"><code>source/util</code></a></h3>
+<p>我们提供的辅助模块，主要是各种总线之间的转接桥。其中 <code>CBusArbiter.sv</code> 是我们提供的仲裁器的实现。你可以直接使用 <code>CBusArbiter</code> 而不需要实现自己的仲裁器 <code>MyArbiter</code>。</p>
+<h2 id="verilate"><a class="header" href="#verilate"><code>verilate</code></a></h2>
+<p>用于存放 Verilator 仿真时用到的 C++ 代码。<code>verilate/include</code> 是共用的 C++ 头文件，<code>verilate/source</code> 下是所有的 C++ 代码。直接放在 <code>verilate/source</code> 目录下的是通用的 C++ 代码。针对不同的模块的测试，专用的代码会放在这个文件夹的子目录下。例如 <code>verilate/source/refcpu/VTop</code> 就是用于存放测试 <code>source/refcpu/VTop.sv</code> 这个顶层模块的所有 C++ 代码。</p>
+<p>在执行 <code>make vsim</code> 命令时，参数 <code>TARGET</code> 可以指定编译哪个顶层模块对应的 C++ 代码。默认 <code>TARGET=refcpu/VTop</code>，即编译 <code>verilate/source/refcpu/VTop</code> 下的代码。编译后的可执行文件名为 <code>vmain</code>，会放到 <code>build</code> 文件夹下的对应位置，例如 <code>build/gcc/refcpu/VTop/vmain</code>。</p>
+<h2 id="vivado"><a class="header" href="#vivado"><code>vivado</code></a></h2>
+<p>用于存放龙芯杯的测试。龙芯杯的功能测试被分为了测试 1 至测试 4，分别放在 <code>vivado/test1</code> 到 <code>vivado/test4</code> 这四个目录下。<code>vivado/test1_naive</code> 的测试内容和 <code>vivado/test1</code> 的测试内容相同，只有顶层使用的接口不同。<code>vivado/test5</code> 是龙芯杯的所有性能测试。此外除了 <code>vivado/test1_naive</code> 使用固定延时的类 SRAM 接口外，其余测试使用的都是有随机延时的 AXI 接口。</p>
+<p>Vivado 的工程文件（.xpr）通常放在名为 <code>run_vivado</code> 的文件夹下，例如 <code>vivado/test1/soc_axi_func/run_vivado/mycpu_prj1/mycpu.xpr</code>。可以使用 Vivado 直接打开这个工程文件。如果某个测试需要建立多个工程，请注意复制对应的文件夹后再用 Vivado 打开。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="misc/gtkwave.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="faq.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="misc/gtkwave.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a rel="next" href="faq.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>使用 GTKWave - Introduction to NSCSCC</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="../favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="../favicon.png">
+        
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+        <link rel="stylesheet" href="../custom.css">
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="../arch-lab/lab2.html">实验 2</a></li><li class="chapter-item "><a href="../arch-lab/lab3.html">实验 3</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="../arch-lab/lab5.html">实验 5</a></li><li class="chapter-item "><a href="../arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="../sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="../misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item expanded "><a href="../misc/gtkwave.html" class="active">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Introduction to NSCSCC</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<h1 id="使用-gtkwave"><a class="header" href="#使用-gtkwave">使用 GTKWave</a></h1>
+<p>打开样例波形图文件：</p>
+<pre><code class="language-shell">gtkwave misc/demo.fst
+</code></pre>
+<p>一开始面板上是没有信号的。另外有一个文件 <code>misc/demo.gtkw</code> 是与之相关联的配置文件，也可以直接打开：</p>
+<pre><code class="language-shell">gtkwave misc/demo.gtkw
+</code></pre>
+<p><img src="./../asset/misc/demo.png" alt="样例波形图界面" /></p>
+<h2 id="添加信号"><a class="header" href="#添加信号">添加信号</a></h2>
+<p>当你想加入更多的信号时，点击主菜单中的 “Search” → “Signal Search Tree”（或者使用快捷键 Shift+Alt+T 呼出）。之后会看到下面的窗口：</p>
+<p><img src="../asset/misc/gtkwave-search-tree.png" alt="" /></p>
+<p>（这个窗口貌似有 BUG，第一次打开后关掉再重开，就展开不了结构树了...）</p>
+<p>你也可以用 “Search” → “Signal Search Regexp” 来用文本搜索信号名。</p>
+<h2 id="生成新的波形图"><a class="header" href="#生成新的波形图">生成新的波形图</a></h2>
+<p>我们的 Verilator 仿真程序一般支持使用 <code>--fst-tract</code>/<code>-f</code> 参数来指定 FST 波形图保存的位置。例如：</p>
+<pre><code class="language-shell">make vsim -j VSIM_ARGS=&quot;-f ./build/trace.fst&quot;
+</code></pre>
+<p>将会在 <code>build</code> 目录下生成一个名为 <code>trace.fst</code> 的波形图文件。之后可以直接用 GTKWave 打开。</p>
+<h2 id="配置"><a class="header" href="#配置">配置</a></h2>
+<p>开学在寝室无所事事？请阅读<a href="../misc/external.html"> GTKWave 用户手册</a>：<i class="fa fa-file-pdf-o"></i> GTKWave 3.3 Wave Analyzer User’s Guide。</p>
+<p>不想折腾？请将下面的内容写入 <code>~/.gtkwaverc</code>：</p>
+<pre><code class="language-plaintext"># 选择字体
+#fontname_signals Lato 16
+#fontname_logfile Lato 16
+#fontname_waves JetBrains Mono Medium 14
+
+# 快捷键
+# “x” 新建一个 marker，“z” 删除一个 marker，“c” 删除所有 marker
+accel &quot;/Markers/Drop Named Marker&quot; x
+accel &quot;/Markers/Collect Named Marker&quot; z
+accel &quot;/Markers/Collect All Named Markers&quot; c
+
+fill_waveform 1
+hide_sst 1
+hier_grouping 1
+hier_max_level 2
+left_justify_sigs 1
+use_fat_lines 1
+use_roundcaps 1
+wave_scrolling 1
+disable_mouseover 0
+highlight_wavewindow 1
+splash_disable 1
+color_back 041933
+color_0 54c231
+color_1 54c231
+color_vbox 54c231
+color_grid 666666
+color_trans cc0000
+color_vtrans cc0000
+color_value eeeeee
+color_umark f9fd01
+enable_horiz_grid 0
+page_divisor 4
+</code></pre>
+<h2 id="示例"><a class="header" href="#示例">示例</a></h2>
+<p><img src="../asset/misc/gtkwave-navigate.gif" alt="浏览波形图的简单示例" /></p>
+<p>（上面演示中使用的是 GTK3 版本的 GTKWave）</p>
+<h2 id="为什么要用-gtkwave"><a class="header" href="#为什么要用-gtkwave">为什么要用 GTKWave？</a></h2>
+<p>GTKWave 看起来挺土的，而且貌似有很多 BUG...</p>
+<p>因为没有其它软件了。开源的波形图浏览器只有这一个能打的 <code>:)</code></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="../misc/verilate.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="../directory-structure.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="../misc/verilate.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a rel="next" href="../directory-structure.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

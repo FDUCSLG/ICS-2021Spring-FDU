@@ -175,6 +175,7 @@
 <li>GitHub 仓库：<i class="fa fa-github"></i> <a href="https://github.com/FDUCSLG/ICS-2021Spring-FDU">FDUCSLG/ICS-2021Spring-FDU</a></li>
 <li>课程首页：<i class="fa fa-link"></i> <a href="https://fducslg.github.io/ICS-2021Spring-FDU/">https://fducslg.github.io/ICS-2021Spring-FDU/</a></li>
 <li>答疑平台：<i class="fa fa-slack"></i> <a href="https://fducslg.slack.com">FDUCSLG Slack</a>，#sig-architecture</li>
+<li><i class="fa fa-question-circle"></i> <a href="faq.html">常见问题</a> / <i class="fa fa-folder-open"></i> <a href="directory-structure.html">仓库结构</a> / <i class="fa fa-user"></i> <a href="contributors.html">贡献者</a></li>
 </ul>
 <p>体系结构部分的实验安排：</p>
 <table><thead><tr><th align="center">时间</th><th align="center">实验课安排</th><th align="center">时间</th><th align="center">实验课安排</th></tr></thead><tbody>
@@ -998,6 +999,11 @@ page_divisor 4
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="常见问题"><a class="header" href="#常见问题">常见问题</a></h1>
 <p>关于实验内容的答疑，请前往 <a href="https://fducslg.slack.com">FDUCSLG</a> 的 Slack 平台的 #sig-architecture 频道提问。如果你不想公开提问，可以单独询问助教。本页面不定期更新。</p>
+<h3 id="为什么-vivado-上的仿真非常慢要跑十多分钟甚至是一个小时"><a class="header" href="#为什么-vivado-上的仿真非常慢要跑十多分钟甚至是一个小时">为什么 Vivado 上的仿真非常慢？要跑十多分钟甚至是一个小时？</a></h3>
+<p>我们提供的测试的设置中，默认是会在仿真过程中记录所有的信号。这样在测试不通过时，可以查看所有的信号来寻找问题，方便大家调试。由于 Vivado 自带的 xsim 仿真器本身性能不高，如果需要记录所有的信号，势必会严重拖慢仿真。如果你想加快仿真速度，可以考虑关闭完整的信号记录。</p>
+<p>依次点击 Vivado 顶部菜单栏的 “Tools” → “Settings...”，然后在下图所示的窗口中按照红色矩形框的指示，将 <code>xsim.simulate.log_all_signals</code> 右侧的勾选框取消。</p>
+<p><img src="asset/faq/log-all-signals.png" alt="记录所有信号的选项" /></p>
+<p>然后点击 “OK” 保存设置。之后重新启动仿真。</p>
 <h3 id="我能拿-a-吗"><a class="header" href="#我能拿-a-吗">我能拿 A 吗？</a></h3>
 <p>未来可期。</p>
 <h3 id="可以退课吗"><a class="header" href="#可以退课吗">可以退课吗？</a></h3>

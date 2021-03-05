@@ -4,11 +4,12 @@
 
 ProgramRunner<MyCPU> app;
 
-void on_abort(int) {
+void on_error(int) {
     app.~ProgramRunner();
 }
 
 int vmain(int argc, char *argv[]) {
-    hook_signal(SIGABRT, on_abort);
+    hook_signal(SIGABRT, on_error);
+    hook_signal(SIGINT, on_error)
     return app.main(argc, argv);
 }

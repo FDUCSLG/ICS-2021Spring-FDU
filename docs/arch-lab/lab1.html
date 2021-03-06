@@ -241,7 +241,7 @@ instruction 7
 
 # sequence is: bne -&gt; instruction 4 -&gt; instruction 5
 </code></pre>
-<p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<code>addi</code>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>、<code>jalr</code>。</p>
+<p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<code>addi</code>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>。</p>
 <h3 id="112-虚实地址转换"><a class="header" href="#112-虚实地址转换">1.1.2 虚实地址转换</a></h3>
 <p>指令代码、寄存器中的地址都是虚拟地址。CPU 向内存请求时，需要提供物理地址。</p>
 <p>本实验中，只要求实现简单的虚实地址转换。</p>
@@ -362,7 +362,7 @@ endmodule
 <p>Tips：</p>
 <ul>
 <li>W 阶段流水线寄存器不允许被阻塞。</li>
-<li>F 阶段流水线寄存器一般不清零。</li>
+<li>F 阶段流水线寄存器一般不清零；<strong>PC的复位值为<code>32'hbfc0_0000</code></strong> 。</li>
 <li>M 阶段流水线寄存器阻塞时（因），E 阶段流水线寄存器通常也阻塞（果），防止丢失指令。</li>
 <li>E 阶段流水线寄存器阻塞时（因），M 阶段流水线寄存器通常清零（果），防止指令被执行多次。</li>
 </ul>
@@ -433,7 +433,19 @@ typedef struct packed {
 assign debug_wb_pc     = top.core.writeback.pc;
 assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 </code></pre>
-<h2 id="13-发布包"><a class="header" href="#13-发布包">1.3 发布包</a></h2>
+<h2 id="13-数据通路与译码控制信号"><a class="header" href="#13-数据通路与译码控制信号">1.3 数据通路与译码控制信号</a></h2>
+<p>CPU 需要一系列硬件来执行指令所要求的功能。如果 CPU 只支持一条指令，那么 CPU 内所有的硬件都只为这一个功能所服务。随着指令条数的增加， CPU 设计者会添加一些硬件，同时也会复用一些原有的硬件。随着这些硬件复用性的提升， CPU 的数据通路会变得更复杂。Decode 阶段的译码器为这些硬件提供控制信号，这些控制信号也是高度复用的。</p>
+<p>我们设计的第一条指令是 <code>addu</code> 。只支持这一条指令的流水线，是比较简单的：</p>
+<p><img src="../asset/lab1/datapath/addu.svg" alt="addu" /></p>
+<p>随后，我们加入了 <code>addiu</code> 。Execute 阶段的加法器可以被复用，但源操作数不再是两个寄存器的值，而是一个寄存器和一个立即数；目的寄存器也不再是 <code>rd</code>， 而是 <code>rt</code> ：</p>
+<p><img src="../asset/lab1/datapath/addiu.svg" alt="addiu" /></p>
+<p><code>lw</code> 指令通过一个加法器算出数据的虚拟地址，这个加法器可以使用已有的加法器。然而，写入寄存器的数据不再是加法器，而是数据内存：</p>
+<p><img src="../asset/lab1/datapath/sw.svg" alt="sw" /></p>
+<p>添加了 <code>jal</code> 指令后，下一条指令的 PC 不再只可能是 (PC + 4) ；写入的寄存器被指定为 31 号寄存器，数据则是指定为 (PC + 8)：</p>
+<p><img src="../asset/lab1/datapath/jal.svg" alt="jal" /></p>
+<p>当 CPU 需要支持新的指令时，根据该指令的功能，设计数据通路，并视具体情形添加或复用硬件与控制信号。添加硬件，会增加 CPU 的电路面积；复用原有硬件，会增加复用器的电路复杂性，增加电路延迟。</p>
+<p>添加新硬件时，需考虑将该硬件放在流水线的哪一阶段，避免影响该流水段的逻辑延迟。</p>
+<h2 id="14-发布包"><a class="header" href="#14-发布包">1.4 发布包</a></h2>
 <p>用 Vivado 2019.2 打开 <code>vivado/test1_naive/soc_sram_func/run_vivado/mycpu_prj1/mycpu.xpr</code>，添加源文件后，即可开始仿真。</p>
 <p>Tips：第一次仿真前，先点击 “IP Sources”，选中所有 IP 核源文件，右键，点击 “Generate Output Products”。几秒钟后，跳出 “OK”，然后再点仿真。</p>
 <p><code>vivado/test1_naive/soft/obj/test.s</code> 是测试的反汇编文件，有 PC、机器码、汇编码的对应。<code>soft</code> 目录下的其他文件里，可以找到测试的 C 代码。</p>
@@ -446,29 +458,30 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <p>你可以在该目录下随意添加源文件。在 Vivado 中执行 <code>add_sources.tcl</code> 后，它们都会添加到项目里。</p>
 <p><code>source/include/</code> 里有一些头文件。</p>
 <p><strong>本次实验没有暂时没有使用 Verilator 进行仿真</strong>。我们会从实验 2 开始引入 Verilator，所以你需要确保你的在这次实验中编写的代码能够通过 Verilator 的编译。如果在使用 Verilator 中遇到了问题，请先阅读 <a href="../misc/verilate.html">Verilator 仿真</a>寻找解决方案。</p>
-<h2 id="14-作业与提交"><a class="header" href="#14-作业与提交">1.4 作业与提交</a></h2>
+<h2 id="15-作业与提交"><a class="header" href="#15-作业与提交">1.5 作业与提交</a></h2>
 <p>在 <code>source/mycpu/</code> 里添加你的代码，实现五级流水线 MIPS CPU。</p>
-<p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<code>addi</code>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>、<code>jalr</code>。</p>
-<h3 id="141-通过标准"><a class="header" href="#141-通过标准">1.4.1 通过标准</a></h3>
+<p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<code>addi</code>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>。</p>
+<p><strong>PC的复位值为<code>32'hbfc0_0000</code></strong> 。</p>
+<h3 id="151-通过标准"><a class="header" href="#151-通过标准">1.5.1 通过标准</a></h3>
 <ol>
 <li>打开原有 <code>mycpu.xpr</code>，用 <code>source/mycpu/add_sources.tcl</code> 添加源文件，上板显示两个绿灯。</li>
 <li>在仓库根目录打开终端，运行 <code>make verilate TARGET=mycpu/VTop</code>，确认 Verilator 能够编译你的 CPU 代码，并且没有报告任何错误和警告。</li>
 </ol>
-<h3 id="142-实验报告要求"><a class="header" href="#142-实验报告要求">1.4.2 实验报告要求</a></h3>
+<h3 id="152-实验报告要求"><a class="header" href="#152-实验报告要求">1.5.2 实验报告要求</a></h3>
 <ul>
 <li>格式：PDF</li>
 <li>内容：按本文档 1.2 节的思路写即可。写好姓名学号。</li>
 </ul>
-<h3 id="143-提交文件格式"><a class="header" href="#143-提交文件格式">1.4.3 提交文件格式</a></h3>
+<h3 id="153-提交文件格式"><a class="header" href="#153-提交文件格式">1.5.3 提交文件格式</a></h3>
 <pre><code class="language-plaintext">18307130024/
 ├── report/（报告所在目录）
 └── source/（源文件所在目录）
 </code></pre>
 <p>用 <code>zip -r 18307130024.zip 18307130024/</code> 打包。用 <code>unzip 18307130024.zip</code> 检查，应在当前目录下有学号目录。</p>
-<h3 id="144-评分"><a class="header" href="#144-评分">1.4.4 评分</a></h3>
+<h3 id="154-评分"><a class="header" href="#154-评分">1.5.4 评分</a></h3>
 <p>代码 80%，报告 20%。</p>
 <p><strong>Deadline：2020 年 3 月 21 日 23:59:59</strong></p>
-<h2 id="15-思考"><a class="header" href="#15-思考">1.5 思考</a></h2>
+<h2 id="16-思考"><a class="header" href="#16-思考">1.6 思考</a></h2>
 <ol>
 <li>流水线寄存器的 flush 信号，需要让所有信号都清零吗？</li>
 <li>转发的成本是什么？有哪些限制？（板子上的组合逻辑基本部件为 LUT6 ，6 输入 1 输出，可实现 6 输入的任何给定逻辑式）</li>

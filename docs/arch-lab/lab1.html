@@ -362,7 +362,7 @@ endmodule
 <p>Tips：</p>
 <ul>
 <li>W 阶段流水线寄存器不允许被阻塞。</li>
-<li>F 阶段流水线寄存器一般不清零；<strong>PC的复位值为<code>32'hbfc0_0000</code></strong> 。</li>
+<li>F 阶段流水线寄存器一般不清零；<strong>PC的复位值为 <code>32'hbfc0_0000</code></strong>。</li>
 <li>M 阶段流水线寄存器阻塞时（因），E 阶段流水线寄存器通常也阻塞（果），防止丢失指令。</li>
 <li>E 阶段流水线寄存器阻塞时（因），M 阶段流水线寄存器通常清零（果），防止指令被执行多次。</li>
 </ul>
@@ -435,13 +435,13 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 </code></pre>
 <h2 id="13-数据通路与译码控制信号"><a class="header" href="#13-数据通路与译码控制信号">1.3 数据通路与译码控制信号</a></h2>
 <p>CPU 需要一系列硬件来执行指令所要求的功能。如果 CPU 只支持一条指令，那么 CPU 内所有的硬件都只为这一个功能所服务。随着指令条数的增加， CPU 设计者会添加一些硬件，同时也会复用一些原有的硬件。随着这些硬件复用性的提升， CPU 的数据通路会变得更复杂。Decode 阶段的译码器为这些硬件提供控制信号，这些控制信号也是高度复用的。</p>
-<p>我们设计的第一条指令是 <code>addu</code> 。只支持这一条指令的流水线，是比较简单的：</p>
+<p>我们设计的第一条指令是 <code>addu</code>。只支持这一条指令的流水线，是比较简单的：</p>
 <p><img src="../asset/lab1/datapath/addu.svg" alt="addu" /></p>
-<p>随后，我们加入了 <code>addiu</code> 。Execute 阶段的加法器可以被复用，但源操作数不再是两个寄存器的值，而是一个寄存器和一个立即数；目的寄存器也不再是 <code>rd</code>， 而是 <code>rt</code> ：</p>
+<p>随后，我们加入了 <code>addiu</code>。Execute 阶段的加法器可以被复用，但源操作数不再是两个寄存器的值，而是一个寄存器和一个立即数；目的寄存器也不再是 <code>rd</code>， 而是 <code>rt</code>：</p>
 <p><img src="../asset/lab1/datapath/addiu.svg" alt="addiu" /></p>
 <p><code>lw</code> 指令通过一个加法器算出数据的虚拟地址，这个加法器可以使用已有的加法器。然而，写入寄存器的数据不再是加法器，而是数据内存：</p>
 <p><img src="../asset/lab1/datapath/sw.svg" alt="sw" /></p>
-<p>添加了 <code>jal</code> 指令后，下一条指令的 PC 不再只可能是 (PC + 4) ；写入的寄存器被指定为 31 号寄存器，数据则是指定为 (PC + 8)：</p>
+<p>添加了 <code>jal</code> 指令后，下一条指令的 PC 不再只可能是 (PC + 4)；写入的寄存器被指定为 31 号寄存器，数据则是指定为 (PC + 8)：</p>
 <p><img src="../asset/lab1/datapath/jal.svg" alt="jal" /></p>
 <p>当 CPU 需要支持新的指令时，根据该指令的功能，设计数据通路，并视具体情形添加或复用硬件与控制信号。添加硬件，会增加 CPU 的电路面积；复用原有硬件，会增加复用器的电路复杂性，增加电路延迟。</p>
 <p>添加新硬件时，需考虑将该硬件放在流水线的哪一阶段，避免影响该流水段的逻辑延迟。</p>
@@ -461,7 +461,7 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <h2 id="15-作业与提交"><a class="header" href="#15-作业与提交">1.5 作业与提交</a></h2>
 <p>在 <code>source/mycpu/</code> 里添加你的代码，实现五级流水线 MIPS CPU。</p>
 <p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<code>addi</code>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>。</p>
-<p><strong>PC的复位值为<code>32'hbfc0_0000</code></strong> 。</p>
+<p><strong>PC的复位值为 <code>32'hbfc0_0000</code></strong>。</p>
 <h3 id="151-通过标准"><a class="header" href="#151-通过标准">1.5.1 通过标准</a></h3>
 <ol>
 <li>打开原有 <code>mycpu.xpr</code>，用 <code>source/mycpu/add_sources.tcl</code> 添加源文件，上板显示两个绿灯。</li>

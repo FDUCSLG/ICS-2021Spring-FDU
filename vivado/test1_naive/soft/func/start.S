@@ -2,7 +2,7 @@
 #include <regdef.h>
 #include <cpu_cde.h>
 
-#define TEST_NUM 28
+#define TEST_NUM 27
 
 
 ##s0, number
@@ -379,10 +379,10 @@ kseg0_kseg1:
     nop
     jal wait_1s
     nop */
-    jal n22_addi_test   #addi
+    /* jal n22_addi_test   #addi
     nop
     jal wait_1s
-    nop
+    nop */
     /* jal n23_sub_test   #sub
     nop
     jal wait_1s

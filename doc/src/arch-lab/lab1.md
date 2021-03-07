@@ -99,7 +99,7 @@ instruction 7
 # sequence is: bne -> instruction 4 -> instruction 5
 ```
 
-本实验需要实现的指令：`lui`、`addu`、`addiu`、`beq`、`bne`、`lw`、`or`、`slt`、`slti`、`sltiu`、`sll`、`sw`、`j`、`jal`、`jr`、`addi`、`subu`、`sltu`、`and`、`andi`、`nor`、`ori`、`xor`、`xori`、`sra`、`srl`、`jalr`。
+本实验需要实现的指令：`lui`、`addu`、`addiu`、`beq`、`bne`、`lw`、`or`、`slt`、`slti`、`sltiu`、`sll`、`sw`、`j`、`jal`、`jr`、~~`addi`~~、`subu`、`sltu`、`and`、`andi`、`nor`、`ori`、`xor`、`xori`、`sra`、`srl`、~~`jalr`~~。
 
 ### 1.1.2 虚实地址转换
 
@@ -261,7 +261,7 @@ endmodule
 Tips：
 
 * W 阶段流水线寄存器不允许被阻塞。
-* F 阶段流水线寄存器一般不清零。
+* F 阶段流水线寄存器一般不清零；**PC的复位值为 `32'hbfc0_0000`**。
 * M 阶段流水线寄存器阻塞时（因），E 阶段流水线寄存器通常也阻塞（果），防止丢失指令。
 * E 阶段流水线寄存器阻塞时（因），M 阶段流水线寄存器通常清零（果），防止指令被执行多次。
 
@@ -348,7 +348,31 @@ assign debug_wb_pc     = top.core.writeback.pc;
 assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 ```
 
-## 1.3 发布包
+## 1.3 数据通路与译码控制信号
+
+CPU 需要一系列硬件来执行指令所要求的功能。如果 CPU 只支持一条指令，那么 CPU 内所有的硬件都只为这一个功能所服务。随着指令条数的增加， CPU 设计者会添加一些硬件，同时也会复用一些原有的硬件。随着这些硬件复用性的提升， CPU 的数据通路会变得更复杂。Decode 阶段的译码器为这些硬件提供控制信号，这些控制信号也是高度复用的。
+
+我们设计的第一条指令是 `addu`。只支持这一条指令的流水线，是比较简单的：
+
+![addu](../asset/lab1/datapath/addu.svg)
+
+随后，我们加入了 `addiu`。Execute 阶段的加法器可以被复用，但源操作数不再是两个寄存器的值，而是一个寄存器和一个立即数；目的寄存器也不再是 `rd`， 而是 `rt`：
+
+![addiu](../asset/lab1/datapath/addiu.svg)
+
+`lw` 指令通过一个加法器算出数据的虚拟地址，这个加法器可以使用已有的加法器。然而，写入寄存器的数据不再是加法器，而是数据内存：
+
+![sw](../asset/lab1/datapath/sw.svg)
+
+添加了 `jal` 指令后，下一条指令的 PC 不再只可能是 (PC + 4)；写入的寄存器被指定为 31 号寄存器，数据则是指定为 (PC + 8)：
+
+![jal](../asset/lab1/datapath/jal.svg)
+
+当 CPU 需要支持新的指令时，根据该指令的功能，设计数据通路，并视具体情形添加或复用硬件与控制信号。添加硬件，会增加 CPU 的电路面积；复用原有硬件，会增加复用器的电路复杂性，增加电路延迟。
+
+添加新硬件时，需考虑将该硬件放在流水线的哪一阶段，避免影响该流水段的逻辑延迟。
+
+## 1.4 发布包
 
 用 Vivado 2019.2 打开 `vivado/test1_naive/soc_sram_func/run_vivado/mycpu_prj1/mycpu.xpr`，添加源文件后，即可开始仿真。
 
@@ -368,23 +392,25 @@ Tips：第一次仿真前，先点击 “IP Sources”，选中所有 IP 核源�
 
 **本次实验没有暂时没有使用 Verilator 进行仿真**。我们会从实验 2 开始引入 Verilator，所以你需要确保你的在这次实验中编写的代码能够通过 Verilator 的编译。如果在使用 Verilator 中遇到了问题，请先阅读 [Verilator 仿真](../misc/verilate.md)寻找解决方案。
 
-## 1.4 作业与提交
+## 1.5 作业与提交
 
 在 `source/mycpu/` 里添加你的代码，实现五级流水线 MIPS CPU。
 
-本实验需要实现的指令：`lui`、`addu`、`addiu`、`beq`、`bne`、`lw`、`or`、`slt`、`slti`、`sltiu`、`sll`、`sw`、`j`、`jal`、`jr`、`addi`、`subu`、`sltu`、`and`、`andi`、`nor`、`ori`、`xor`、`xori`、`sra`、`srl`、`jalr`。
+本实验需要实现的指令：`lui`、`addu`、`addiu`、`beq`、`bne`、`lw`、`or`、`slt`、`slti`、`sltiu`、`sll`、`sw`、`j`、`jal`、`jr`、~~`addi`~~、`subu`、`sltu`、`and`、`andi`、`nor`、`ori`、`xor`、`xori`、`sra`、`srl`、~~`jalr`~~。
 
-### 1.4.1 通过标准
+**PC的复位值为 `32'hbfc0_0000`**。
+
+### 1.5.1 通过标准
 
 1. 打开原有 `mycpu.xpr`，用 `source/mycpu/add_sources.tcl` 添加源文件，上板显示两个绿灯。
 2. 在仓库根目录打开终端，运行 `make verilate TARGET=mycpu/VTop`，确认 Verilator 能够编译你的 CPU 代码，并且没有报告任何错误和警告。
 
-### 1.4.2 实验报告要求
+### 1.5.2 实验报告要求
 
 * 格式：PDF
 * 内容：按本文档 1.2 节的思路写即可。写好姓名学号。
 
-### 1.4.3 提交文件格式
+### 1.5.3 提交文件格式
 
 ```plaintext
 18307130024/
@@ -394,13 +420,13 @@ Tips：第一次仿真前，先点击 “IP Sources”，选中所有 IP 核源�
 
 用 `zip -r 18307130024.zip 18307130024/` 打包。用 `unzip 18307130024.zip` 检查，应在当前目录下有学号目录。
 
-### 1.4.4 评分
+### 1.5.4 评分
 
 代码 80%，报告 20%。
 
 **Deadline：2020 年 3 月 21 日 23:59:59**
 
-## 1.5 思考
+## 1.6 思考
 
 1. 流水线寄存器的 flush 信号，需要让所有信号都清零吗？
 2. 转发的成本是什么？有哪些限制？（板子上的组合逻辑基本部件为 LUT6 ，6 输入 1 输出，可实现 6 输入的任何给定逻辑式）

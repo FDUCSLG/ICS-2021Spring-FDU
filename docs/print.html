@@ -418,7 +418,7 @@ instruction 7
 
 # sequence is: bne -&gt; instruction 4 -&gt; instruction 5
 </code></pre>
-<p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<code>addi</code>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>。</p>
+<p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<del><code>addi</code></del>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>、<del><code>jalr</code></del>。</p>
 <h3 id="112-虚实地址转换"><a class="header" href="#112-虚实地址转换">1.1.2 虚实地址转换</a></h3>
 <p>指令代码、寄存器中的地址都是虚拟地址。CPU 向内存请求时，需要提供物理地址。</p>
 <p>本实验中，只要求实现简单的虚实地址转换。</p>
@@ -637,7 +637,7 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <p><strong>本次实验没有暂时没有使用 Verilator 进行仿真</strong>。我们会从实验 2 开始引入 Verilator，所以你需要确保你的在这次实验中编写的代码能够通过 Verilator 的编译。如果在使用 Verilator 中遇到了问题，请先阅读 <a href="arch-lab/../misc/verilate.html">Verilator 仿真</a>寻找解决方案。</p>
 <h2 id="15-作业与提交"><a class="header" href="#15-作业与提交">1.5 作业与提交</a></h2>
 <p>在 <code>source/mycpu/</code> 里添加你的代码，实现五级流水线 MIPS CPU。</p>
-<p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<code>addi</code>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>。</p>
+<p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<del><code>addi</code></del>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>、<del><code>jalr</code></del>。</p>
 <p><strong>PC的复位值为 <code>32'hbfc0_0000</code></strong>。</p>
 <h3 id="151-通过标准"><a class="header" href="#151-通过标准">1.5.1 通过标准</a></h3>
 <ol>
@@ -754,7 +754,7 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <tr><td align="center"><code>jal</code></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
 <tr><td align="center"><code>jr</code></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
 <tr><td align="center"><code>add</code></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td><td align="center"></td></tr>
-<tr><td align="center"><code>addi</code></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
+<tr><td align="center"><code>addi</code></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td><td align="center"></td></tr>
 <tr><td align="center"><code>sub</code></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td><td align="center"></td></tr>
 <tr><td align="center"><code>subu</code></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
 <tr><td align="center"><code>sltu</code></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
@@ -774,7 +774,7 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <tr><td align="center"><code>blez</code></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
 <tr><td align="center"><code>bltz</code></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
 <tr><td align="center"><code>bltzal</code></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center"></td></tr>
-<tr><td align="center"><code>bgezal</code></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
+<tr><td align="center"><code>bgezal</code></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center"></td></tr>
 <tr><td align="center"><code>jalr</code></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
 <tr><td align="center"><code>div</code></td><td align="center"></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center">✓</td></tr>
 <tr><td align="center"><code>divu</code></td><td align="center"></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center">✓</td></tr>
@@ -790,7 +790,7 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <tr><td align="center"><code>lhu</code></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
 <tr><td align="center"><code>sb</code></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
 <tr><td align="center"><code>sh</code></td><td align="center"></td><td align="center">✓</td><td align="center"></td><td align="center"></td><td align="center">✓</td></tr>
-<tr><td align="center"><code>syscall</code></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td><td align="center">✓</td></tr>
+<tr><td align="center"><code>syscall</code></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td><td align="center"></td></tr>
 <tr><td align="center"><code>break</code></td><td align="center"></td><td align="center"></td><td align="center"></td><td align="center">✓</td><td align="center">✓</td></tr>
 </tbody></table>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">

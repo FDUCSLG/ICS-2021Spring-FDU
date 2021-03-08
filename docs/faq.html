@@ -168,6 +168,9 @@
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="常见问题"><a class="header" href="#常见问题">常见问题</a></h1>
 <p>关于实验内容的答疑，请前往 <a href="https://fducslg.slack.com">FDUCSLG</a> 的 Slack 平台的 #sig-architecture 频道提问。如果你不想公开提问，可以单独询问助教。本页面不定期更新。</p>
+<h3 id="为什么仿真一直在跑却没有显示-functional-test-point-pass"><a class="header" href="#为什么仿真一直在跑却没有显示-functional-test-point-pass">为什么仿真一直在跑却没有显示 “Functional Test Point PASS!!!”？</a></h3>
+<p>有时候你甚至会发现第一个点已经显示通过了，但是第二个点的 “PASS!!!” 一直没有出现。这种情况可能是你的流水线 writeback 阶段没有写入寄存器，导致 trace 没有进行比对，因此也没有发现你 CPU 的错误。</p>
+<p>龙芯的测试是在信号 <code>debug_wb_rf_wen</code> 不为零的时钟上升沿进行比对。你在仿真的时候可以注意下波形图中 <code>debug_wb_rf_wen</code> 这一行是否出现了 <code>4'hf</code>，如果出现了则说明 trace 比对正在进行。如果全程为 <code>0</code> 则说明你的流水线没有写入寄存器，或者是 <code>debug_*</code> 信号连接出错。</p>
 <h3 id="为什么-vivado-上的仿真非常慢要跑十多分钟甚至是一个小时"><a class="header" href="#为什么-vivado-上的仿真非常慢要跑十多分钟甚至是一个小时">为什么 Vivado 上的仿真非常慢？要跑十多分钟甚至是一个小时？</a></h3>
 <p>我们提供的测试的设置中，默认是会在仿真过程中记录所有的信号。这样在测试不通过时，可以查看所有的信号来寻找问题，方便大家调试。由于 Vivado 自带的 xsim 仿真器本身性能不高，如果需要记录所有的信号，势必会严重拖慢仿真。如果你想加快仿真速度，可以考虑关闭完整的信号记录。</p>
 <p>依次点击 Vivado 顶部菜单栏的 “Tools” → “Settings...”，然后在下图所示的窗口中按照红色矩形框的指示，将 <code>xsim.simulate.log_all_signals</code> 右侧的勾选框取消。</p>

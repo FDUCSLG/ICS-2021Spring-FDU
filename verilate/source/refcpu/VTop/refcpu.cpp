@@ -1,3 +1,4 @@
+#include "defs.h"
 #include "refcpu.h"
 
 #include <chrono>
@@ -47,6 +48,52 @@ void RefCPU::print_writeback() {
     }
 }
 
+void RefCPU::print_instruction() {
+    auto state = get_ctx().state();
+
+#define PRINT_ENUM(enum_type, enum_value) \
+    if (get_new_ctx().state() != CPUState::S_EXCEPTION) \
+        info("%s ", nameof::nameof_enum(enum_type(enum_value)).data());
+
+    switch (state) {
+        case CPUState::S_FETCH:
+            info("\n");
+            break;
+        case CPUState::S_DECODE:
+            PRINT_ENUM(Opcode, VTop->core__DOT__Decode_inst__DOT__opcode);
+            break;
+        case CPUState::S_RTYPE: {
+            auto funct = VTop->core__DOT__RType_inst__DOT__funct0;
+
+            // manually print FN_SYSCALL and FN_BREAK since they will be trapped into S_EXCEPTION.
+            if (funct == RtypeFunct::FN_SYSCALL)
+                info("FN_SYSCALL ");
+            else if (funct == RtypeFunct::FN_BREAK)
+                info("FN_BREAK ");
+            else
+                PRINT_ENUM(RtypeFunct, VTop->core__DOT__RType_inst__DOT__funct0);
+        } break;
+        case CPUState::S_BRANCH_EVAL:
+            if (VTop->core__DOT__BranchEval_inst__DOT__opcode0 == Opcode::OP_BTYPE)
+                PRINT_ENUM(BranchType, VTop->core__DOT__BranchEval_inst__DOT__btype);
+            break;
+        case CPUState::S_COP0_DECODE:
+            if (VTop->core__DOT__COP0Decode_inst__DOT__is_co) {
+                info("=CO ");
+                PRINT_ENUM(Cop0COFunct, VTop->core__DOT__COP0Decode_inst__DOT__cp0_co_funct);
+            } else
+                info("≠CO ");
+            break;
+        case CPUState::S_COP0_ACCESS:
+            PRINT_ENUM(Cop0Funct, VTop->core__DOT__COP0Access_inst__DOT__cp0_funct);
+            break;
+
+        default: ;
+    }
+
+#undef PRINT_ENUM
+}
+
 void RefCPU::reset() {
     dev->reset();
     clk = 0;
@@ -67,6 +114,10 @@ void RefCPU::tick() {
 
     // print_request();
     print_writeback();
+
+#ifdef ICS_DUMP_INSTRUCTIONS
+    print_instruction();
+#endif
 
     // send request to memory
     dev->eval_req(get_oreq());
@@ -118,7 +169,7 @@ void RefCPU::run() {
     auto t_run_end = clock::now();
     auto span = std::chrono::duration<double>(t_run_end - t_run_start).count();
 
-    info(BLUE "(info)" RESET " testbench finished in %d cycles (%.3lf KHz).\n",
+    notify(BLUE "(info)" RESET " testbench finished in %d cycles (%.3lf KHz).\n",
         current_cycle, current_cycle / span / 1000);
 
     if (get_text_diff().get_error_count() > 0) {

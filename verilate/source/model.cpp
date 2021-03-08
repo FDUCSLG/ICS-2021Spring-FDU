@@ -132,7 +132,7 @@ void ModelBase::checkout_confreg() {
 
     if (_current_num != num) {
         assert(_current_num + 1 == num);
-        info(BLUE "(info)" RESET " #%d completed.\n", num);
+        notify(BLUE "(info)" RESET " #%d completed.\n", num);
         assert(ack == num);
         _current_num = num;
     }

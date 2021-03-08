@@ -4,10 +4,12 @@ module Decode (
     input  context_t ctx,
     output context_t out
 );
+    `MAKE_PUBLIC_READ(opcode_t, opcode, ctx.instr.opcode);
+
     always_comb begin
         out = ctx;
 
-        unique case (ctx.instr.opcode)
+        unique case (opcode)
         OP_RTYPE:
             out.state = S_RTYPE;
 

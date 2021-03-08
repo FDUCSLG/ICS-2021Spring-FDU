@@ -38,6 +38,8 @@ module COP0Access (
     assign v_new = ctx.r[instr.rt];
     assign v_updated = (v_old & ~mask) | (v_new & mask);
 
+    `MAKE_PUBLIC_READ(cp0_fn_t, cp0_funct, instr.funct);
+
     always_comb begin
         out = ctx;
         out.state = S_COMMIT;
@@ -45,7 +47,7 @@ module COP0Access (
         if (id_invalid)
             `FATAL
 
-        unique case (instr.funct)
+        unique case (cp0_funct)
         CFN_MF: begin
             out.target_id = instr.rt;
             out.r[instr.rt] = v_old;

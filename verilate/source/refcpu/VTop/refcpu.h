@@ -37,4 +37,5 @@ private:
     void print_status();
     void print_request();
     void print_writeback();
+    void print_instruction();
 };

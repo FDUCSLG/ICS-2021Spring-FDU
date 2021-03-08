@@ -84,12 +84,12 @@ typedef enum i5 {
 typedef enum i5 {
     CFN_MF = 5'b00000,
     CFN_MT = 5'b00100
-} cp0_fn_t;
+} cp0_fn_t /* verilator public */;
 
 // funct for COP0 instructions when CO bit is set
 typedef enum i6 {
     COFN_ERET = 6'b011000
-} cp0_cofn_t;
+} cp0_cofn_t /* verilator public */;
 
 // general-purpose registers
 typedef enum i5 {

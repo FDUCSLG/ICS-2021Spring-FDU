@@ -33,7 +33,8 @@ SV_FLAGS = \
 	--top-module $(SV_NAME) \
 	--prefix $(SV_PREFIX) \
 	$(SV_INCLUDES) \
-	$(SV_WARNINGS)
+	$(SV_WARNINGS) \
+	$(SV_EXTRA_FLAGS)
 
 ifeq ($(USE_CLANG), 1)
 SV_FLAGS += -CFLAGS -stdlib=libc++

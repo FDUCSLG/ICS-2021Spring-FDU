@@ -7,6 +7,7 @@ module BranchEval (
     localparam type offset_t = logic [17:0];
 
     `FORMAT_ITYPE(opcode, rs, rt, imm, ctx.instr);
+    `MAKE_PUBLIC_READ(opcode_t, opcode0, opcode);
 
     word_t v_rs, v_rt;
     assign v_rs = ctx.r[rs];
@@ -21,7 +22,7 @@ module BranchEval (
     assign target_pc = next_pc + `SIGN_EXTEND(offset, 32);
     assign jump_pc = {ctx.pc[31:28], ctx.instr.payload, 2'b00};
 
-    btype_t btype;
+    btype_t btype /* verilator public_flat_rd */;
     assign btype = btype_t'(rt);
 
     logic need_link;

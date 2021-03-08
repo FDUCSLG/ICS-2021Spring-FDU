@@ -2,6 +2,8 @@
 
 Spring 2021, Fudan University.
 
+Course Website: <https://fducslg.github.io/ICS-2021Spring-FDU/>
+
 ## Directory Structure
 
 * `misc/`: miscellaneous files.
@@ -69,7 +71,7 @@ dpkg -i verilator4.deb
 ln -s /usr/local/share/verilator /usr/share/
 ```
 
-NOTE: only GCC 8 is available on Debian 10. However, Verilator simulation can still be compiled successfully as long as you don't use the C++ library `nameof`, which is located at `verilate/include/thirdparty/nameof`.
+NOTE: only GCC 8 is available on Debian 10. However, Verilator simulation can still be compiled successfully as long as you don't use the C++ library `nameof`, which is located at `verilate/include/thirdparty/nameof.hpp`.
 
 ### ArchLinux/Manjaro
 

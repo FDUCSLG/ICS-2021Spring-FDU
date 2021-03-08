@@ -119,7 +119,7 @@ void MyCPU::run() {
     auto t_run_end = clock::now();
     auto span = std::chrono::duration<double>(t_run_end - t_run_start).count();
 
-    info(BLUE "(info)" RESET " testbench finished in %d cycles (%.3lf KHz).\n",
+    notify(BLUE "(info)" RESET " testbench finished in %d cycles (%.3lf KHz).\n",
         current_cycle, current_cycle / span / 1000);
 
     if (get_text_diff().get_error_count() > 0) {

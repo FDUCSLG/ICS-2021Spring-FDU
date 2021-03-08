@@ -53,7 +53,8 @@ endif
 CXXFLAGS += \
 	-std=c++17 -g \
 	$(CXX_INCLUDES) \
-	$(CXX_WARNINGS)
+	$(CXX_WARNINGS) \
+	$(CXX_EXTRA_FLAGS)
 	# -DVL_THREADED
 
 ifeq ($(USE_CLANG), 1)

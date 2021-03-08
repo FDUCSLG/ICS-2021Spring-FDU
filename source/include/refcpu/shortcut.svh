@@ -1,6 +1,10 @@
 `ifndef __REFCPU_SHORTCUT_SVH__
 `define __REFCPU_SHORTCUT_SVH__
 
+`define MAKE_PUBLIC_READ(typename, new_name, name) \
+    typename new_name /* verilator public_flat_rd */; \
+    assign new_name = name;
+
 `define SIGN_EXTEND(imm, width) \
     {{(((width) - 1) - $high(imm)){imm[$high(imm)]}}, imm}
 `define ZERO_EXTEND(imm, width) \

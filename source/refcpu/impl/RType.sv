@@ -5,6 +5,7 @@ module RType (
     output context_t out
 );
     `FORMAT_RTYPE(rs, rt, rd, shamt, funct, ctx.instr);
+    `MAKE_PUBLIC_READ(funct_t, funct0, funct);
 
     addr_t link_pc;
     assign link_pc = ctx.pc + 8;

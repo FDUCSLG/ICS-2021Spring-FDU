@@ -10,6 +10,8 @@ def main(args):
     for line in data_file:
         token = line.strip()
 
+        if len(token) == 0:
+            continue
         if token.startswith('make'):
             data.append(set())
         else:

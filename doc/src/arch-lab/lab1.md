@@ -217,6 +217,7 @@ module regfile(
     end
     for (genvar i = 1; i <= 31; i ++) begin
         always_comb begin
+            regs_nxt[i[4:0]] = regs[i[4:0]];
             if (wa3 == i[4:0] && write_enable) begin
                 regs_nxt[i[4:0]] = wd3;
             end

@@ -5,6 +5,7 @@ SV_NAME := $(notdir $(TARGET))#               # VTop
 SV_MKFILE = $(SV_BUILD)/$(SV_PREFIX).mk#      # build/gcc/refcpu/VTop/verilated/VTop.mk
 SV_VTOP = source/$(TARGET).sv#                # source/refcpu/VTop.sv
 
+SV_SOURCE_FOLDERS := $(shell find 'source/${SV_ROOT}' -type d)
 SV_FILES := \
 	$(wildcard source/util/*) \
 	$(wildcard source/ram/*) \
@@ -12,12 +13,11 @@ SV_FILES := \
 	$(shell find 'source/include/$(SV_ROOT)' -type f -name '*.svh') \
 	$(shell find 'source/$(SV_ROOT)' -type f -name '*.sv')
 
-SV_INCLUDES = \
+SV_INCLUDES := \
 	-y source/util/ \
 	-y source/ram/ \
 	-y source/include/ \
-	-y source/$(SV_ROOT)/ \
-	-y source/$(SV_ROOT)/*/
+	$(addprefix -y , $(SV_SOURCE_FOLDERS))
 
 SV_WARNINGS = \
 	-Wall \

@@ -1,6 +1,14 @@
 # 常见问题
 
-关于实验内容的答疑，请前往 [FDUCSLG](https://fducslg.slack.com) 的 Slack 平台的 #sig-architecture 频道提问。如果你不想公开提问，可以单独询问助教。本页面不定期更新。
+关于实验内容的答疑，请前往 [FDUCSLG](https://fducslg.slack.com) 的 Slack 平台的 #sig-architecture 频道提问。如果你不想公开提问，可以单独询问助教。
+
+本页面不定期更新。
+
+### 为什么 Verilator 会报告 `UNOPT`/`UNOPTFLAT`？
+
+这是因为你的代码中可能存在组合逻辑环。请根据 Verilator 输出的文件位置检查是否真的有逻辑环。
+
+如果你认为并不存在逻辑环，并且 Vivado 布线时也没有报告逻辑环，有可能是遇到了 [“组合逻辑环与 `UNOPT`”](misc/unopt.md) 中提到的情形。
 
 ### 为什么仿真一直在跑却没有显示 “Functional Test Point PASS!!!”？
 

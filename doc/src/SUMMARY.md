@@ -15,6 +15,7 @@
     * [外部资料](misc/external.md)
     * [指令列表](misc/instruction.md)
     * [Verilator 仿真](misc/verilate.md)
+    * [组合逻辑环与 `UNOPT`](misc/unopt.md)
     * [使用 GTKWave](misc/gtkwave.md)
 
 [仓库目录结构](directory-structure.md)

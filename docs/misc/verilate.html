@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="../arch-lab/lab2.html">实验 2</a></li><li class="chapter-item "><a href="../arch-lab/lab3.html">实验 3</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="../arch-lab/lab5.html">实验 5</a></li><li class="chapter-item "><a href="../arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="../sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item expanded "><a href="../misc/verilate.html" class="active">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="../arch-lab/lab2.html">实验 2</a></li><li class="chapter-item "><a href="../arch-lab/lab3.html">实验 3</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="../arch-lab/lab5.html">实验 5</a></li><li class="chapter-item "><a href="../arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="../sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item expanded "><a href="../misc/verilate.html" class="active">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -231,6 +231,7 @@ endmodule
 	# add warnings that you wanna ignore.
 </code></pre>
 <p>当然，请注意在你的 SystemVerilog 代码里面应该<strong>避免组合回路</strong>而不是单纯地消除这个警告！</p>
+<p>关于 <code>UNOPT</code> 警告更详细的说明，请参见 <a href="unopt.html">“组合逻辑环与 <code>UNOPT</code>”</a>。</p>
 <h2 id="周期精确仿真"><a class="header" href="#周期精确仿真">周期精确仿真</a></h2>
 <p>所谓周期精确仿真，是在确定模块输入的情况下，计算出模块在足够长时间后的输出。因此在周期精确仿真中没有延时的概念。可以理解为每次更新都是计算模块在无穷久后处于稳态时的输出。对于 CPU 这种由一个时钟信号驱动的设计，外层代码（C++ 代码）可以通过反复变动时钟信号的值（从 <code>0</code> 变 <code>1</code>，再从 <code>1</code> 变 <code>0</code>），就能得到每个周期内 CPU 的状态。</p>
 <p>在 <code>VModel</code> 中，其核心的函数是 <code>eval</code>，它负责计算输入更新后模块的输出。如果 <code>VModel</code> 的时钟信号名为 <code>clk</code>，并且是在时钟上升沿时触发，则我们可以使用类似于下面的 C++ 代码来更新一个周期：</p>
@@ -294,7 +295,7 @@ endmodule
                         
 
                         
-                            <a rel="next" href="../misc/gtkwave.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../misc/unopt.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -312,7 +313,7 @@ endmodule
                 
 
                 
-                    <a rel="next" href="../misc/gtkwave.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../misc/unopt.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

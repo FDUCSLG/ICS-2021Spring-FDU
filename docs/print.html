@@ -99,7 +99,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="arch-lab/lab2.html">实验 2</a></li><li class="chapter-item "><a href="arch-lab/lab3.html">实验 3</a></li><li class="chapter-item "><a href="arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="arch-lab/lab5.html">实验 5</a></li><li class="chapter-item "><a href="arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="misc/external.html">外部资料</a></li><li class="chapter-item "><a href="misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="contributors.html">贡献者</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="arch-lab/lab2.html">实验 2</a></li><li class="chapter-item "><a href="arch-lab/lab3.html">实验 3</a></li><li class="chapter-item "><a href="arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="arch-lab/lab5.html">实验 5</a></li><li class="chapter-item "><a href="arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="misc/external.html">外部资料</a></li><li class="chapter-item "><a href="misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="contributors.html">贡献者</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -863,6 +863,7 @@ endmodule
 	# add warnings that you wanna ignore.
 </code></pre>
 <p>当然，请注意在你的 SystemVerilog 代码里面应该<strong>避免组合回路</strong>而不是单纯地消除这个警告！</p>
+<p>关于 <code>UNOPT</code> 警告更详细的说明，请参见 <a href="misc/unopt.html">“组合逻辑环与 <code>UNOPT</code>”</a>。</p>
 <h2 id="周期精确仿真"><a class="header" href="#周期精确仿真">周期精确仿真</a></h2>
 <p>所谓周期精确仿真，是在确定模块输入的情况下，计算出模块在足够长时间后的输出。因此在周期精确仿真中没有延时的概念。可以理解为每次更新都是计算模块在无穷久后处于稳态时的输出。对于 CPU 这种由一个时钟信号驱动的设计，外层代码（C++ 代码）可以通过反复变动时钟信号的值（从 <code>0</code> 变 <code>1</code>，再从 <code>1</code> 变 <code>0</code>），就能得到每个周期内 CPU 的状态。</p>
 <p>在 <code>VModel</code> 中，其核心的函数是 <code>eval</code>，它负责计算输入更新后模块的输出。如果 <code>VModel</code> 的时钟信号名为 <code>clk</code>，并且是在时钟上升沿时触发，则我们可以使用类似于下面的 C++ 代码来更新一个周期：</p>
@@ -914,6 +915,106 @@ endmodule
 </code></pre>
 <p>将会把波形图保存到当前目录下的 <code>build</code> 文件夹中，波形图文件名为 <code>trace.fst</code>。之后我们可以使用 GTKWave 来查看 FST 格式的波形图。</p>
 <p>请注意，开启波形图记录后的仿真速度大约会慢 10 倍。</p>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<h1 id="组合逻辑环与-unopt"><a class="header" href="#组合逻辑环与-unopt">组合逻辑环与 <code>UNOPT</code></a></h1>
+<p>上一节中的 <code>SRLatch</code> 是一个典型的组合逻辑环的例子。在 Vivado 中，<code>SRLatch</code> 可以综合和布线，但是布线阶段 Vivado 也会警告代码中的组合逻辑环：</p>
+<p><img src="misc/../asset/misc/sr-latch-warning.png" alt="" /></p>
+<p>因为组合逻辑环容易导致电路震荡，从而造成 “仿真通过但上板不过” 的情况。因此，<strong>请务必消除 Vivado 报告的组合逻辑环</strong>。</p>
+<p>Verilator 对于组合逻辑环通常报告 <code>UNOPT</code> 或者 <code>UNOPTFLAT</code> 警告，字面意思是不好优化，因为组合逻辑环需要多次迭代后才能得到最终的结果（收敛）。这两种警告的区别在于，一个是 Verilator 生成网表（flatten netlist）前报告的，一个是生成网表后报告的，因此这两种警告对我们而言没有区别。下文中两种警告都用 <code>UNOPT</code> 指代。</p>
+<p>Verilator 虽然声称忽略这些警告不会影响仿真的正确性，只会影响仿真的性能。但我们的 CPU 中不应该有组合逻辑环。如果有，大概率是有地方写错了，导致仿真的结果和我们的预期不符。根据我们的经验，大家在写流水线的 hazard 部分时比较容易写出组合逻辑环。</p>
+<p>对于 Verilator 报告的 <code>UNOPT</code> 警告，某些情况下不一定是真的组合逻辑环。这是因为，出于仿真性能上的考虑，Verilator 并不是按信号的每一位来单独计算的，通常会把很多信号放一起计算（比如都放在一个 <code>uint32_t</code> 内）。你可以简单地认为 Verilator 是在变量层级生成网表。下面将举几个常见的例子。</p>
+<h2 id="例子structwire"><a class="header" href="#例子structwire">例子：<code>StructWire</code></a></h2>
+<pre><code class="language-verilog">module StructWire (
+    input  logic a,
+    output logic d
+);
+    struct packed {
+        logic b, c;
+    } block;
+    assign block.b = a;
+    assign block.c = block.b;
+    assign d = block.c;
+endmodule
+</code></pre>
+<p>这段代码单纯地把 <code>a</code> 的值传给 <code>d</code>，中间经过了 <code>block</code>。很明显，<code>a</code> → <code>block.b</code> → <code>block.c</code> → <code>d</code> 没有形成组合逻辑环，但是 Verilator 会把 <code>block</code> 这个变量看作一个整体，于是就出现了 <code>block</code> → <code>block</code> 这个假的逻辑环。此时你只需使用 <code>/* verilator split_var */</code> 来消除警告：</p>
+<pre><code class="language-verilog">    struct packed {
+        logic b, c;
+    } block /* verilator split_var */;
+</code></pre>
+<p><code>split_var</code> 告诉 Verilator 要把 <code>block</code> 拆成多个变量（可能是 <code>block__DOT__a</code> 和 <code>block__DOT__b</code> 之类的）。这样一来 Verilator 就不会报告 <code>UNOPT</code> 了。</p>
+<h2 id="例子partialsum"><a class="header" href="#例子partialsum">例子：<code>PartialSum</code></a></h2>
+<p>下面是一个异或前缀和的例子：</p>
+<pre><code class="language-verilog">module PartialSum (
+    input  logic [31:0] a,
+    output logic [31:0] b
+);
+    assign b[0] = a[0];
+    for (genvar i = 1; i &lt; 32; i++) begin
+        assign b[i] = b[i - 1] ^ a[i];
+    end
+endmodule
+</code></pre>
+<p>和 <code>StructWire</code> 一样，从每一位来看，不存在逻辑环。但是 Verilator 会认为有 <code>b</code> → <code>b</code> 的组合逻辑环。所以这里也需要将 <code>b</code> 的每一位分开。但与 <code>StructWire</code> 例子中不一样的是，<code>b</code> 是模块的端口，如果你尝试：</p>
+<pre><code class="language-verilog">module PartialSum (
+    input  logic [31:0] a,
+    output logic [31:0] b /* verilator split_var */
+);
+</code></pre>
+<p>你会收到下面的警告：</p>
+<pre><code class="language-plaintext">%Warning-SPLITVAR: PartialSum-SPLITVAR.sv:3:25: 'b' has split_var metacomment but will not be split because it is public
+    3 |     output logic [31:0] b /*verilator split_var*/
+      |                         ^
+                   ... Use &quot;/* verilator lint_off SPLITVAR */&quot; and lint_on around source to disable this message.
+%Error: Exiting due to 1 warning(s)
+</code></pre>
+<p>因为 <code>b</code> 是公开的模块端口，所以 Verilator 拒绝直接将 <code>b</code> 分为多个变量。一个常用的技巧是引入一个私有的中间变量：</p>
+<pre><code class="language-verilog">    logic [31:0] c /* verilator split_var */;  // 引入中间变量
+    // 对 c 而不是 b 做操作
+    assign c[0] = a[0];
+    for (genvar i = 1; i &lt; 32; i++) begin
+        assign c[i] = c[i - 1] ^ a[i];
+    end
+    assign b = c;  // 再将 c 整体赋值给 b
+</code></pre>
+<h2 id="例子alwayscomb"><a class="header" href="#例子alwayscomb">例子：<code>AlwaysComb</code></a></h2>
+<p>下面这个例子是从同学们实验 1 的代码中发现的。我们对原始代码做了简化，大致的代码结构如下：</p>
+<pre><code class="language-verilog">module AlwaysComb (
+    input  logic a, d,
+    output logic c, f
+);
+    always_comb begin
+        // ...
+        f = ~a;
+        // ...
+        c = d ^ f;
+        // ...
+    end
+endmodule
+
+module Top (
+    input  logic a, b,
+    output logic c
+);
+    logic d, f;
+    assign d = b ^ f;
+    AlwaysComb inst(.*);
+endmodule
+</code></pre>
+<p>将上面的代码画成原理图，并没有发现逻辑环：</p>
+<img src="misc/../asset/misc/always-comb-schematic.svg" style="min-width: 30%; max-width: 60%" />
+<p>但是 Verilator 依然会报告 <code>UNOPT</code>。这是因为 Verilator 把 <code>always_comb</code> 语句块作为一个整体处理。Verilator 认为上面的 <code>always_comb</code> 块的输入（敏感列表）有 <code>a</code>、<code>d</code> 和 <code>f</code>，输出有 <code>c</code> 和 <code>f</code>。因此，当 <code>a</code> 发生变化时，触发 <code>always_comb</code> 块，从而 <code>f</code> 也会发生变化。然后 <code>d</code> 也发生变化。由于 <code>d</code> 是 <code>always_comb</code> 块的输入之一，导致 Verilator 认为形成了 <code>f</code> → <code>d</code> → <code>f</code> 的逻辑环。但是明显 <code>d</code> 的变化不会导致 <code>f</code> 变化。消除这个 <code>UNOPT</code> 的一种方法就是将 <code>always_comb</code> 一分为二：</p>
+<pre><code class="language-verilog">    always_comb begin
+        // ...
+        f = ~a;
+        // ...
+    end
+    always_comb begin
+        // ...
+        c = d ^ f;
+        // ...
+    end
+</code></pre>
+<p>事实上这种拆分无论是对 Verilator 还是对一般的事件驱动的仿真器都是有好处的，因为拆分后可以减少不必要的迭代，从而优化仿真性能。从这个例子中可以总结出一个经验：<code>always</code> 块应该避免给变量赋值后使用这个变量，也就是避免变量同时出现在 <code>always</code> 块的输入和输出中。同时我们也鼓励大家不要写过长的 <code>always</code> 块，而是尽量将其分为若干个独立的 <code>always</code> 块。</p>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="使用-gtkwave-1"><a class="header" href="#使用-gtkwave-1">使用 GTKWave</a></h1>
 <p>打开样例波形图文件：</p>
@@ -1015,7 +1116,11 @@ page_divisor 4
 <p>Vivado 的工程文件（.xpr）通常放在名为 <code>run_vivado</code> 的文件夹下，例如 <code>vivado/test1/soc_axi_func/run_vivado/mycpu_prj1/mycpu.xpr</code>。可以使用 Vivado 直接打开这个工程文件。如果某个测试需要建立多个工程，请注意复制对应的文件夹后再用 Vivado 打开。</p>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="常见问题"><a class="header" href="#常见问题">常见问题</a></h1>
-<p>关于实验内容的答疑，请前往 <a href="https://fducslg.slack.com">FDUCSLG</a> 的 Slack 平台的 #sig-architecture 频道提问。如果你不想公开提问，可以单独询问助教。本页面不定期更新。</p>
+<p>关于实验内容的答疑，请前往 <a href="https://fducslg.slack.com">FDUCSLG</a> 的 Slack 平台的 #sig-architecture 频道提问。如果你不想公开提问，可以单独询问助教。</p>
+<p>本页面不定期更新。</p>
+<h3 id="为什么-verilator-会报告-unoptunoptflat"><a class="header" href="#为什么-verilator-会报告-unoptunoptflat">为什么 Verilator 会报告 <code>UNOPT</code>/<code>UNOPTFLAT</code>？</a></h3>
+<p>这是因为你的代码中可能存在组合逻辑环。请根据 Verilator 输出的文件位置检查是否真的有逻辑环。</p>
+<p>如果你认为并不存在逻辑环，并且 Vivado 布线时也没有报告逻辑环，有可能是遇到了 <a href="misc/unopt.html">“组合逻辑环与 <code>UNOPT</code>”</a> 中提到的情形。</p>
 <h3 id="为什么仿真一直在跑却没有显示-functional-test-point-pass"><a class="header" href="#为什么仿真一直在跑却没有显示-functional-test-point-pass">为什么仿真一直在跑却没有显示 “Functional Test Point PASS!!!”？</a></h3>
 <p>有时候你甚至会发现第一个点已经显示通过了，但是第二个点的 “PASS!!!” 一直没有出现。这种情况可能是你的流水线 writeback 阶段没有写入寄存器，导致 trace 没有进行比对，因此也没有发现你 CPU 的错误。</p>
 <p>龙芯的测试是在信号 <code>debug_wb_rf_wen</code> 不为零的时钟上升沿进行比对。你在仿真的时候可以注意下波形图中 <code>debug_wb_rf_wen</code> 这一行是否出现了 <code>4'hf</code>，如果出现了则说明 trace 比对正在进行。如果全程为 <code>0</code> 则说明你的流水线没有写入寄存器，或者是 <code>debug_*</code> 信号连接出错。</p>

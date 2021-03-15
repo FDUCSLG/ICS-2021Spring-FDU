@@ -623,7 +623,22 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <p><img src="arch-lab/../asset/lab1/datapath/jal.svg" alt="jal" /></p>
 <p>当 CPU 需要支持新的指令时，根据该指令的功能，设计数据通路，并视具体情形添加或复用硬件与控制信号。添加硬件，会增加 CPU 的电路面积；复用原有硬件，会增加复用器的电路复杂性，增加电路延迟。</p>
 <p>添加新硬件时，需考虑将该硬件放在流水线的哪一阶段，避免影响该流水段的逻辑延迟。</p>
-<h2 id="14-发布包"><a class="header" href="#14-发布包">1.4 发布包</a></h2>
+<h2 id="14-流水线性能评估"><a class="header" href="#14-流水线性能评估">1.4 *流水线性能评估</a></h2>
+<p>在本次实验中，我们实现了五级流水线 CPU 。相对于单周期 CPU ，流水线 CPU 牺牲了一些 IPC （流水线的数据冲突会阻塞流水线），换取频率的大幅提升。这一节主要分析流水线的性能。</p>
+<h3 id="141-高延迟的逻辑部件"><a class="header" href="#141-高延迟的逻辑部件">1.4.1 高延迟的逻辑部件</a></h3>
+<p>在本实验设计的 CPU 中，有以下几个高延迟的逻辑部件：</p>
+<p><strong>寄存器文件</strong>。它的读逻辑和写逻辑都十分复杂。读过程的每一位是一个32选1的复用器，也就是37个变量的组合逻辑方程；读数据为32位，相当于上述逻辑复制32份。1位寄存器的写逻辑比较简单，但32位的写入需要将该逻辑复制32次，电路就变得复杂了。</p>
+<p><strong>算术逻辑单元 ALU</strong> 。本实验需要实现的算数操作中，加法、比较运算的电路是级联，移位运算的电路是复用器；整个 ALU 的输出还需要一次复用。</p>
+<p><strong>内存</strong>。本实验中不需要实现内存，但它在 CPU 的外部，数据传进来有很高的接线延迟。</p>
+<h3 id="142-用转发来减少阻塞"><a class="header" href="#142-用转发来减少阻塞">1.4.2 用转发来减少阻塞</a></h3>
+<p>在流水线中，写后读冲突会导致流水线阻塞。</p>
+<p>如果需要的寄存器数据，在流水线的其他阶段已经计算好了，可以进行转发。</p>
+<p>然而，转发会导致该阶段延迟的增加。下图的转发会大幅度增加 E 阶段的延迟：</p>
+<p><img src="arch-lab/../asset/lab1/forward.svg" alt="forward" /></p>
+<h3 id="143-pipeline-as-mechanism"><a class="header" href="#143-pipeline-as-mechanism">1.4.3 Pipeline as Mechanism</a></h3>
+<p>单周期 CPU 中，时钟频率是不可控的：为了支持新的指令，需要向数据通路中添加新的逻辑部件，导致延迟将越来越高。</p>
+<p>流水线是拆分数据通路的一种<strong>机制</strong>，它将各个高延迟的逻辑部件划分在不同的流水段，使得电路延迟变得<strong>可控</strong>。五级流水线是一种<strong>策略</strong>。根据现有的数据通路和频率要求，设计更深或更浅的流水线。</p>
+<h2 id="15-发布包"><a class="header" href="#15-发布包">1.5 发布包</a></h2>
 <p>用 Vivado 2019.2 打开 <code>vivado/test1_naive/soc_sram_func/run_vivado/mycpu_prj1/mycpu.xpr</code>，添加源文件后，即可开始仿真。</p>
 <p>Tips：第一次仿真前，先点击 “IP Sources”，选中所有 IP 核源文件，右键，点击 “Generate Output Products”。几秒钟后，跳出 “OK”，然后再点仿真。</p>
 <p><code>vivado/test1_naive/soft/obj/test.s</code> 是测试的反汇编文件，有 PC、机器码、汇编码的对应。<code>soft</code> 目录下的其他文件里，可以找到测试的 C 代码。</p>
@@ -636,30 +651,30 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <p>你可以在该目录下随意添加源文件。在 Vivado 中执行 <code>add_sources.tcl</code> 后，它们都会添加到项目里。</p>
 <p><code>source/include/</code> 里有一些头文件。</p>
 <p><strong>本次实验没有暂时没有使用 Verilator 进行仿真</strong>。我们会从实验 2 开始引入 Verilator，所以你需要确保你的在这次实验中编写的代码能够通过 Verilator 的编译。如果在使用 Verilator 中遇到了问题，请先阅读 <a href="arch-lab/../misc/verilate.html">Verilator 仿真</a>寻找解决方案。</p>
-<h2 id="15-作业与提交"><a class="header" href="#15-作业与提交">1.5 作业与提交</a></h2>
+<h2 id="16-作业与提交"><a class="header" href="#16-作业与提交">1.6 作业与提交</a></h2>
 <p>在 <code>source/mycpu/</code> 里添加你的代码，实现五级流水线 MIPS CPU。</p>
 <p>本实验需要实现的指令：<code>lui</code>、<code>addu</code>、<code>addiu</code>、<code>beq</code>、<code>bne</code>、<code>lw</code>、<code>or</code>、<code>slt</code>、<code>slti</code>、<code>sltiu</code>、<code>sll</code>、<code>sw</code>、<code>j</code>、<code>jal</code>、<code>jr</code>、<del><code>addi</code></del>、<code>subu</code>、<code>sltu</code>、<code>and</code>、<code>andi</code>、<code>nor</code>、<code>ori</code>、<code>xor</code>、<code>xori</code>、<code>sra</code>、<code>srl</code>、<del><code>jalr</code></del>。</p>
 <p><strong>PC的复位值为 <code>32'hbfc0_0000</code></strong>。</p>
-<h3 id="151-通过标准"><a class="header" href="#151-通过标准">1.5.1 通过标准</a></h3>
+<h3 id="161-通过标准"><a class="header" href="#161-通过标准">1.6.1 通过标准</a></h3>
 <ol>
 <li>打开原有 <code>mycpu.xpr</code>，用 <code>source/mycpu/add_sources.tcl</code> 添加源文件，上板显示两个绿灯。</li>
 <li>在仓库根目录打开终端，运行 <code>make verilate TARGET=mycpu/VTop</code>，确认 Verilator 能够编译你的 CPU 代码，并且没有报告任何错误和警告。</li>
 </ol>
-<h3 id="152-实验报告要求"><a class="header" href="#152-实验报告要求">1.5.2 实验报告要求</a></h3>
+<h3 id="162-实验报告要求"><a class="header" href="#162-实验报告要求">1.6.2 实验报告要求</a></h3>
 <ul>
 <li>格式：PDF</li>
 <li>内容：按本文档 1.2 节的思路写即可。写好姓名学号。</li>
 </ul>
-<h3 id="153-提交文件格式"><a class="header" href="#153-提交文件格式">1.5.3 提交文件格式</a></h3>
+<h3 id="163-提交文件格式"><a class="header" href="#163-提交文件格式">1.6.3 提交文件格式</a></h3>
 <pre><code class="language-plaintext">18307130024/
 ├── report/（报告所在目录）
 └── source/（源文件所在目录）
 </code></pre>
 <p>用 <code>zip -r 18307130024.zip 18307130024/</code> 打包。用 <code>unzip 18307130024.zip</code> 检查，应在当前目录下有学号目录。</p>
-<h3 id="154-评分"><a class="header" href="#154-评分">1.5.4 评分</a></h3>
+<h3 id="164-评分"><a class="header" href="#164-评分">1.6.4 评分</a></h3>
 <p>代码 80%，报告 20%。</p>
 <p><strong>Deadline：2020 年 3 月 21 日 23:59:59</strong></p>
-<h2 id="16-思考"><a class="header" href="#16-思考">1.6 思考</a></h2>
+<h2 id="17-思考"><a class="header" href="#17-思考">1.7 *思考</a></h2>
 <ol>
 <li>流水线寄存器的 flush 信号，需要让所有信号都清零吗？</li>
 <li>转发的成本是什么？有哪些限制？（板子上的组合逻辑基本部件为 LUT6 ，6 输入 1 输出，可实现 6 输入的任何给定逻辑式）</li>

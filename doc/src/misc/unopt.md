@@ -4,7 +4,7 @@
 
 ![](../asset/misc/sr-latch-warning.png)
 
-因为组合逻辑环容易导致电路震荡，从而造成 “仿真通过但上板不过” 的情况。因此，**请务必消除 Vivado 报告的组合逻辑环**。
+因为组合逻辑环容易导致电路振荡，从而造成 “仿真通过但上板不过” 的情况。因此，**请务必消除 Vivado 报告的组合逻辑环**。
 
 Verilator 对于组合逻辑环通常报告 `UNOPT` 或者 `UNOPTFLAT` 警告，字面意思是不好优化，因为组合逻辑环需要多次迭代后才能得到最终的结果（收敛）。这两种警告的区别在于，一个是 Verilator 生成网表（flatten netlist）前报告的，一个是生成网表后报告的，因此这两种警告对我们而言没有区别。下文中两种警告都用 `UNOPT` 指代。
 
@@ -87,7 +87,7 @@ module PartialSum (
 
 ## 例子：`AlwaysComb`
 
-下面这个例子是从同学们实验 1 的代码中发现的。我们对原始代码做了简化，大致的代码结构如下：
+下面这个例子来自某位同学实验 1 的代码。我们对原始代码做了简化，大致的代码结构如下：
 
 ```verilog
 module AlwaysComb (
@@ -133,3 +133,60 @@ endmodule
 ```
 
 事实上这种拆分无论是对 Verilator 还是对一般的事件驱动的仿真器都是有好处的，因为拆分后可以减少不必要的迭代，从而优化仿真性能。从这个例子中可以总结出一个经验：`always` 块应该避免给变量赋值后使用这个变量，也就是避免变量同时出现在 `always` 块的输入和输出中。同时我们也鼓励大家不要写过长的 `always` 块，而是尽量将其分为若干个独立的 `always` 块。
+
+## 例子：`Box`
+
+下面这段代码中有一个真的组合逻辑环，和一个假的组合逻辑环。请尝试用 `verilator --lint-only [文件名]` 找出这两个逻辑环。
+
+```verilog
+typedef logic [31:0] i32;
+typedef struct packed {
+    logic valid, write_en;
+    i32   addr, data;
+} req_t;
+typedef struct packed {
+    logic data_ok;
+    i32   data;
+} resp_t;
+
+module Box (
+    input  logic  clk, resetn,
+    input  req_t  req,
+    output resp_t resp
+);
+    i32 stored;
+
+    assign resp.data_ok = req.valid && req.addr == 32'h19260817;
+    always_comb begin
+        if (resp.data_ok)
+            resp.data = stored;
+        else
+            resp.data = '0;
+    end
+
+    always_ff @(posedge clk)
+    if (resetn) begin
+        if (req.write_en)
+            stored <= resp.data_ok ? req.data : stored;
+    end else
+        stored <= 32'hdeadbeef;
+endmodule
+
+module Fetch (
+    input  logic  flush,
+    output req_t  req,
+    input  resp_t resp
+);
+    assign {req.valid, req.addr} = {!flush, 32'h19260817};
+endmodule
+
+module Core(input logic clk, resetn);
+    logic  flush /* verilator public_flat_rd */;
+    req_t  req   /* verilator public_flat_rd */;
+    resp_t resp  /* verilator public_flat_rd */;
+    assign flush = resp.data_ok && resp.data == '0;
+
+    Fetch trump(.*);
+    Box biden(.*);
+endmodule
+```

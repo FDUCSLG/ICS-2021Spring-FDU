@@ -284,24 +284,24 @@ Tips：
 ```verilog
 module mycpu_top (
     input logic clk,
-    input logic resetn,  //low active
-    input logic[5:0] ext_int,  //interrupt,high active
+    input logic resetn,  // low active
+    input logic[5:0] ext_int,  // interrupt, high active
 
     output logic inst_sram_en,              // 指令内存总使能
-    output logic[3:0] inst_sram_wen,        // 字节写使能，本实验中为全0
+    output logic[3:0] inst_sram_wen,        // 字节写使能，本实验中为全 0
     output logic[31:0] inst_sram_addr,      // 地址
     output logic[31:0] inst_sram_wdata,     // 写数据
     input logic[31:0] inst_sram_rdata,      // 读数据
 
     output logic data_sram_en,              // 数据内存总使能
-    output logic[3:0] data_sram_wen,        // 字节写使能，本实验中为全0或全1
+    output logic[3:0] data_sram_wen,        // 字节写使能，本实验中为全 0 或全 1
     output logic[31:0] data_sram_addr,      // 地址
     output logic[31:0] data_sram_wdata,     // 写数据
     input logic[31:0] data_sram_rdata,      // 读数据
 
     //debug
-    output logic[31:0] debug_wb_pc,         // w阶段pc
-    output logic[3:0] debug_wb_rf_wen,      // 写使能，一般为全0或全1
+    output logic[31:0] debug_wb_pc,         // W 阶段 PC
+    output logic[3:0] debug_wb_rf_wen,      // 写使能，一般为全 0 或全 1
     output logic[4:0] debug_wb_rf_wnum,     // 写入的寄存器
     output logic[31:0] debug_wb_rf_wdata    // 写回的数据
 );

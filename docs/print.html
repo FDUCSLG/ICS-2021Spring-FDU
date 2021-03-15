@@ -919,7 +919,7 @@ endmodule
 <h1 id="组合逻辑环与-unopt"><a class="header" href="#组合逻辑环与-unopt">组合逻辑环与 <code>UNOPT</code></a></h1>
 <p>上一节中的 <code>SRLatch</code> 是一个典型的组合逻辑环的例子。在 Vivado 中，<code>SRLatch</code> 可以综合和布线，但是布线阶段 Vivado 也会警告代码中的组合逻辑环：</p>
 <p><img src="misc/../asset/misc/sr-latch-warning.png" alt="" /></p>
-<p>因为组合逻辑环容易导致电路震荡，从而造成 “仿真通过但上板不过” 的情况。因此，<strong>请务必消除 Vivado 报告的组合逻辑环</strong>。</p>
+<p>因为组合逻辑环容易导致电路振荡，从而造成 “仿真通过但上板不过” 的情况。因此，<strong>请务必消除 Vivado 报告的组合逻辑环</strong>。</p>
 <p>Verilator 对于组合逻辑环通常报告 <code>UNOPT</code> 或者 <code>UNOPTFLAT</code> 警告，字面意思是不好优化，因为组合逻辑环需要多次迭代后才能得到最终的结果（收敛）。这两种警告的区别在于，一个是 Verilator 生成网表（flatten netlist）前报告的，一个是生成网表后报告的，因此这两种警告对我们而言没有区别。下文中两种警告都用 <code>UNOPT</code> 指代。</p>
 <p>Verilator 虽然声称忽略这些警告不会影响仿真的正确性，只会影响仿真的性能。但我们的 CPU 中不应该有组合逻辑环。如果有，大概率是有地方写错了，导致仿真的结果和我们的预期不符。根据我们的经验，大家在写流水线的 hazard 部分时比较容易写出组合逻辑环。</p>
 <p>对于 Verilator 报告的 <code>UNOPT</code> 警告，某些情况下不一定是真的组合逻辑环。这是因为，出于仿真性能上的考虑，Verilator 并不是按信号的每一位来单独计算的，通常会把很多信号放一起计算（比如都放在一个 <code>uint32_t</code> 内）。你可以简单地认为 Verilator 是在变量层级生成网表。下面将举几个常见的例子。</p>
@@ -977,7 +977,7 @@ endmodule
     assign b = c;  // 再将 c 整体赋值给 b
 </code></pre>
 <h2 id="例子alwayscomb"><a class="header" href="#例子alwayscomb">例子：<code>AlwaysComb</code></a></h2>
-<p>下面这个例子是从同学们实验 1 的代码中发现的。我们对原始代码做了简化，大致的代码结构如下：</p>
+<p>下面这个例子来自某位同学实验 1 的代码。我们对原始代码做了简化，大致的代码结构如下：</p>
 <pre><code class="language-verilog">module AlwaysComb (
     input  logic a, d,
     output logic c, f
@@ -1015,6 +1015,59 @@ endmodule
     end
 </code></pre>
 <p>事实上这种拆分无论是对 Verilator 还是对一般的事件驱动的仿真器都是有好处的，因为拆分后可以减少不必要的迭代，从而优化仿真性能。从这个例子中可以总结出一个经验：<code>always</code> 块应该避免给变量赋值后使用这个变量，也就是避免变量同时出现在 <code>always</code> 块的输入和输出中。同时我们也鼓励大家不要写过长的 <code>always</code> 块，而是尽量将其分为若干个独立的 <code>always</code> 块。</p>
+<h2 id="例子box"><a class="header" href="#例子box">例子：<code>Box</code></a></h2>
+<p>下面这段代码中有一个真的组合逻辑环，和一个假的组合逻辑环。请尝试用 <code>verilator --lint-only [文件名]</code> 找出这两个逻辑环。</p>
+<pre><code class="language-verilog">typedef logic [31:0] i32;
+typedef struct packed {
+    logic valid, write_en;
+    i32   addr, data;
+} req_t;
+typedef struct packed {
+    logic data_ok;
+    i32   data;
+} resp_t;
+
+module Box (
+    input  logic  clk, resetn,
+    input  req_t  req,
+    output resp_t resp
+);
+    i32 stored;
+
+    assign resp.data_ok = req.valid &amp;&amp; req.addr == 32'h19260817;
+    always_comb begin
+        if (resp.data_ok)
+            resp.data = stored;
+        else
+            resp.data = '0;
+    end
+
+    always_ff @(posedge clk)
+    if (resetn) begin
+        if (req.write_en)
+            stored &lt;= resp.data_ok ? req.data : stored;
+    end else
+        stored &lt;= 32'hdeadbeef;
+endmodule
+
+module Fetch (
+    input  logic  flush,
+    output req_t  req,
+    input  resp_t resp
+);
+    assign {req.valid, req.addr} = {!flush, 32'h19260817};
+endmodule
+
+module Core(input logic clk, resetn);
+    logic  flush /* verilator public_flat_rd */;
+    req_t  req   /* verilator public_flat_rd */;
+    resp_t resp  /* verilator public_flat_rd */;
+    assign flush = resp.data_ok &amp;&amp; resp.data == '0;
+
+    Fetch trump(.*);
+    Box biden(.*);
+endmodule
+</code></pre>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="使用-gtkwave-1"><a class="header" href="#使用-gtkwave-1">使用 GTKWave</a></h1>
 <p>打开样例波形图文件：</p>

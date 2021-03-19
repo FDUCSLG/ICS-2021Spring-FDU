@@ -38,9 +38,10 @@ CXX_WARNINGS = \
 	-Wall -Wextra \
 	-Wno-aligned-new \
 	-Wno-sign-compare \
-	-Wno-unused-const-variable
+	-Wno-unused-const-variable \
+	-Wno-implicit-fallthrough
 
-CXX_LINKS = -lz
+CXX_LINKS = -lz -lpthread
 
 # link to filesystem library to make legacy compilers happy.
 ifeq ($(USE_CLANG), 1)
@@ -58,7 +59,7 @@ CXXFLAGS += \
 	# -DVL_THREADED
 
 ifeq ($(USE_CLANG), 1)
-CXXFLAGS += -stdlib=libc++
+CXXFLAGS += -stdlib=libc++ -Wno-unknown-warning-option
 endif
 
 ifeq ($(VSIM_OPT), 1)
@@ -83,6 +84,37 @@ $(VLIBRARY): $(SV_READY) $(SV_FILES)
 $(VMAIN): $(CXX_LIBS) $(VLIBRARY)
 	$(CXX) $(CXXFLAGS) $^ $(CXX_LINKS) -o $@
 
+# select test file
+# for test1 ~ test4, use both COE file and ref text trace
+# for NSCSCC performance tests, only COE file for mycpu/*, but also std text trace for refcpu/VTop
+
+ifneq ($(TEST),)
+
+TEST_COE_FILE = misc/nscscc/$(TEST).coe
+TEST_REF_FILE = misc/nscscc/$(TEST).txt
+TEST_STD_FILE = misc/std/$(TEST).txt
+
+override VSIM_ARGS += -m $(TEST_COE_FILE)
+
+ifneq ($(wildcard $(TEST_REF_FILE)),)
+override VSIM_ARGS += -r $(TEST_REF_FILE)
+else ifneq ($(wildcard $(TEST_STD_FILE)),)
+
+# only add std trace for RefCPU
+ifeq ($(TARGET), refcpu/VTop)
+override VSIM_ARGS += -r $(TEST_STD_FILE) --force-diff
+endif
+
+else
+override VSIM_ARGS += -r ''
+endif
+
+endif
+
+ifneq ($(FST),)
+override VSIM_ARGS += -f $(FST)
+endif
+
 .PHONY: vbuild vsim vsim-gdb
 
 vbuild: $(VMAIN)
@@ -91,4 +123,5 @@ vsim: $(VMAIN)
 	./$(VMAIN) $(VSIM_ARGS)
 
 vsim-gdb: $(VMAIN)
-	gdb ./$(VMAIN)
+	@echo Command line arguments: $(VSIM_ARGS)
+	@gdb -q ./$(VMAIN)

@@ -38,6 +38,8 @@ endmodule
 
 `split_var` 告诉 Verilator 要把 `block` 拆成多个变量（可能是 `block__DOT__a` 和 `block__DOT__b` 之类的）。这样一来 Verilator 就不会报告 `UNOPT` 了。
 
+> 注意：`/* verilator split_var */` 需要 Verilator 的版本 ≥ 4.030[^split-var-version]。如果你用的是 Ubuntu 20.04，那你有可能在使用 4.028。请按照课程仓库首页的指示安装较新版本的 Verilator。我们在测试的时候会使用较高版本的 Verilator。
+
 ## 例子：`PartialSum`
 
 下面是一个异或前缀和的例子：
@@ -190,3 +192,5 @@ module Core(input logic clk, resetn);
     Box biden(.*);
 endmodule
 ```
+
+[^split-var-version]: 参见 <https://github.com/verilator/verilator/blob/master/Changes#L329-L336>。

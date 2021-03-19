@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.h"
-#include "icbus.h"
+#include "bus.h"
 #include "axi.h"
 
 #include <cstring>
@@ -10,16 +10,26 @@
 #include <memory>
 #include <functional>
 
+using MemoryDump = std::vector<word_t>;
+
 class IMemory {
 public:
     virtual ~IMemory() = default;
 
     virtual void reset() = 0;
+
+    /**
+     * addr is indexed by bytes.
+     * mask is 32 bits, which is different to 4 bit strobe.
+     */
+
     virtual auto load(addr_t addr) -> word_t = 0;
     virtual void store(addr_t addr, word_t data, word_t mask) = 0;
+
+    virtual auto dump(addr_t addr, size_t size = MEMORY_SIZE) -> MemoryDump = 0;
 };
 
-class MemoryRouter : public IMemory {
+class MemoryRouter final : public IMemory {
 public:
     using TranslateFn = std::function<addr_t(addr_t)>;
 
@@ -37,28 +47,38 @@ public:
     auto load(addr_t addr) -> word_t;
     void store(addr_t addr, word_t data, word_t mask);
 
+    auto dump(addr_t addr, size_t size = MEMORY_SIZE) -> MemoryDump;
+
 private:
     std::vector<Entry> entries;
 
     auto search(addr_t addr) -> Entry*;
 };
 
-class BlockMemory : public IMemory {
+class BlockMemory final : public IMemory {
 public:
     BlockMemory(size_t _size, addr_t _offset = 0);
     BlockMemory(const ByteSeq &data, addr_t _offset = 0);
     BlockMemory(size_t _size, const ByteSeq &data, addr_t _offset = 0);
+
+    auto size() const -> size_t;
+    auto offset() const -> addr_t;
+
+    // set the name to show in DEBUG mode
+    void set_name(const char *new_name);
 
     void reset();
     auto load(addr_t addr) -> word_t;
     void store(addr_t addr, word_t data, word_t mask);
 
     void map(addr_t addr, const ByteSeq &data);
+    auto dump(addr_t addr, size_t size = MEMORY_SIZE) -> MemoryDump;
 
 private:
-    size_t size;
-    addr_t offset;
-    std::vector<word_t> mem, saved_mem;
+    size_t _size;
+    addr_t _offset;
+    MemoryDump mem, saved_mem;
+    const char *name;
 };
 
 /**
@@ -75,9 +95,12 @@ public:
      * we should guarantee that there's no combinatorial
      * logic between the request and the response.
      */
-    auto eval_resp() -> CBusRespVType;
-    void eval_req(const ICBus &req);
+    auto eval_resp() -> CBusResp;
+    void eval_req(const CBusReq &req);
     void sync();
+
+    // for model comparing
+    auto dump(addr_t addr, size_t size = MEMORY_SIZE) -> MemoryDump;
 
 private:
     std::shared_ptr<IMemory> mem;

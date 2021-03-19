@@ -13,5 +13,5 @@ module Store (
         `MEM_WAIT(dresp, S_STORE, S_STORE_ADDR_SENT, S_COMMIT);
     end
 
-    logic _unused_ok = &{dresp.data};
+    `UNUSED_OK({dresp.data});
 endmodule

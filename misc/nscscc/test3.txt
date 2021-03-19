@@ -1,0 +1,1 @@
+../../vivado/test3/golden_trace.txt

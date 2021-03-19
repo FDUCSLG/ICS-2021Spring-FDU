@@ -69,6 +69,5 @@ module CoreProxy (
         {ctx, ctx0} <= {2{CONTEXT_RESET}};
     end
 
-    // for Verilator
-    logic _unused_ok = &{ctx0};
+    `UNUSED_OK({ctx0});
 endmodule

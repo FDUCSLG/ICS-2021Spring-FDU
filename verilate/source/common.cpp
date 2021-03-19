@@ -1,5 +1,6 @@
 #include "common.h"
 
+#include <mutex>
 #include <cstdio>
 #include <cassert>
 #include <cstdarg>
@@ -16,7 +17,8 @@ void hook_signal(int sig, handler_t *handler) {
     sigemptyset(&action.sa_mask);
     action.sa_flags = SA_RESTART;
 
-    assert(sigaction(sig, &action, NULL) >= 0);
+    auto result = sigaction(sig, &action, NULL);
+    assert(result >= 0);
 }
 
 /*
@@ -141,12 +143,11 @@ auto parse_memory_file(const std::string &path) -> ByteSeq {
  */
 
 static struct {
+    std::mutex lock;
     bool debug_enabled;
     bool log_enabled;
     bool status_enabled;
     bool in_status_line;
-    int status_count;
-    int status_count_max;
     std::string char_buffer;
 } _ctx;
 
@@ -170,12 +171,8 @@ void enable_status_line(bool enable) {
     _ctx.status_enabled = enable;
 }
 
-void set_status_countdown(int countdown) {
-    assert(countdown >= 0);
-    _ctx.status_count_max = countdown;
-}
-
 #define VPRINT(fp) { \
+    std::lock_guard<std::mutex> guard(_ctx.lock); \
     check_status_line(); \
     va_list args; \
     va_start(args, message); \
@@ -204,6 +201,8 @@ void notify(const char *message, ...) {
 }
 
 void notify_char(char c) {
+    std::lock_guard<std::mutex> guard(_ctx.lock);
+
     if (_ctx.status_enabled) {
         auto &buf = _ctx.char_buffer;
         buf.push_back(c);
@@ -219,13 +218,9 @@ void notify_char(char c) {
 }
 
 void status_line(const char *message, ...) {
-    if (_ctx.status_count > 0) {
-        _ctx.status_count--;
-        return;
-    } else
-        _ctx.status_count = _ctx.status_count_max;
-
     if (_ctx.status_enabled) {
+        std::lock_guard<std::mutex> guard(_ctx.lock);
+
         va_list args;
         va_start(args, message);
 
@@ -242,4 +237,53 @@ void status_line(const char *message, ...) {
 void log_separator() {
     fputs("\n", stdout);
     fputs("\n", stderr);
+}
+
+SimpleTimer::SimpleTimer() {
+    t_start = clock::now();
+}
+
+SimpleTimer::~SimpleTimer() {
+    t_end = clock::now();
+    auto span = std::chrono::duration<double>(t_end - t_start).count();
+
+    bool use_mhz = false;
+    auto rate = _cycles / span / 1e3;
+    if (rate >= 1e3 - 1) {
+        use_mhz = true;
+        rate /= 1e3;
+    }
+
+    notify(BLUE "(info)" RESET " testbench finished in %d cycles (%.3lf %s).\n",
+        _cycles, rate, use_mhz ? "MHz" : "KHz");
+
+}
+
+void SimpleTimer::update(uint64_t cycles) {
+    _cycles = cycles;
+}
+
+StatusReporter::StatusReporter(uint64_t interval_in_ms, const WorkerFn &fn)
+    : stopped(false),
+      flag(new bool(false)) {
+    auto ptr = flag;
+    worker = std::thread([interval_in_ms, ptr, fn] {
+        while (!(*ptr)) {
+            fn();
+            std::this_thread::sleep_for(std::chrono::milliseconds(interval_in_ms));
+        }
+
+        delete ptr;
+    });
+    worker.detach();
+}
+
+StatusReporter::~StatusReporter() {
+    if (!stopped)
+        stop();
+}
+
+void StatusReporter::stop() {
+    stopped = true;
+    *flag = true;
 }

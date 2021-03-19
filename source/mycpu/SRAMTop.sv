@@ -44,5 +44,5 @@ module SRAMTop(
     assign data_sram_wdata = dsreq.wdata;
     assign dsresp.rdata    = data_sram_rdata;
 
-    logic _unused_ok = &{ext_int};
+    `UNUSED_OK({ext_int});
 endmodule

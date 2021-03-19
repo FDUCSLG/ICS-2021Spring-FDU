@@ -63,5 +63,5 @@ module CBusArbiter #(
         {busy, index, saved_req} <= '0;
     end
 
-    logic _unused_ok = &{saved_req};
+    `UNUSED_OK({saved_req});
 endmodule

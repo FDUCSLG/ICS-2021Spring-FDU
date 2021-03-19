@@ -14,5 +14,5 @@ module LoadAddrSent (
         out.state = dresp.data_ok ? S_LOADED : S_LOAD_ADDR_SENT;
     end
 
-    logic _unused_ok = &{dresp.addr_ok};
+    `UNUSED_OK({dresp.addr_ok});
 endmodule

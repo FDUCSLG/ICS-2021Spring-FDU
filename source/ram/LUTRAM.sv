@@ -68,7 +68,7 @@ if (BACKEND == "behavioral") begin: behavioral
         end
     end
 
-    logic _unused_ok = &{NUM_BITS};
+    `UNUSED_OK({NUM_BITS});
 
 end else begin: xilinx_xpm
 
@@ -111,7 +111,7 @@ end else begin: xilinx_xpm
     );
     // End of xpm_memory_spram_inst instantiation
 `else
-    logic _unused_ok = &{clk, addr, strobe, wdata, rdata};
+    `UNUSED_OK({clk, addr, strobe, wdata, rdata});
 `endif
 
 end

@@ -1,8 +1,8 @@
 # Verilator 仿真
 
-在本学期的实验中，除了 Vivado 外，我们会引入 [Verilator](https://www.veripool.org/wiki/verilator) 来进行仿真。Verilator 是一个支持 Verilog/SystemVerilog 的周期精确（cycle-accurate）开源仿真器。Verilator 将用 Verilog/SystemVerilog 的 RTL 级描述的模块（module）综合为一个 C++ 模型。这个 C++ 模型一般称为 verilated model，在本学期的实验中是一个叫做 `VModel` 的 C++ class。然后再通过编写 C++ 代码来提供模型的输入，以及检查模型的输出。在开源领域，特别是与 RISC-V 相关的开源芯片项目，普遍使用 Verilator 进行整个 CPU 的仿真，例如东京大学的 [RSD](https://github.com/rsd-devel/rsd)。
+在本学期的实验中，除了 Vivado 外，我们会引入 [Verilator](https://www.veripool.org/wiki/verilator) 来进行仿真。Verilator 是一个支持 Verilog/SystemVerilog 的周期精确（cycle-accurate）开源仿真器。Verilator 将用 Verilog/SystemVerilog 的 RTL 级描述的模块（module）综合为一个 C++ 模型。这个 C++ 模型一般称为 verilated model，在本学期的实验中是一个叫做 `VModel` 的 C++ class。然后再通过编写 C++ 代码来提供模型的输入，以及检查模型的输出。在开源领域，特别是与 RISC-V 相关的开源芯片项目，普遍使用 Verilator 进行整个 CPU 的仿真，例如中国科学院大学的 [NutShell](https://github.com/OSCPU/NutShell) 和东京大学的 [RSD](https://github.com/rsd-devel/rsd)。
 
-使用 Verilator 进行仿真有两个优点。首先，仿真速度一般比 Vivado 更快。以龙芯杯性能测试中的 CoreMark 为例，在 Vivado 上仿真一次通常需要十多分钟，而在 Verilator 上只用一分钟。如果不进行波形图的记录，最快只需要 3 秒就可以完成仿真。其次，使用 C++ 编写测试相比使用 SystemVeriog 而言更具灵活性，例如我们可以很方便的在 C++ 中模拟随机访存的效果，或者是将 VGA 模块的输出可视化。
+使用 Verilator 进行仿真有两个优点。首先，仿真速度一般比 Vivado 更快。以龙芯杯性能测试中的 CoreMark 为例，在 Vivado 上仿真一次通常需要十多分钟，而在 Verilator 上只用一分钟。如果不进行波形图的记录，最快只需要 3 秒就可以完成仿真。其次，使用 C++ 编写测试相比使用 SystemVeriog 而言更具灵活性，例如我们可以很方便的在 C++ 中模拟随机访存的效果，或者是借助外部库 SDL2 将 VGA 模块的输出可视化。
 
 Verilator 目前依然有许多不足之处。首先 Verilator 对 SystemVerilog 的语言支持还非常不完整，比如 unpacked 结构体是不支持的。此外 `interface`、`package` 这些关键字虽然支持，但是在功能上还不够完善。为了避免你的 SystemVerilog 代码不能通过 Verilator 的综合和不正确的仿真行为，请**尽量避免**以下事项：
 

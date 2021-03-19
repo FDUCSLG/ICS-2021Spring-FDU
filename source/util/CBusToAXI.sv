@@ -159,9 +159,9 @@ module CBusToAXI(
         in_issue <= 0;
     end
 
-    logic _unused_ok = &{
+    `UNUSED_OK({
         saved_req.valid, saved_req.is_write,
         saved_req.data, saved_req.strobe,
         rid, rresp, bid, bresp
-    };
+    });
 endmodule

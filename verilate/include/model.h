@@ -42,12 +42,14 @@ public:
     bool force_diff;
     float p_disable;
 
+    void install_soc(const std::shared_ptr<BlockMemory> &mem);
     void install_memory(const std::shared_ptr<BlockMemory> &mem);
     void remove_memory();
 
     // start/stop: output to some file
     // open/close: input to program
     void start_fst_trace(const std::string &path);
+    void enable_fst_trace(bool enable = true);
     void stop_fst_trace();
     void start_text_trace(const std::string &path);
     void stop_text_trace();
@@ -77,6 +79,7 @@ protected:
 
 private:
     bool _memory_installed;
+    bool _fst_enabled;
     size_t _fst_count;
     int _current_num;
 

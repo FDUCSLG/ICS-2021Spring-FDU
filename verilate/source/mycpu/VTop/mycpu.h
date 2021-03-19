@@ -1,9 +1,11 @@
 #pragma once
 
 #include "model.h"
-#include "cbus.h"
+#include "bus.h"
 
-class MyCPU : public ModelBase {
+#include "defs.h"
+
+class MyCPU final : public ModelBase {
 public:
     MyCPU() :
         current_cycle(0),
@@ -20,13 +22,11 @@ private:
     auto get_oreq() const -> CBusWrapper {
         return CBusWrapper(VTop, oreq);
     }
-    void set_oresp(const CBusRespVType &resp) {
-        oresp = resp;
-    }
 
     auto get_writeback_pc() const -> addr_t;
     auto get_writeback_id() const -> int;
     auto get_writeback_value() const -> word_t;
+    auto get_writeback_wen() const -> word_t;
 
     void print_status();
     void print_writeback();

@@ -14,5 +14,5 @@ module DCache (
 
     // remove following lines when you start
     assign {dresp, creq} = '0;
-    logic _unused_ok = &{clk, resetn, dreq, cresp};
+    `UNUSED_OK({clk, resetn, dreq, cresp});
 endmodule

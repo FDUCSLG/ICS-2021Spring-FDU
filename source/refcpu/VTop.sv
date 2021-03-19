@@ -11,7 +11,7 @@ module VTop #(
 
     input i6 ext_int
 );
-    `include "cbus_decl"
+    `include "bus_decl"
 
     `STRUCT_ACCESSOR(context_t, state, cpu_state_t);
     `STRUCT_ACCESSOR(context_t, pc, addr_t);

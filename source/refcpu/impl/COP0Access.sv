@@ -68,5 +68,5 @@ module COP0Access (
         endcase
     end
 
-    logic _unused_ok = &{instr};
+    `UNUSED_OK({instr});
 endmodule

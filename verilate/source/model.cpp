@@ -9,7 +9,7 @@ ModelBase::~ModelBase() {
         close_text_diff();
 }
 
-void ModelBase::install_memory(const std::shared_ptr<BlockMemory> &mem) {
+void ModelBase::install_soc(const std::shared_ptr<BlockMemory> &mem) {
     assert(!_memory_installed);
 
     con = std::make_shared<Confreg>();
@@ -24,11 +24,23 @@ void ModelBase::install_memory(const std::shared_ptr<BlockMemory> &mem) {
     _memory_installed = true;
 }
 
+void ModelBase::install_memory(const std::shared_ptr<BlockMemory> &mem) {
+    assert(!_memory_installed);
+
+    dev = std::make_shared<CBusDevice>(mem, p_disable);
+
+    _memory_installed = true;
+}
+
 void ModelBase::remove_memory() {
     assert(_memory_installed);
     dev = nullptr;
     con = nullptr;
     _memory_installed = false;
+}
+
+void ModelBase::enable_fst_trace(bool enable) {
+    _fst_enabled = enable;
 }
 
 void ModelBase::start_fst_trace(const std::string &path) {
@@ -40,6 +52,7 @@ void ModelBase::start_fst_trace(const std::string &path) {
     _fst_tfp->open(path.data());
     assert(_fst_tfp->isOpen());
 
+    enable_fst_trace();
     fst_dump(+0);
 }
 
@@ -47,6 +60,8 @@ void ModelBase::stop_fst_trace() {
     if (_fst_avail()) {
         notify("FST trace: stop @%zu\n", fst_time());
         eval();
+
+        enable_fst_trace();
         fst_dump(+FST_TRACE_TIME_SCALE);
 
         _fst_tfp->flush();
@@ -60,12 +75,13 @@ auto ModelBase::fst_time() -> size_t {
 }
 
 void ModelBase::fst_advance(size_t incr) {
-    _fst_count += incr;
+    if (_fst_enabled)
+        _fst_count += incr;
 }
 
 void ModelBase::fst_dump(size_t offset) {
-    if (_fst_avail())
-        _fst_tfp->dump(fst_time() + offset);
+    if (_fst_enabled && _fst_avail())
+        _fst_tfp->dump(static_cast<vluint64_t>(fst_time() + offset));
 }
 
 void ModelBase::start_text_trace(const std::string &path) {

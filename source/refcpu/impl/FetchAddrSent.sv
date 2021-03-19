@@ -17,5 +17,5 @@ module FetchAddrSent (
         out.state = iresp.data_ok ? S_DECODE : S_FETCH_ADDR_SENT;
     end
 
-    logic _unused_ok = &{iresp.addr_ok};
+    `UNUSED_OK({iresp.addr_ok});
 endmodule

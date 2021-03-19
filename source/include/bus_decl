@@ -1,0 +1,116 @@
+/**
+ * please include this file directly inside module VTop/VCacheTop etc.
+ * to export struct member accessors of cbus_req_t. for example,
+ *
+ * ```
+ * module VTop;
+ *     `include "bus_decl"
+ *     // ...
+ * endmodule
+ * ```
+ */
+
+// `include "common.svh"
+// `include "access.svh"
+
+`ifdef STRUCT_ACCESSOR
+
+`STRUCT_ACCESSOR(cbus_req_t, valid, logic);
+`STRUCT_ACCESSOR(cbus_req_t, is_write, logic);
+`STRUCT_ACCESSOR(cbus_req_t, size, msize_t);
+`STRUCT_ACCESSOR(cbus_req_t, addr, addr_t);
+`STRUCT_ACCESSOR(cbus_req_t, strobe, strobe_t);
+`STRUCT_ACCESSOR(cbus_req_t, data, word_t);
+`STRUCT_ACCESSOR(cbus_req_t, len, mlen_t);
+
+`STRUCT_ACCESSOR(cbus_resp_t, ready, logic);
+`STRUCT_ACCESSOR(cbus_resp_t, last, logic);
+`STRUCT_ACCESSOR(cbus_resp_t, data, word_t);
+
+`STRUCT_ACCESSOR(dbus_req_t, valid, logic);
+`STRUCT_ACCESSOR(dbus_req_t, size, msize_t);
+`STRUCT_ACCESSOR(dbus_req_t, addr, addr_t);
+`STRUCT_ACCESSOR(dbus_req_t, strobe, strobe_t);
+`STRUCT_ACCESSOR(dbus_req_t, data, word_t);
+
+`STRUCT_ACCESSOR(dbus_resp_t, addr_ok, logic);
+`STRUCT_ACCESSOR(dbus_resp_t, data_ok, logic);
+`STRUCT_ACCESSOR(dbus_resp_t, data, word_t);
+
+`else
+
+`ifdef VERILATOR
+`error "macro \"STRUCT_ACCESSOR\" is not defined."
+`endif
+
+`endif
+
+/**
+ * helper tasks to issue/clear DBus requests.
+ */
+
+task dbus_update(
+    input logic    valid,
+    input addr_t   addr,
+    input msize_t  size,
+    input strobe_t strobe,
+    input word_t   data,
+
+    output dbus_req_t req
+);
+    /* verilator public */
+    req = dbus_req_t'{
+        valid  : valid,
+        addr   : addr,
+        size   : size,
+        strobe : strobe,
+        data   : data
+    };
+endtask
+
+task dbus_issue_store(
+    input addr_t   addr,
+    input msize_t  size,
+    input strobe_t strobe,
+    input word_t   data,
+
+    output dbus_req_t req
+);
+    /* verilator public */
+    req = dbus_req_t'{
+        valid  : 1'b1,
+        addr   : addr,
+        size   : size,
+        strobe : strobe,
+        data   : data
+    };
+endtask
+
+function i2 dbus_handshake(input dbus_resp_t resp, input i2 mask);
+    /* verilator public */
+    automatic logic _unused_ok = &{1'b0, resp};
+    return {resp.data_ok, resp.addr_ok} & mask;
+endfunction
+
+/* verilator lint_save */
+/* verilator lint_off UNDRIVEN */
+
+task dbus_issue_load(
+    input addr_t  addr,
+    input msize_t size,
+
+    output dbus_req_t req
+);
+    /* verilator public */
+    {req.valid, req.addr, req.size, req.strobe} = {1'b1, addr, size, 4'b0};
+    // req.data left unchanged
+endtask
+
+task dbus_reset_valid(
+    output dbus_req_t req
+);
+    /* verilator public */
+    req.valid = 1'b0;
+endtask
+
+/* verilator lint_restore */

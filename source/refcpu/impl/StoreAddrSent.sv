@@ -13,5 +13,5 @@ module StoreAddrSent (
         out.state = dresp.data_ok ? S_COMMIT : S_STORE_ADDR_SENT;
     end
 
-    logic _unused_ok = &{dresp.addr_ok, dresp.data};
+    `UNUSED_OK({dresp.addr_ok, dresp.data});
 endmodule

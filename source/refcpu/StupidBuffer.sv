@@ -109,6 +109,5 @@ module StupidBuffer (
         {req, offset} <= '0;
     end
 
-    // for Verilator
-    logic _unused_ok = &{req.valid, req.size};
+    `UNUSED_OK({req.valid, req.size});
 endmodule

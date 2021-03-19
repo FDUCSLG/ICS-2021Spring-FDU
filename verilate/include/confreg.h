@@ -8,7 +8,7 @@
  * simulate the "confreg.v" from NSCSCC
  */
 
-class Confreg : public IMemory {
+class Confreg final : public IMemory {
 public:
     static constexpr addr_t ADDR_MASK = 0xffff;
 
@@ -41,6 +41,11 @@ public:
     auto load(addr_t addr) -> word_t;
     void store(addr_t addr, word_t data, word_t mask);
     void sync();
+
+    auto dump(addr_t /*addr*/, size_t /*size*/ = MEMORY_SIZE) -> MemoryDump {
+        // CONFREG does not support memory dump.
+        assert(false);
+    }
 
     auto trace_enabled() const -> bool {
         return ctx0.v_open_trace;

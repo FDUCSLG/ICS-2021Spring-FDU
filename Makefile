@@ -18,6 +18,8 @@ help:
 	@echo ''
 	@echo 'Available parameters:'
 	@echo '  TARGET: e.g. refcpu/VTop, mycpu/VCacheTop.'
+	@echo '  TEST: which test under misc/nscscc to simulate. Default to empty string.'
+	@echo '  FST: where to save FST trace file.'
 	@echo '  USE_CLANG: use LLVM clang and libc++.'
 	@echo '  VSIM_ARGS: pass command line arguments to "vmain".'
 	@echo '  VSIM_OPT: set to 1 to enable compiler optimization. ("-O2 -march=native -flto")'
@@ -31,6 +33,8 @@ clean:
 
 # make arguments
 TARGET ?= refcpu/VTop
+TEST ?=
+FST ?=
 USE_CLANG ?= 0
 VSIM_ARGS ?=
 VSIM_OPT ?= 0
@@ -82,22 +86,23 @@ system-info:
 	-ls /usr/share/verilator/include
 
 DUMP_COMMAND_PREFIX = $(MAKE) --no-print-directory vsim VSIM_ARGS=" --no-status -r '' -m
-DUMP_COMMAND_SUFFIX = " USE_CLANG=1 VSIM_OPT=1 2> /dev/null | sort | uniq | tail -n +3
+DUMP_COMMAND_SUFFIX = " USE_CLANG=1 VSIM_OPT=1 CXX_EXTRA_FLAGS="-DICS_DUMP_INSTRUCTIONS" 2> /dev/null | sort | uniq | tail -n +3
+dump = @echo '=> "$(1)"'; $(DUMP_COMMAND_PREFIX) $(1) $(DUMP_COMMAND_SUFFIX)
 dump-instructions:
 	$(MAKE) clean
 	$(MAKE) vbuild CXX_EXTRA_FLAGS='-DICS_DUMP_INSTRUCTIONS' USE_CLANG=1 VSIM_OPT=1 -j
-	$(DUMP_COMMAND_PREFIX) vivado/test1/soft/func/obj/inst_ram.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) vivado/test2/soft/func/obj/inst_ram.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) vivado/test3/soft/func/obj/inst_ram.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) vivado/test4/soft/func/obj/inst_ram.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/bitcount.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/bubble_sort.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/coremark.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/crc32.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/dhrystone.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/quick_sort.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/select_sort.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/sha.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/stream_copy.coe $(DUMP_COMMAND_SUFFIX)
-	$(DUMP_COMMAND_PREFIX) misc/nscscc/stringsearch.coe $(DUMP_COMMAND_SUFFIX)
+	$(call dump,vivado/test1/soft/func/obj/inst_ram.coe)
+	$(call dump,vivado/test2/soft/func/obj/inst_ram.coe)
+	$(call dump,vivado/test3/soft/func/obj/inst_ram.coe)
+	$(call dump,vivado/test4/soft/func/obj/inst_ram.coe)
+	$(call dump,misc/nscscc/bitcount.coe)
+	$(call dump,misc/nscscc/bubble_sort.coe)
+	$(call dump,misc/nscscc/coremark.coe)
+	$(call dump,misc/nscscc/crc32.coe)
+	$(call dump,misc/nscscc/dhrystone.coe)
+	$(call dump,misc/nscscc/quick_sort.coe)
+	$(call dump,misc/nscscc/select_sort.coe)
+	$(call dump,misc/nscscc/sha.coe)
+	$(call dump,misc/nscscc/stream_copy.coe)
+	$(call dump,misc/nscscc/stringsearch.coe)
 	$(MAKE) clean

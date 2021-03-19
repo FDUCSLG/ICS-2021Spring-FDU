@@ -1,11 +1,14 @@
 #pragma once
 
-#include "common.h"
+#include "bus.h"
 
 #include "VModel__Syms.h"
 
-using VTopType = VModel_VTop;
 using VScope = VModel___024unit;
+using VModelScope = VModel_VTop;
+
+using CBusWrapper = CBusWrapperGen<VModelScope>;
+
 using CPUState = VScope::cpu_state_t;
 using Opcode = VScope::opcode_t;
 using RegisterID = VScope::regid_t;

@@ -17,5 +17,5 @@ module MyArbiter #(
     // remove following lines when you start
     assign iresps = '0;
     assign oreq = '0;
-    logic _unused_ok = &{ireqs, oresp};
+    `UNUSED_OK({ireqs, oresp});
 endmodule

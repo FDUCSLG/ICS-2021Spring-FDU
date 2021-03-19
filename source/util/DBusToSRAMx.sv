@@ -30,5 +30,5 @@ module DBusToSRAMx (
         last_valid <= 0;
     end
 
-    logic _unused_ok = &{dreq.size};
+    `UNUSED_OK({dreq.size});
 endmodule

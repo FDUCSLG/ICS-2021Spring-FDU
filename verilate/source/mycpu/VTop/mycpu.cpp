@@ -1,7 +1,5 @@
 #include "mycpu.h"
 
-#include <chrono>
-
 #include "thirdparty/nameof.hpp"
 
 constexpr int MAX_CYCLE = 100000000;
@@ -28,6 +26,13 @@ auto MyCPU::get_writeback_value() const -> addr_t {
     return 0xdeadbeef;
 }
 
+auto MyCPU::get_writeback_wen() const -> word_t {
+    /**
+     * TODO (Lab2) retrieve writeback wen from verilated model :)
+     */
+    return get_writeback_id() != 0;
+}
+
 void MyCPU::print_status() {
     status_line(
         GREEN "[%d]" RESET " ack=%zu (%d%%), pc=%08x",
@@ -43,8 +48,8 @@ void MyCPU::print_writeback() {
     auto id = get_writeback_id();
     auto value = get_writeback_value();
 
-    if (id != 0) {
-        debug("R[%d] <- %08x\n", id, value);
+    if (get_writeback_wen() != 0) {
+        // debug("R[%d] <- %08x\n", id, value);
         text_dump(con->trace_enabled(), pc, id, value);
     }
 }
@@ -63,7 +68,7 @@ void MyCPU::tick() {
 
     // update response from memory
     clk = 0;
-    oresp = dev->eval_resp();
+    oresp =  (CBusRespVType) dev->eval_resp();
     eval();
     fst_dump(+1);
 
@@ -89,16 +94,17 @@ void MyCPU::tick() {
 }
 
 void MyCPU::run() {
-    using clock = std::chrono::high_resolution_clock;
+    SimpleTimer timer;
 
     reset();
-
-    auto t_run_start = clock::now();
 
     clk = 0;
     resetn = 1;
     eval();
-    print_status();
+
+    auto worker = StatusReporter(100, [this] {
+        print_status();
+    });
 
     for (
         current_cycle = 1;
@@ -110,20 +116,17 @@ void MyCPU::run() {
         current_cycle++
     ) {
         tick();
-        print_status();
     }
 
+    worker.stop();
+    assert(current_cycle <= MAX_CYCLE);
     diff_eof();
     final();
-
-    auto t_run_end = clock::now();
-    auto span = std::chrono::duration<double>(t_run_end - t_run_start).count();
-
-    notify(BLUE "(info)" RESET " testbench finished in %d cycles (%.3lf KHz).\n",
-        current_cycle, current_cycle / span / 1000);
 
     if (get_text_diff().get_error_count() > 0) {
         warn(RED "(warn)" RESET " TextDiff: %zu error(s) suppressed.\n",
             get_text_diff().get_error_count());
     }
+
+    timer.update(current_cycle);
 }

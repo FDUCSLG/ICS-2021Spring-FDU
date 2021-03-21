@@ -1,0 +1,8 @@
+{ signal: [
+  { name: "clk",     wave: "p.P.....p....." },
+  { name: "valid",   wave: "01.....0......" },
+  { name: "addr",    wave: "x345678x......" },
+  { name: "addr_ok", wave: "1......0...1.." },
+  { name: "data_ok", wave: "0..1....0..10." },
+  { name: "data",    wave: "x..34567x..8x." },
+]}

@@ -10,10 +10,13 @@ template <typename TModel>
 class ProgramRunner final {
 public:
     struct {
+        std::string default_memfile = "misc/nscscc/func_test.coe";
+        std::string default_ref_trace = "misc/nscscc/func_test.txt";
+
         std::string fst_trace_path = "" /*"/tmp/trace.fst"*/;
         std::string text_trace_path = "" /*"/tmp/trace.txt"*/;
-        std::string ref_trace_path = "./misc/nscscc/func_test.txt";
-        std::string memfile_path = "./misc/nscscc/func_test.coe";
+        std::string memfile_path = default_memfile;
+        std::string ref_trace_path = "";
         bool status_enable = true;
         bool debug_enable = false;
         float p_disable = 0.0f;
@@ -54,6 +57,8 @@ public:
         app.add_flag("--force-diff,!--no-force-diff", args.force_diff, "Ignore OPEN_TRACE bit from Confreg.");
 
         CLI11_PARSE(app, argc, argv);
+        if (args.memfile_path == args.default_memfile && args.ref_trace_path.empty())
+            args.ref_trace_path = args.default_ref_trace;
 
         enable_logging();
         enable_status_line(args.status_enable);

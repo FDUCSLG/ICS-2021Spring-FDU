@@ -506,6 +506,12 @@ public:
             issue(pending.front());
     }
 
+    void ticks(size_t count) {
+        while (count--) {
+            tick();
+        }
+    }
+
     /**
      * raw load/strore interface
      * we don't recommend you use these functions.

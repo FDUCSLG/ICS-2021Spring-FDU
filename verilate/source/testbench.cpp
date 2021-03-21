@@ -1,10 +1,10 @@
 #include "testbench.h"
 
-static std::vector<ITestbench *> test_list;
+static std::vector<ITestbench *> test_list INIT_PRIORITY(65532);
 static ITestbench *current_test = nullptr;
 static PretestHook pretest_hook INIT_PRIORITY(65533) = [] {};
 static PosttestHook posttest_hook INIT_PRIORITY(65533) = [] {};
-static std::vector<DeferHook> defer_list;
+static std::vector<DeferHook> defer_list INIT_PRIORITY(65532);
 
 auto _testbench_pretest_hook() -> PretestHook & {
     return pretest_hook;

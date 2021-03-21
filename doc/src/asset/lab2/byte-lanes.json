@@ -1,0 +1,14 @@
+{ signal: [
+  { name: "clk",     wave: "p..P...." },
+  { name: "valid",   wave: "0.1....0" },
+  { name: "addr",    wave: "x.2....x", data: "0xbfc01fc2" },
+  { name: "size",    wave: "x.2....x", data: "MSIZE4"},
+  { name: "[31:24]", wave: "x.3456x.", data: "0x22 0x66 0xaa 0xee" },
+  { name: "[23:16]", wave: "x.3456x.", data: "0x11 0x55 0x99 0xdd" },
+  { name: "[15:8]",  wave: "x..456x.", data: "0x44 0x88 0xcc" },
+  { name: "[7:0]",   wave: "x..4567x", data: "0x33 0x77 0xbb 0xff" },
+  { name: "strobe",  wave: "x.22..2x", data: "0xc 0xf 0x1" },
+  { name: "data_ok", wave: "0.1....0" },
+],
+  config: { hscale: 2 }
+}

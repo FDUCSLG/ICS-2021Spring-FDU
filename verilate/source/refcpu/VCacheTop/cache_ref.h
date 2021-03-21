@@ -17,7 +17,7 @@ public:
     void check_memory();
 
 private:
-    word_t buffer[15];
+    word_t buffer[16];
     StupidBuffer *top;
     VModelScope *scope;
     BlockMemory mem;

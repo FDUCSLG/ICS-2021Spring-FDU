@@ -113,6 +113,8 @@ auto randi() -> T {
 #define CLEAR_ALL      "\033[2K"
 #define MOVE_TO_FRONT  "\r"
 
+constexpr size_t LOG_MAX_BUFFER_SIZE = 1024;
+
 void enable_logging(bool enable = true);
 void enable_debugging(bool enable = true);
 void enable_status_line(bool enable = true);

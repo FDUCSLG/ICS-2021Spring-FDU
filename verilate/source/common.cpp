@@ -206,7 +206,7 @@ void notify_char(char c) {
     if (_ctx.status_enabled) {
         auto &buf = _ctx.char_buffer;
         buf.push_back(c);
-        if (buf.back() == '\n') {
+        if (buf.back() == '\n' || buf.size() >= LOG_MAX_BUFFER_SIZE) {
             check_status_line();
             fputs(buf.data(), stderr);
             buf.clear();

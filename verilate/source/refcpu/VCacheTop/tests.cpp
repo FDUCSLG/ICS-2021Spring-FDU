@@ -145,9 +145,7 @@ WITH TRACE /*DEBUG*/ {
 
         dbus->async_storew(0xffffc, 0x2048ffff);
 
-        for (int i = 0; i < 128; i++) {
-            top->tick();
-        }
+        top->ticks(128);
 
         dbus->async_loadw(0xffffc);
         word_t value = dbus->await(128);  // it waits for async_loadw to complete.
@@ -216,9 +214,7 @@ WITH TRACE /*DEBUG*/ {
         p.loadw(0xffffc, &value);
 
         // manually update the pipeline
-        for (int i = 0; i < 128; i++) {
-            p.tick();
-        }
+        p.ticks(128);
 
         assert(value == 0x2048ffff);
     }

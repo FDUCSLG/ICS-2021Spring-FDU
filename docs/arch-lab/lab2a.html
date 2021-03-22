@@ -264,7 +264,8 @@ assign flushW = ~d_data_ok;
     );
 </code></pre>
 <p><code>CBusArbiter</code> 有一个缺点，它需要花费一个时钟周期来确定谁有总线的访问权，无论是有多个请求还是只有一个请求。换句话说，<code>CBusArbiter</code> 会把所有的访存增加至少一个周期的延时。实际上这一个时钟周期可以被优化掉，只是这么做是要付出代价的。因为这种优化需要添加新的组合逻辑，有可能会增加关键路径的延时，导致 CPU 频率降低。</p>
-<p>如果你想优化 <code>CBusArbiter</code>，请在 <code>source/mycpu/MyArbiter.sv</code> 中实现新的仲裁器，然后将 <code>VTop</code> 的 <code>CBusArbiter mux</code> 换成 <code>MyArbiter mux</code>。你可以选择实现优先级仲裁，或者是 round-robin 式仲裁。</p>
+<p>如果你想优化 <code>CBusArbiter</code>，请在 <code>source/mycpu/MyArbiter.sv</code> 中实现新的仲裁器，然后将 <code>VTop</code> 的 <code>CBusArbiter mux</code> 换成 <code>MyArbiter mux</code>。</p>
+<p>另外请注意：<strong><code>CBusArbiter</code> 默认的仲裁策略是 IBus 比 DBus 优先</strong>。如果你想调换优先级，请将上面 <code>CBusArbiter mux</code> 接口中的 <code>icreq</code> 和 <code>dcreq</code> 对换，以及将 <code>icresp</code> 和 <code>dcresp</code> 对换。</p>
 <h3 id="实现新的指令"><a class="header" href="#实现新的指令">实现新的指令</a></h3>
 <p><a href="../misc/instruction.html">“指令列表”</a> 中有一张表，记录了 <code>test1</code> 到 <code>test4</code> 和所有性能测试会用到的指令。请据此确定 <code>test2</code> 需要添加的指令并实现。</p>
 <p><code>test2</code> 中需要额外实现的指令，主要有以下三类：</p>

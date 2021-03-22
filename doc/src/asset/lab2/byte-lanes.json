@@ -1,7 +1,7 @@
 { signal: [
   { name: "clk",     wave: "p..P...." },
   { name: "valid",   wave: "0.1....0" },
-  { name: "addr",    wave: "x.2....x", data: "0xbfc01fc2" },
+  { name: "addr",    wave: "x.34567x", data: "0xbfc01fc2 0xbfc01fc4 0xbfc01fc8 0xbfc01fcc 0xbfc01fd0" },
   { name: "size",    wave: "x.2....x", data: "MSIZE4"},
   { name: "[31:24]", wave: "x.3456x.", data: "0x22 0x66 0xaa 0xee" },
   { name: "[23:16]", wave: "x.3456x.", data: "0x11 0x55 0x99 0xdd" },

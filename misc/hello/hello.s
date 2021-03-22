@@ -1,3 +1,4 @@
+entry:
     b       main
 
 .align 12

@@ -145,7 +145,9 @@ assign flushW = ~d_data_ok;
 
 `CBusArbiter` 有一个缺点，它需要花费一个时钟周期来确定谁有总线的访问权，无论是有多个请求还是只有一个请求。换句话说，`CBusArbiter` 会把所有的访存增加至少一个周期的延时。实际上这一个时钟周期可以被优化掉，只是这么做是要付出代价的。因为这种优化需要添加新的组合逻辑，有可能会增加关键路径的延时，导致 CPU 频率降低。
 
-如果你想优化 `CBusArbiter`，请在 `source/mycpu/MyArbiter.sv` 中实现新的仲裁器，然后将 `VTop` 的 `CBusArbiter mux` 换成 `MyArbiter mux`。你可以选择实现优先级仲裁，或者是 round-robin 式仲裁。
+如果你想优化 `CBusArbiter`，请在 `source/mycpu/MyArbiter.sv` 中实现新的仲裁器，然后将 `VTop` 的 `CBusArbiter mux` 换成 `MyArbiter mux`。
+
+另外请注意：**`CBusArbiter` 默认的仲裁策略是 IBus 比 DBus 优先**。如果你想调换优先级，请将上面 `CBusArbiter mux` 接口中的 `icreq` 和 `dcreq` 对换，以及将 `icresp` 和 `dcresp` 对换。
 
 ### 实现新的指令
 

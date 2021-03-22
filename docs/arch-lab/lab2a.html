@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>实验 2 - Introduction to NSCSCC</title>
+        <title>实验 2a - Introduction to NSCSCC</title>
         
         
 
@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item expanded "><a href="../arch-lab/lab2.html" class="active">实验 2</a></li><li class="chapter-item "><a href="../arch-lab/lab3.html">实验 3</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="../arch-lab/lab5.html">实验 5</a></li><li class="chapter-item "><a href="../arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="../sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="../misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item expanded "><a href="../arch-lab/lab2a.html" class="active">实验 2a</a></li><li class="chapter-item "><a href="../arch-lab/lab2b.html">实验 2b</a></li><li class="chapter-item "><a href="../arch-lab/lab3a.html">实验 3a</a></li><li class="chapter-item "><a href="../arch-lab/lab3b.html">实验 3b</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li><li class="chapter-item "><a href="../arch-lab/project.html">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="../sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="../misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -166,7 +166,7 @@
                 <div id="content" class="content">
                     <main>
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<h1 id="实验-2总线仲裁与延时"><a class="header" href="#实验-2总线仲裁与延时">实验 2：总线仲裁与延时</a></h1>
+<h1 id="实验-2a总线仲裁与延时"><a class="header" href="#实验-2a总线仲裁与延时">实验 2a：总线仲裁与延时</a></h1>
 <h2 id="仲裁"><a class="header" href="#仲裁">仲裁</a></h2>
 <p>多个独立运行的实体同时访问共享资源时，往往需要通过仲裁决定访问的先后顺序。</p>
 <p>在实验 1 中，CPU 有两套访存接口：一个用于取指，另一个用于读写数据。<code>test1_naive</code> 将指令内存和数据内存分开了，从而能够同时支持两边的访问。现实生活中的计算机架构一般遵循 von Neumann 架构，即指令和数据放在同一个内存中。此时需要内存有两个读写端口。</p>
@@ -278,7 +278,7 @@ assign flushW = ~d_data_ok;
 <li>移位的偏移量为寄存器数据。</li>
 </ul>
 <h3 id="接入-verilator"><a class="header" href="#接入-verilator">接入 Verilator</a></h3>
-<p>下一次实验会使用 Verilator 做模块级测试。本次实验先用 <code>test1</code> 和 <code>test2</code>，方便大家熟悉 Verilator 仿真的流程。</p>
+<p>下一轮实验会使用 Verilator 做模块级测试。本次实验先用 <code>test1</code> 和 <code>test2</code>，方便大家熟悉 Verilator 仿真的流程。</p>
 <p>我们提供的测试框架里面，Vivado 仿真的顶层是 <code>mycpu_top</code>，而 Verilator 仿真的顶层用的通常是字母 <code>V</code> 开头的模块<sup class="footnote-reference"><a href="#vtop">1</a></sup>（如 <code>VTop</code>、<code>VCacheTop</code>）。每一个顶层模块对应一个目标名称，也就是 <code>make vsim</code> 命令的 <code>TARGET</code> 参数。如果想以 <code>source/mycpu/VTop.sv</code> 这个文件作为顶层模块，其对应的 <code>TARGET</code> 就是 <code>mycpu/VTop</code>。</p>
 <p>测试框架的代码放在 <code>verilate/source</code> 和 <code>verilate/include</code> 两个目录下。不同的顶层模块可能需要不同的测试代码，这些代码会分别放在 <code>verilate/source</code> 中对应子目录里面。如果 <code>TARGET</code> 是 <code>mycpu/VTop</code>，那么其专用的测试代码都放在 <code>verilate/source/mycpu/VTop</code> 下。我们提供了大部分 <code>mycpu/VTop</code> 的测试代码，目前这个目录下有：</p>
 <ul>
@@ -368,7 +368,7 @@ make: *** [verilate/Makefile.vsim.mk:123: vsim] Aborted (core dumped)
 <p>你需要自行摸索 GTKWave 的使用方式。我们提供了一份简短的使用说明：<a href="../misc/gtkwave.html">“使用 GTKWave”</a>。</p>
 <p>如果遇到你无法确定原因的错误，例如 assertion failed、segmentation fault 之类，有可能是测试框架的问题。请及时向助教反馈。如果遇到这些错误时，终端/命令行最后输出了 “<code>(core dumped)</code>”（上面 trace 比对出错的输出就有），说明这个错误可以使用 <code>coredumpctl gdb</code> 启动 GDB 查看。请进入 GDB 输入 <code>backtrace</code> 后回车，将调用栈打印出来，然后连同调用栈和错误信息一起反馈给助教。</p>
 <h3 id="总结"><a class="header" href="#总结">总结</a></h3>
-<p>总结一下实验 2 要做的事情：</p>
+<p>总结一下实验 2a 要做的事情：</p>
 <ul>
 <li>修改取指和访存阶段的逻辑，支持多周期访存。
 <ul>
@@ -390,6 +390,7 @@ make: *** [verilate/Makefile.vsim.mk:123: vsim] Aborted (core dumped)
 </ul>
 <p>以上是我们推荐的完成顺序。</p>
 <h2 id="实验提交"><a class="header" href="#实验提交">实验提交</a></h2>
+<p><strong>本实验和实验 2b 一起提交。</strong></p>
 <pre><code class="language-plaintext">18307130024/
 ├── report/   （报告所在目录）
 ├── source/   （源文件所在目录）
@@ -406,7 +407,7 @@ make: *** [verilate/Makefile.vsim.mk:123: vsim] Aborted (core dumped)
 <li>内容：简要记录你所做的修改。写好姓名学号。附上测试通过时的照片或截图。</li>
 </ul>
 <h3 id="截止时间"><a class="header" href="#截止时间">截止时间</a></h3>
-<p><strong>2021 年 4 月 4 日 23:59:59</strong></p>
+<p><strong>2021 年 4 月 11 日 23:59:59</strong></p>
 <h2 id="拓展内容"><a class="header" href="#拓展内容">*拓展内容</a></h2>
 <ul>
 <li>
@@ -430,7 +431,7 @@ Hello, world!
 </ul>
 <hr />
 <div class="footnote-definition" id="vtop"><sup class="footnote-definition-label">1</sup>
-<p><code>VTop</code> 用的是将在实验 3 中介绍的 CBus（cache bus），是 AXI 总线的简化。Verilator 仿真的顶层模块和 Vivado 中不同的原因之一就是 CBus 模拟起来简单一些 <code>:)</code></p>
+<p><code>VTop</code> 用的是将在实验 3a 中介绍的 CBus（cache bus），是 AXI 总线的简化。Verilator 仿真的顶层模块和 Vivado 中不同的原因之一就是 CBus 模拟起来简单一些 <code>:)</code></p>
 </div>
 <div class="footnote-definition" id="pc-type"><sup class="footnote-definition-label">2</sup>
 <p>类型是 32 位的 <code>uint32_t</code>。</p>
@@ -450,7 +451,7 @@ Hello, world!
                         
 
                         
-                            <a rel="next" href="../arch-lab/lab3.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../arch-lab/lab2b.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -468,7 +469,7 @@ Hello, world!
                 
 
                 
-                    <a rel="next" href="../arch-lab/lab3.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../arch-lab/lab2b.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

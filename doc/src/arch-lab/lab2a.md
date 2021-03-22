@@ -1,4 +1,4 @@
-# 实验 2：总线仲裁与延时
+# 实验 2a：总线仲裁与延时
 
 ## 仲裁
 
@@ -160,7 +160,7 @@ assign flushW = ~d_data_ok;
 
 ### 接入 Verilator
 
-下一次实验会使用 Verilator 做模块级测试。本次实验先用 `test1` 和 `test2`，方便大家熟悉 Verilator 仿真的流程。
+下一轮实验会使用 Verilator 做模块级测试。本次实验先用 `test1` 和 `test2`，方便大家熟悉 Verilator 仿真的流程。
 
 我们提供的测试框架里面，Vivado 仿真的顶层是 `mycpu_top`，而 Verilator 仿真的顶层用的通常是字母 `V` 开头的模块[^vtop]（如 `VTop`、`VCacheTop`）。每一个顶层模块对应一个目标名称，也就是 `make vsim` 命令的 `TARGET` 参数。如果想以 `source/mycpu/VTop.sv` 这个文件作为顶层模块，其对应的 `TARGET` 就是 `mycpu/VTop`。
 
@@ -285,7 +285,7 @@ gtkwave build/trace.fst
 
 ### 总结
 
-总结一下实验 2 要做的事情：
+总结一下实验 2a 要做的事情：
 
 * 修改取指和访存阶段的逻辑，支持多周期访存。
     * 在 Vivado 仿真中通过 `test1`。
@@ -299,6 +299,8 @@ gtkwave build/trace.fst
 以上是我们推荐的完成顺序。
 
 ## 实验提交
+
+**本实验和实验 2b 一起提交。**
 
 ```plaintext
 18307130024/
@@ -320,7 +322,7 @@ gtkwave build/trace.fst
 
 ### 截止时间
 
-**2021 年 4 月 4 日 23:59:59**
+**2021 年 4 月 11 日 23:59:59**
 
 ## *拓展内容
 
@@ -346,7 +348,7 @@ gtkwave build/trace.fst
 
 ---
 
-[^vtop]: `VTop` 用的是将在实验 3 中介绍的 CBus（cache bus），是 AXI 总线的简化。Verilator 仿真的顶层模块和 Vivado 中不同的原因之一就是 CBus 模拟起来简单一些 `:)`
+[^vtop]: `VTop` 用的是将在实验 3a 中介绍的 CBus（cache bus），是 AXI 总线的简化。Verilator 仿真的顶层模块和 Vivado 中不同的原因之一就是 CBus 模拟起来简单一些 `:)`
 
 [^pc-type]: 类型是 32 位的 `uint32_t`。
 

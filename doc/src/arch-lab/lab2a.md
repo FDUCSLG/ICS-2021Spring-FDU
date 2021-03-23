@@ -147,7 +147,7 @@ assign flushW = ~d_data_ok;
 
 如果你想优化 `CBusArbiter`，请在 `source/mycpu/MyArbiter.sv` 中实现新的仲裁器，然后将 `VTop` 的 `CBusArbiter mux` 换成 `MyArbiter mux`。
 
-另外请注意：**`CBusArbiter` 默认的仲裁策略是 IBus 比 DBus 优先**。如果你想调换优先级，请将上面 `CBusArbiter mux` 接口中的 `icreq` 和 `dcreq` 对换，以及将 `icresp` 和 `dcresp` 对换。
+另外请注意：**`CBusArbiter` 默认的仲裁策略是 DBus 比 IBus 优先**。如果你想调换优先级，请将上面 `CBusArbiter mux` 接口中的 `icreq` 和 `dcreq` 对换，以及将 `icresp` 和 `dcresp` 对换。
 
 ### 实现新的指令
 

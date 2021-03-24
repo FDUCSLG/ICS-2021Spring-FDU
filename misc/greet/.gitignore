@@ -1,0 +1,8 @@
+*.bin
+*.o
+*.coe
+*.out
+
+Makefile
+linker.ld
+start.s

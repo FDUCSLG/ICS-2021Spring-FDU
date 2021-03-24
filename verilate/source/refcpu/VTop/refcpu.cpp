@@ -144,7 +144,7 @@ void RefCPU::run() {
     resetn = 1;
     eval();
 
-    auto worker = StatusReporter(100, [this] {
+    auto worker = ThreadWorker::at_interval(100, [this] {
         print_status();
     });
 

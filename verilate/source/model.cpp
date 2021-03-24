@@ -156,3 +156,8 @@ void ModelBase::checkout_confreg() {
     if (con->has_char() && con->get_char() <= 0x7f)
         notify_char(con->get_char());
 }
+
+void ModelBase::open_pty(const std::string &path) {
+    if (con)
+        con->uart_open_pty(path);
+}

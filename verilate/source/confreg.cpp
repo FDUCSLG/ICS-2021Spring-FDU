@@ -3,6 +3,7 @@
 void Confreg::reset() {
     ctx.reset();
     ctx0.reset();
+    _uart_reset();
 
     mem.clear();
     mem[CR0] = 0x00000000;
@@ -31,8 +32,15 @@ void Confreg::reset() {
 
 auto Confreg::load(addr_t addr) -> word_t {
     addr &= ADDR_MASK;
-    auto it = mem.find(addr);
 
+    switch (addr) {
+        case UART_LSR:
+            return _uart_has_char();
+        case UART_RXD:
+            return _uart_get_char();
+    }
+
+    auto it = mem.find(addr);
     // assert(it != mem.end());
     if (it == mem.end()) {
         warn("CONFREG: load: ignored unknown destination 0x%04x.\n", addr);
@@ -48,51 +56,136 @@ static auto swap_bytes(word_t data) -> word_t {
 // NOTE: confreg ignores mask.
 void Confreg::store(addr_t addr, word_t data, word_t /*mask*/) {
     addr &= ADDR_MASK;
-    auto it = mem.find(addr);
 
-    // assert(it != mem.end());
-    if (it == mem.end()) {
-        warn("CONFREG: store: ignored unknown destination 0x%04x.\n", addr);
-        return;
-    }
-
-    auto &value = it->second;
-    value = data;
-
-    // cache & handle side effects
     switch (addr) {
+        case UART_LSR:
+            // TODO: panic here
+            return;
+        case UART_TXD:
+            _uart_put_char(data & 0xff);
+            return;
+
         case VIRTUAL_UART:
-            value &= 0xff;
-            ctx.uart_written = true;
-            ctx.uart_data = value;
-        break;
-
+            data &= 0xff;
+            ctx.vuart_written = true;
+            ctx.vuart_data = data;
+            break;
         case NUM:
-            ctx.v_num = value;
-        break;
-
+            ctx.v_num = data;
+            break;
         case SIMU_FLAG:
-            value = 0xffffffff;
-        break;
-
+            data = 0xffffffff;
+            break;
         case IO_SIMU:
-            value = swap_bytes(value);
-        break;
-
+            data = swap_bytes(data);
+            break;
         case OPEN_TRACE:
-            value = bool(value);
-            ctx.v_open_trace = value;
-        break;
-
+            data = bool(data);
+            ctx.v_open_trace = data;
+            break;
         case NUM_MONITOR:
-            value &= 1;
-            ctx.v_num_monitor = value;
-        break;
+            data &= 1;
+            ctx.v_num_monitor = data;
+            break;
     }
+
+    changes[addr] = data;
 }
 
 void Confreg::sync() {
+    // update UART
+    if (ctx.uart_fetched) {
+        assert(!uart.ififo.empty());
+        std::lock_guard guard(uart.lock);
+        uchar c = uart.ififo.front();
+        debug("CONFREG: uart: get: %u (0x%x)\n", c, c);
+        uart.ififo.pop_front();
+    }
+    if (ctx.uart_written && uart.opty) {
+        uchar c = ctx.uart_data;
+        debug("CONFREG: uart: put: %u (0x%x)\n", c, c);
+        fputc(ctx.uart_data, uart.opty);
+        fflush(uart.opty);
+    }
+
+    // reset ctx
     ctx0 = ctx;
+    ctx.uart_avail = !uart.ififo.empty();
     ctx.uart_written = false;
+    ctx.uart_fetched = false;
+    ctx.vuart_written = false;
+
+    // commit to memory
+    for (auto [addr, data] : changes) {
+        auto it = mem.find(addr);
+        if (it == mem.end())
+            warn("CONFREG: store: ignored unknown destination 0x%04x.\n", addr);
+        else
+            it->second = data;
+    }
+    changes.clear();
+
+    // increment timer counter
     mem[TIMER]++;
+}
+
+void Confreg::uart_open_pty(const std::string &path) {
+    assert(!uart.ipty);
+    assert(!uart.opty);
+
+    uart.ipty = fopen(path.data(), "r");
+    uart.opty = fopen(path.data(), "w");
+
+    if (uart.ipty && uart.opty) {
+        notify("CONFREG: connected to pty \"%s\".\n", path.data());
+
+        // fetch UART input in the background
+        uart.worker = ThreadWorker::loop([this] {
+            auto c = fgetc(uart.ipty);  // fgetc will block util there's a new char.
+            if (c != EOF) {
+                std::lock_guard guard(uart.lock);
+                uart.ififo.push_back(c);
+            }
+        }, [] {}, [this] {
+            if (uart.ipty) {
+                fclose(uart.ipty);
+                uart.ipty = nullptr;
+            }
+        });
+    }
+}
+
+void Confreg::_uart_close_pty() {
+    uart.worker.stop();
+
+    if (uart.opty) {
+        fclose(uart.opty);
+        uart.opty = nullptr;
+    }
+
+    // workers's fgetc will also block fclose...
+    // we have to let the worker itself to close ipty...
+    // fclose(uart.ipty);
+}
+
+void Confreg::_uart_reset() {
+    std::lock_guard guard(uart.lock);
+    uart.ififo.clear();
+}
+
+auto Confreg::_uart_has_char() -> bool {
+    return ctx.uart_avail;
+}
+
+auto Confreg::_uart_get_char() -> uchar {
+    if (ctx.uart_avail) {
+        ctx.uart_fetched = true;
+        return uart.ififo.front();
+    } else
+        return 0;
+}
+
+void Confreg::_uart_put_char(uchar c) {
+    ctx.uart_written = true;
+    ctx.uart_data = c;
 }

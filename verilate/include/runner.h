@@ -12,11 +12,13 @@ public:
     struct {
         std::string default_memfile = "misc/nscscc/func_test.coe";
         std::string default_ref_trace = "misc/nscscc/func_test.txt";
+        std::string default_pty = "build/vpty";
 
         std::string fst_trace_path = "" /*"/tmp/trace.fst"*/;
         std::string text_trace_path = "" /*"/tmp/trace.txt"*/;
         std::string memfile_path = default_memfile;
         std::string ref_trace_path = "";
+        std::string pty_path = default_pty;
         bool status_enable = true;
         bool debug_enable = false;
         float p_disable = 0.0f;
@@ -39,6 +41,10 @@ public:
         _init_soc = false;
     }
 
+    void no_pty() {
+        _init_pty = false;
+    }
+
     int main(int argc, char *argv[]) {
         auto app = CLI::App();
 
@@ -49,6 +55,9 @@ public:
         if (_init_text_trace) {
             app.add_option("-t,--text-trace", args.text_trace_path, "File path to save text trace.");
             app.add_option("-r,--ref-trace", args.ref_trace_path, "File path of reference text trace.");
+        }
+        if (_init_pty) {
+            app.add_option("-y,--pty", args.pty_path, "Path to pesudo-terminal opened by socat.");
         }
 
         app.add_flag("--status,!--no-status", args.status_enable, "Show status line.");
@@ -84,6 +93,8 @@ public:
             top->start_fst_trace(args.fst_trace_path);
         if (_init_text_trace && !args.text_trace_path.empty())
             top->start_text_trace(args.text_trace_path);
+        if (_init_pty && !args.pty_path.empty())
+            top->open_pty(args.pty_path);
 
         top->run();
 
@@ -99,4 +110,5 @@ protected:
     bool _init_text_trace = true;
     bool _init_fst_trace = true;
     bool _init_soc = true;
+    bool _init_pty = true;
 };

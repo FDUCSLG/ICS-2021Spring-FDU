@@ -2,7 +2,8 @@
 
 Spring 2021, Fudan University.
 
-Course Website: <https://fducslg.github.io/ICS-2021Spring-FDU/>
+* Course Website: <https://fducslg.github.io/ICS-2021Spring-FDU/>
+* Dev Repository: <https://github.com/FDUCSLG/ICS-2021Spring-dev>
 
 ## Directory Structure
 
@@ -55,12 +56,14 @@ We recommend you work on a Linux distribution (Ubuntu, Manjaro, ArchLinux, etc.)
     * corresponding `libstdc++` (GNU C++) or `libc++` (LLVM clang)
 * `libz-dev` (or the correct devel packege for zlib on your Linux distribution)
 * `systemd-coredump` (for `coredumpctl`)
+* `socat`: SOcket CAT
+* any serial port terminal program, e.g. `uucp`'s `cu` or GNU `screen`
 
 ### Ubuntu 20.04
 
 ```shell
 apt update
-apt install -y verilator gdb gtkwave build-essential libz-dev systemd-coredump
+apt install -y verilator gdb gtkwave build-essential libz-dev systemd-coredump screen
 ```
 
 Run RefCPU functional test:
@@ -75,7 +78,7 @@ Because Verilator 3.x on Ubuntu 18.04 is outdated, we need to install a newer ve
 
 ```shell
 apt update
-apt install -y gdb gtkwave make clang-10 libc++-10-dev libc++abi-10-dev libz-dev systemd-coredump
+apt install -y gdb gtkwave make clang-10 libc++-10-dev libc++abi-10-dev libz-dev systemd-coredump screen
 # wget -O verilator4.deb https://github.com/sifive/verilator/releases/download/4.036-0sifive2/verilator_4.036-0sifive2_amd64.deb
 dpkg -i verilator4.deb
 ln -s /usr/local/share/verilator /usr/share/
@@ -93,7 +96,7 @@ You have to download a newer version of Verilator as in the previous section “
 
 ```shell
 apt update
-apt install gdb gtkwave build-essential zlib1g-dev systemd-coredump
+apt install gdb gtkwave build-essential zlib1g-dev systemd-coredump screen
 # wget -O verilator4.deb https://github.com/sifive/verilator/releases/download/4.036-0sifive2/verilator_4.036-0sifive2_amd64.deb
 dpkg -i verilator4.deb
 ln -s /usr/local/share/verilator /usr/share/
@@ -105,7 +108,7 @@ NOTE: only GCC 8 is available on Debian 10. However, Verilator simulation can st
 
 ```
 pacman -Sy
-pacman -S verilator gdb gtkwave base-devel zlib
+pacman -S verilator gdb gtkwave base-devel zlib screen
 ```
 
 ### Notes on Verilator

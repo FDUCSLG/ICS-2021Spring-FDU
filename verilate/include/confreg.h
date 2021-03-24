@@ -2,6 +2,10 @@
 
 #include "memory.h"
 
+#include <cstdio>
+
+#include <deque>
+#include <mutex>
 #include <unordered_map>
 
 /**
@@ -10,9 +14,13 @@
 
 class Confreg final : public IMemory {
 public:
+    static constexpr size_t UART_BUFFER_SIZE = 128;
     static constexpr addr_t ADDR_MASK = 0xffff;
 
     enum Layout : addr_t {
+        UART_RXD = 0x1000,
+        UART_TXD = 0x1000,
+        UART_LSR = 0x1014,
         CR0 = 0x8000,
         CR1 = 0x8004,
         CR2 = 0x8008,
@@ -37,6 +45,10 @@ public:
         NUM_MONITOR = 0xfffc,
     };
 
+    ~Confreg() {
+        _uart_close_pty();
+    }
+
     void reset();
     auto load(addr_t addr) -> word_t;
     void store(addr_t addr, word_t data, word_t mask);
@@ -54,10 +66,10 @@ public:
         return ctx0.v_num_monitor;
     }
     auto has_char() const -> bool {
-        return ctx0.uart_written;
+        return ctx0.vuart_written;
     }
     auto get_char() const -> uchar {
-        return ctx0.uart_data;
+        return ctx0.vuart_data;
     }
     auto get_current_num() const -> int {
         return ctx0.v_num >> 24;
@@ -66,21 +78,41 @@ public:
         return ctx0.v_num & 0xff;
     }
 
+    void uart_open_pty(const std::string &path);
+
 private:
     struct Context {
-        bool uart_written;
+        bool uart_avail, uart_written, uart_fetched;
         uchar uart_data;
+        bool vuart_written;
+        uchar vuart_data;
         bool v_open_trace, v_num_monitor;
         word_t v_num;
 
         void reset() {
+            uart_avail = false;
             uart_written = false;
+            uart_fetched = false;
             uart_data = 0;
+            vuart_written = false;
+            vuart_data = 0;
             v_open_trace = true;
             v_num_monitor = true;
             v_num = 0;
         }
     } ctx, ctx0;
 
-    std::unordered_map<addr_t, word_t> mem;
+    void _uart_reset();
+    auto _uart_has_char() -> bool;
+    auto _uart_get_char() -> uchar;
+    void _uart_put_char(uchar c);
+    void _uart_close_pty();
+
+    struct {
+        std::mutex lock;
+        FILE *ipty = nullptr, *opty = nullptr;
+        std::deque<uchar> ififo;
+        ThreadWorker worker;
+    } uart;
+    std::unordered_map<addr_t, word_t> changes, mem;
 };

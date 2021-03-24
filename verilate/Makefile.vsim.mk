@@ -115,7 +115,10 @@ ifneq ($(FST),)
 override VSIM_ARGS += -f $(FST)
 endif
 
-.PHONY: vbuild vsim vsim-gdb
+.PHONY: vpty vbuild vsim vsim-gdb
+
+vpty:
+	socat pty,link=build/vpty,raw,echo=0 pty,link=build/pty,raw,echo=0
 
 vbuild: $(VMAIN)
 

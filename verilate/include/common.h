@@ -151,12 +151,40 @@ private:
  * report status in a separate thread.
  */
 
-class StatusReporter {
+class ThreadWorker {
 public:
     using WorkerFn = std::function<void(void)>;
 
-    StatusReporter(uint64_t _interval_in_ms, const WorkerFn &fn);
-    ~StatusReporter();
+    ThreadWorker();
+    ThreadWorker(const ThreadWorker &) = delete;
+    ThreadWorker(ThreadWorker &&);
+    ThreadWorker(
+        uint64_t interval_in_ms, bool repeat,
+        const WorkerFn &fn,
+        const WorkerFn &begin_fn,
+        const WorkerFn &final_fn
+    );
+
+    auto operator=(const ThreadWorker &) = delete;
+    auto operator=(ThreadWorker &&) -> ThreadWorker &;
+
+    ~ThreadWorker();
+
+    static auto once(
+        const WorkerFn &fn,
+        const WorkerFn &begin_fn = [] {},
+        const WorkerFn &final_fn = [] {}
+    ) -> ThreadWorker;
+    static auto loop(const WorkerFn &fn,
+        const WorkerFn &begin_fn = [] {},
+        const WorkerFn &final_fn = [] {}
+    ) -> ThreadWorker;
+    static auto at_interval(
+        uint64_t interval_in_ms,
+        const WorkerFn &fn,
+        const WorkerFn &begin_fn = [] {},
+        const WorkerFn &final_fn = [] {}
+    ) -> ThreadWorker;
 
     void stop();
 

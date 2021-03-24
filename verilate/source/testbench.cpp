@@ -27,7 +27,7 @@ void run_testbench() {
 
     for (auto t : test_list) {
         count++;
-        auto _ = StatusReporter(1000, [count, total, t] {
+        auto _ = ThreadWorker::at_interval(1000, [count, total, t] {
             status_line("(%d/%d) running \"%s\"...", count, total, t->name);
         });
 

@@ -957,9 +957,25 @@ Hello, world!
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="实验-2b乘除法指令"><a class="header" href="#实验-2b乘除法指令">实验 2b：乘除法指令</a></h1>
 <p>增加乘除法指令和 <code>HI</code>、<code>LO</code> 寄存器，上板通过 <code>test3</code> 的测试。请自行翻阅<a href="arch-lab/../misc/instruction.html">指令列表</a>和 <a href="arch-lab/../misc/external.html#mips-%E6%9E%B6%E6%9E%84">MIPS 指令手册</a>。</p>
+<h2 id="实验提交-1"><a class="header" href="#实验提交-1">实验提交</a></h2>
 <p><strong>本实验和实验 2a 一起提交。</strong></p>
 <h3 id="截止时间-1"><a class="header" href="#截止时间-1">截止时间</a></h3>
 <p><strong>2021 年 4 月 11 日 23:59:59</strong></p>
+<h2 id="扩展内容"><a class="header" href="#扩展内容">*扩展内容</a></h2>
+<ul>
+<li>
+<p>李四发现 Verilator 仿真的 CONFREG 模块提供了简单的串口交互接口：地址 <code>0xbfaf1000</code> 用于在串口上读写字符，地址 <code>0xbfaf1014</code> 用于检查是否有未读入的字符。于是李四在 <code>misc/echo</code> 下编写了一个汇编程序 <code>echo.s</code>，它会将你在终端上输入的字符显示出来。请先尝试将 <code>echo.s</code> 编译成 <code>.coe</code> 文件。</p>
+<p>打开一个终端，在仓库根目录下运行 <code>make vpty</code>。这个命令会使用 <code>socat</code> 在 <code>build</code> 目录下创建一个虚拟控制台（pty）。然后再打开一个终端，运行：</p>
+<pre><code class="language-shell">make vsim -j TARGET=mycpu/VTop VSIM_ARGS=&quot;-m [.coe 文件路径]&quot;
+</code></pre>
+<p>此时 <code>vmain</code> 会自动接入到之前 <code>make vpty</code> 创建的虚拟控制台的一端，并且会在仿真的终端打印一行 “<code>CONFREG: connected to pty &quot;build/vpty&quot;.</code>”。最后再打开一个终端，运行串口软件。以 GNU <code>screen</code> 为例：</p>
+<pre><code class="language-shell">screen build/pty
+</code></pre>
+<p>然后尝试输入字符，你会看到这些字符在串口软件的终端里能显示出来。此时如果杀死 <code>vmain</code> 进程，再到串口软件上输入时，就看不到新输入的字符了。</p>
+<p>此时，你<del>李四</del>可以尝试编写在终端上交互的程序了。李四的 <code>echo.s</code> 还不支持 backspace 键，你可以思考一下如何实现 backspace。</p>
+<p><strong>提示</strong>：你可以使用 <code>showkey</code> 查看键盘上每个按键对应的 ASCII 码。</p>
+</li>
+</ul>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="实验-3a"><a class="header" href="#实验-3a">实验 3a</a></h1>
 <p>无可奉告。</p>

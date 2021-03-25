@@ -864,6 +864,11 @@ endmodule
 (info) #27 completed.
 (info) testbench finished in 337516 cycles (601.973 KHz).
 </code></pre>
+<h3 id="随机延时"><a class="header" href="#随机延时">随机延时</a></h3>
+<p><code>vmain</code> 默认情况下并没有随机延时。可以使用 <code>--p-disable</code>/<code>-p</code> 参数开启随机延时。这个参数是一个概率值，表示内存每个周期无响应的概率。例如：</p>
+<pre><code class="language-shell">make vsim -j TARGET=mycpu/VTop TEST=test1 VSIM_ARGS='-p 0.99'
+</code></pre>
+<p>表示内存有 99% 的时间没有响应。如果设置为 <code>-p 0</code>，相当于关闭随机延时。</p>
 <h3 id="记录波形图"><a class="header" href="#记录波形图">记录波形图</a></h3>
 <p>如果你不幸没有通过 <code>vmain</code> 的测试，看到了类似于下面的报错：</p>
 <pre><code class="language-plaintext">TextDiff: on line 18:
@@ -914,7 +919,15 @@ make: *** [verilate/Makefile.vsim.mk:123: vsim] Aborted (core dumped)
 <p>用 <code>zip -r 18307130024.zip 18307130024/</code> 打包。用 <code>unzip 18307130024.zip</code> 检查，应在当前目录下有学号目录。</p>
 <h3 id="通过标准"><a class="header" href="#通过标准">通过标准</a></h3>
 <ul>
-<li>通过 <code>test1</code> 和 <code>test2</code> 的上板和 Verilator 仿真。</li>
+<li>通过以下四条命令的测试：
+<ul>
+<li><code>make vsim -j TARGET=mycpu/VTop TEST=test1</code></li>
+<li><code>make vsim -j TARGET=mycpu/VTop TEST=test1 VSIM_ARGS=&quot;-p 0.99&quot;</code></li>
+<li><code>make vsim -j TARGET=mycpu/VTop TEST=test2</code></li>
+<li><code>make vsim -j TARGET=mycpu/VTop TEST=test2 VSIM_ARGS=&quot;-p 0.99&quot;</code></li>
+</ul>
+</li>
+<li>上板通过 <code>test1</code> 和 <code>test2</code>。</li>
 </ul>
 <h3 id="实验报告要求"><a class="header" href="#实验报告要求">实验报告要求</a></h3>
 <ul>

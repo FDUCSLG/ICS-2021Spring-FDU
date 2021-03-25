@@ -90,7 +90,7 @@ public:
     // construct a cell pointed to addr.
     MemoryCellGen(addr_t _addr, Pipeline *_p)
         : addr(_addr), p(_p) {
-        assert(addr % Width == 0);
+        asserts(addr % Width == 0, "addr must be aligned to %d bytes", Width);
     }
 
     // assigned by other memory cell.

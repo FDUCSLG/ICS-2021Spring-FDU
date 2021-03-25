@@ -3,13 +3,13 @@
 #include <filesystem>
 
 auto TextDiff::is_open() const -> bool {
-    return fs && fs.is_open();
+    return fs.is_open();
 }
 
 void TextDiff::open(const std::string &path) {
-    assert(!is_open());
+    asserts(!is_open(), "TextDiff has been already opened");
     fs.open(path);
-    assert(fs);
+    asserts(fs, "failed to open \"%s\"", path.data());
 
     line_number = 0;
     byte_read = 0;
@@ -18,7 +18,7 @@ void TextDiff::open(const std::string &path) {
 }
 
 void TextDiff::close() {
-    assert(is_open());
+    asserts(is_open(), "TextDiff is not opened");
     fs.close();
 }
 

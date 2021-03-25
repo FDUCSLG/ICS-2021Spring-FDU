@@ -55,8 +55,7 @@ public:
     void sync();
 
     auto dump(addr_t /*addr*/, size_t /*size*/ = MEMORY_SIZE) -> MemoryDump {
-        // CONFREG does not support memory dump.
-        assert(false);
+        panic("CONFREG does not support memory dump");
     }
 
     auto trace_enabled() const -> bool {

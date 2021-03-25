@@ -41,12 +41,17 @@ void CacheRefModel::check_internal() {
     debug("ref: check_internal()\n");
 
     for (int i = 0; i < 16; i++) {
-        assert(buffer[i] == scope->mem[i]);
+        asserts(
+            buffer[i] == scope->mem[i],
+            "reference model's internal state is different from RTL model."
+            " at mem[%x], expected = %08x, got = %08x",
+            i, buffer[i], scope->mem[i]
+        );
     }
 }
 
 void CacheRefModel::check_memory() {
     debug("ref: check_memory()\n");
 
-    assert(mem.dump(0, mem.size()) == top->dump());
+    asserts(mem.dump(0, mem.size()) == top->dump(), "reference model's memory content is different from RTL model");
 }

@@ -433,7 +433,7 @@ public:
                 return data;
         }
 
-        assert(false);
+        panic("no response from DBus in %llu cycle(s)", max_count);
     }
 
 protected:
@@ -449,7 +449,7 @@ class DBusPipelineGen {
 public:
     DBusPipelineGen(VModel *_top, DBus *_dbus)
         : top(_top), dbus(_dbus) {
-        assert(!busy());
+        asserts(!busy(), "DBus is busy");
     }
 
     // implicit tail fence
@@ -475,14 +475,14 @@ public:
         top->tick();
 
         if (addr_ok && valid) {
-            assert(!pending.empty());
+            internal_assert(!pending.empty(), "pending queue should not be empty");
             ongoing.push(pending.front());
             pending.pop();
         }
 
         // data may be returned in one cycle
         if (data_ok) {
-            assert(!ongoing.empty());
+            internal_assert(!ongoing.empty(), "ongoing queue should not be empty");
 
             auto u = ongoing.front();
             ongoing.pop();
@@ -534,11 +534,11 @@ public:
      */
 
     void loadw(addr_t addr, void *dest) {
-        assert((addr & 0x3) == 0);
+        asserts((addr & 0x3) == 0, "addr must be aligned on word boundry");
         load(addr, MSIZE4, dest, LoadOp::SIZE4_SHT0);
     }
     void loadh(addr_t addr, void *dest) {
-        assert((addr & 0x1) == 0);
+        asserts((addr & 0x1) == 0, "addr must be aligned on halfword boundry");
         load(addr, MSIZE2, dest, LoadOp::parse<2>(addr));
     }
     void loadb(addr_t addr, void *dest) {
@@ -546,11 +546,11 @@ public:
     }
 
     void storew(addr_t addr, word_t data) {
-        assert((addr & 0x3) == 0);
+        asserts((addr & 0x3) == 0, "addr must be aligned on word boundry");
         store(addr, MSIZE4, 0b1111u, data);
     }
     void storeh(addr_t addr, word_t data) {
-        assert((addr & 0x1) == 0);
+        asserts((addr & 0x1) == 0, "addr must be aligned on halfword boundry");
         auto op = LoadOp::parse<2>(addr);
         store(addr, MSIZE2, op.strobe(), op.place(data));
     }
@@ -560,11 +560,11 @@ public:
     }
 
     void expectw(addr_t addr, word_t data) {
-        assert((addr & 0x3) == 0);
+        asserts((addr & 0x3) == 0, "addr must be aligned on word boundry");
         expect(addr, MSIZE4, data, LoadOp::SIZE4_SHT0);
     }
     void expecth(addr_t addr, word_t data) {
-        assert((addr & 0x1) == 0);
+        asserts((addr & 0x1) == 0, "addr must be aligned on halfword boundry");
         auto op = LoadOp::parse<2>(addr);
         expect(addr, MSIZE2, op.place(data), op);
     }
@@ -582,7 +582,7 @@ public:
             count++;
         }
 
-        assert(empty());
+        internal_assert(empty(), "all queues should be empty");
     }
 
 private:
@@ -609,7 +609,12 @@ private:
         }
 
         void apply_assert(word_t value) {
-            assert(((data ^ value) & load_op.mask()) == 0);
+            asserts(
+                ((data ^ value) & load_op.mask()) == 0,
+                "received data does not match with expected value."
+                " expected = %08x, got = %08x, mask = %08x",
+                data, value, load_op.mask()
+            );
         }
 
         void apply_load(word_t value) {

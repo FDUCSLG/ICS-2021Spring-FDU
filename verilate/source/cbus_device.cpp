@@ -33,9 +33,9 @@ void CBusDevice::eval_req(const CBusReq &req) {
 
     if (tx.busy) {
         // simple sanity checks
-        assert(req.valid());
-        assert(req.is_write() == tx.is_write);
-        assert(req.addr() == tx.Start_Address);
+        asserts(req.valid(), "req.valid should be 1 during CBus transaction");
+        asserts(req.is_write() == tx.is_write, "type of CBus transaction should not change");
+        asserts(req.addr() == tx.Start_Address, "address of CBus transaction should not change");
 
         // pass arguments to commit
         _strobe = req.strobe();

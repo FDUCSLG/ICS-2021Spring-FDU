@@ -252,6 +252,16 @@ make vsim TARGET=mycpu/VTop TEST=test1 -j
 (info) testbench finished in 337516 cycles (601.973 KHz).
 ```
 
+### 随机延时
+
+`vmain` 默认情况下并没有随机延时。可以使用 `--p-disable`/`-p` 参数开启随机延时。这个参数是一个概率值，表示内存每个周期无响应的概率。例如：
+
+```shell
+make vsim -j TARGET=mycpu/VTop TEST=test1 VSIM_ARGS='-p 0.99'
+```
+
+表示内存有 99% 的时间没有响应。如果设置为 `-p 0`，相当于关闭随机延时。
+
 ### 记录波形图
 
 如果你不幸没有通过 `vmain` 的测试，看到了类似于下面的报错：
@@ -315,7 +325,12 @@ gtkwave build/trace.fst
 
 ### 通过标准
 
-* 通过 `test1` 和 `test2` 的上板和 Verilator 仿真。
+* 通过以下四条命令的测试：
+    * `make vsim -j TARGET=mycpu/VTop TEST=test1`
+    * `make vsim -j TARGET=mycpu/VTop TEST=test1 VSIM_ARGS="-p 0.99"`
+    * `make vsim -j TARGET=mycpu/VTop TEST=test2`
+    * `make vsim -j TARGET=mycpu/VTop TEST=test2 VSIM_ARGS="-p 0.99"`
+* 上板通过 `test1` 和 `test2`。
 
 ### 实验报告要求
 

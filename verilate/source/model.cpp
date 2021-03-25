@@ -10,7 +10,7 @@ ModelBase::~ModelBase() {
 }
 
 void ModelBase::install_soc(const std::shared_ptr<BlockMemory> &mem) {
-    assert(!_memory_installed);
+    asserts(!_memory_installed, "memory has been already installed");
 
     con = std::make_shared<Confreg>();
     std::vector<MemoryRouter::Entry> layout = {
@@ -25,7 +25,7 @@ void ModelBase::install_soc(const std::shared_ptr<BlockMemory> &mem) {
 }
 
 void ModelBase::install_memory(const std::shared_ptr<BlockMemory> &mem) {
-    assert(!_memory_installed);
+    asserts(!_memory_installed, "memory has been already installed");
 
     dev = std::make_shared<CBusDevice>(mem, p_disable);
 
@@ -33,7 +33,7 @@ void ModelBase::install_memory(const std::shared_ptr<BlockMemory> &mem) {
 }
 
 void ModelBase::remove_memory() {
-    assert(_memory_installed);
+    asserts(_memory_installed, "no memory installed");
     dev = nullptr;
     con = nullptr;
     _memory_installed = false;
@@ -44,13 +44,13 @@ void ModelBase::enable_fst_trace(bool enable) {
 }
 
 void ModelBase::start_fst_trace(const std::string &path) {
-    assert(!_fst_avail());
+    asserts(!_fst_avail(), "FST trace has been already opened");
 
     _fst_tfp = new VerilatedFstC;
     _fst_count = 0;
     trace(_fst_tfp, FST_TRACE_MAX_DEPTH);
     _fst_tfp->open(path.data());
-    assert(_fst_tfp->isOpen());
+    asserts(_fst_tfp->isOpen(), "failed to open \"%s\"", path.data());
 
     enable_fst_trace();
     fst_dump(+0);
@@ -85,9 +85,9 @@ void ModelBase::fst_dump(size_t offset) {
 }
 
 void ModelBase::start_text_trace(const std::string &path) {
-    assert(!_text_avail());
+    asserts(!_text_avail(), "text trace writer has been already opened");
     _text_tfp = fopen(path.data(), "w");
-    assert(_text_avail());
+    asserts(_text_avail(), "failed to open \"%s\"", path.data());
 }
 
 void ModelBase::stop_text_trace() {
@@ -112,9 +112,9 @@ void ModelBase::text_dump(bool enable, addr_t pc, int id, word_t value) {
 }
 
 void ModelBase::open_text_diff(const std::string &path) {
-    assert(!_diff_avail());
+    asserts(!_diff_avail(), "text trace diff has been already opened");
     _text_diff.open(path);
-    assert(_diff_avail());
+    asserts(_diff_avail(), "failed to open \"%s\"", path.data());
 }
 
 void ModelBase::close_text_diff() {
@@ -147,9 +147,9 @@ void ModelBase::checkout_confreg() {
     int ack = con->get_acked_num();
 
     if (_current_num != num) {
-        assert(_current_num + 1 == num);
+        asserts(_current_num + 1 == num, "#%d not passed", _current_num + 1);
         notify(BLUE "(info)" RESET " #%d completed.\n", num);
-        assert(ack == num);
+        asserts(ack == num, "#%d not passed", _current_num + 1);
         _current_num = num;
     }
 

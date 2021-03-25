@@ -1,6 +1,6 @@
-#include "refcpu.h"
-
 #include "thirdparty/nameof.hpp"
+
+#include "refcpu.h"
 
 constexpr int MAX_CYCLE = 100000000;
 constexpr addr_t TEST_END_PC = 0xbfc00100;
@@ -161,7 +161,7 @@ void RefCPU::run() {
     }
 
     worker.stop();
-    assert(current_cycle <= MAX_CYCLE);
+    asserts(current_cycle <= MAX_CYCLE, "simulation reached MAX_CYCLE limit");
     diff_eof();
     final();
 

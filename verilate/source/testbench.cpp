@@ -66,7 +66,7 @@ void ITestbench::run() {
 }
 
 DeferListProxy::DeferListProxy() {
-    assert(defer_list.empty());
+    internal_assert(defer_list.empty(), "defer list is not empty");
     defer_list.reserve(4);
 }
 

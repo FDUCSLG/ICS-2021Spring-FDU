@@ -2,7 +2,6 @@
 
 #include <mutex>
 #include <cstdio>
-#include <cassert>
 #include <cstdarg>
 #include <sstream>
 #include <fstream>
@@ -18,7 +17,7 @@ void hook_signal(int sig, handler_t *handler) {
     action.sa_flags = SA_RESTART;
 
     auto result = sigaction(sig, &action, NULL);
-    assert(result >= 0);
+    internal_assert(result >= 0, "failed to hook signal %d", sig);
 }
 
 /*
@@ -63,8 +62,8 @@ static void feed(ByteSeq &seq, std::ifstream &fp, int base) {
 
         size_t count = 0;
         uint64_t data = std::stoull(buf, &count, base);
-        assert(count == buf.size());
-        assert((data & 0xffffffff) == data);
+        asserts(count == buf.size(),  "failed to parse data \"%s\" in base %d", buf.data(), base);
+        asserts((data & 0xffffffff) == data, "\"%s\" cannot fit in a 32-bit integer", buf.data());
 
         for (size_t i = 0; i < 4; i++) {
             seq.push_back(data & 0xff);
@@ -82,7 +81,7 @@ static auto parse_coe(std::ifstream &fp) -> ByteSeq {
     {
         std::istringstream bs(buf);
         std::getline(bs, buf, '=');
-        assert(trim(buf) == "memory_initialization_radix");
+        asserts(trim(buf) == "memory_initialization_radix", "COE file should begin with \"memory_initialization_radix = \"");
         std::getline(bs, buf);
     }
 
@@ -94,7 +93,7 @@ static auto parse_coe(std::ifstream &fp) -> ByteSeq {
     {
         std::istringstream bs(buf);
         std::getline(bs, buf, '=');
-        assert(trim(buf) == "memory_initialization_vector");
+        asserts(trim(buf) == "memory_initialization_vector", "the second line of COE file should be \"memory_initialization_vector =\"");
     }
 
     // data
@@ -126,7 +125,7 @@ static auto parse_bin(std::ifstream &fp) -> ByteSeq {
 
 auto parse_memory_file(const std::string &path) -> ByteSeq {
     std::ifstream fp(path);
-    assert(fp);
+    asserts(fp, "failed to open file \"%s\"", path.data());
 
     if (endswith(path, ".coe"))
         return parse_coe(fp);
@@ -340,7 +339,7 @@ ThreadWorker::~ThreadWorker() {
 void ThreadWorker::stop() {
     if (!stopped) {
         stopped = true;
-        assert(flag);
+        internal_assert(flag, "flag should not be nullptr");
         *flag = true;
     }
 }

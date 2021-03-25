@@ -41,7 +41,6 @@ auto Confreg::load(addr_t addr) -> word_t {
     }
 
     auto it = mem.find(addr);
-    // assert(it != mem.end());
     if (it == mem.end()) {
         warn("CONFREG: load: ignored unknown destination 0x%04x.\n", addr);
         return 0;
@@ -95,7 +94,7 @@ void Confreg::store(addr_t addr, word_t data, word_t /*mask*/) {
 void Confreg::sync() {
     // update UART
     if (ctx.uart_fetched) {
-        assert(!uart.ififo.empty());
+        internal_assert(!uart.ififo.empty(), "UART input FIFO should not be empty");
         std::lock_guard guard(uart.lock);
         uchar c = uart.ififo.front();
         debug("CONFREG: uart: get: %u (0x%x)\n", c, c);
@@ -130,29 +129,34 @@ void Confreg::sync() {
 }
 
 void Confreg::uart_open_pty(const std::string &path) {
-    assert(!uart.ipty);
-    assert(!uart.opty);
+    asserts(!uart.ipty, "already connected to UART");
+    asserts(!uart.opty, "already connected to UART");
 
     uart.ipty = fopen(path.data(), "r");
+    if (!uart.ipty)
+        return;
+
+    // to prevent create a new file during open opty,
+    // we should open ipty first.
     uart.opty = fopen(path.data(), "w");
+    if (!uart.opty)
+        return;
 
-    if (uart.ipty && uart.opty) {
-        notify("CONFREG: connected to pty \"%s\".\n", path.data());
+    notify("CONFREG: connected to pty \"%s\".\n", path.data());
 
-        // fetch UART input in the background
-        uart.worker = ThreadWorker::loop([this] {
-            auto c = fgetc(uart.ipty);  // fgetc will block util there's a new char.
-            if (c != EOF) {
-                std::lock_guard guard(uart.lock);
-                uart.ififo.push_back(c);
-            }
-        }, [] {}, [this] {
-            if (uart.ipty) {
-                fclose(uart.ipty);
-                uart.ipty = nullptr;
-            }
-        });
-    }
+    // fetch UART input in the background
+    uart.worker = ThreadWorker::loop([this] {
+        auto c = fgetc(uart.ipty);  // fgetc will block util there's a new char.
+        if (c != EOF) {
+            std::lock_guard guard(uart.lock);
+            uart.ififo.push_back(c);
+        }
+    }, [] {}, [this] {
+        if (uart.ipty) {
+            fclose(uart.ipty);
+            uart.ipty = nullptr;
+        }
+    });
 }
 
 void Confreg::_uart_close_pty() {

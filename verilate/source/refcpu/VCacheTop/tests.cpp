@@ -22,13 +22,13 @@ PRETEST_HOOK [] {
 WITH {
     dbus->async_load(0xc, MSIZE4);
     top->tick();
-    // assert(top->dresp == 0);
+    // ASSERT(top->dresp == 0);
 } AS("void");
 
 WITH {
-    assert(dbus->addr_ok() == true);
-    assert(dbus->data_ok() == false);
-    assert(dbus->rdata() == 0);
+    ASSERT(dbus->addr_ok() == true);
+    ASSERT(dbus->data_ok() == false);
+    ASSERT(dbus->rdata() == 0);
 } AS("reset");
 
 WITH {
@@ -38,7 +38,7 @@ WITH {
         top->eval();
 
         for (int j = 0; j < 256; j++) {
-            assert(!dbus->valid());
+            ASSERT(!dbus->valid());
             top->tick();
         }
     }
@@ -51,7 +51,7 @@ WITH {
         top->eval();
 
         for (int j = 0; j < 256; j++) {
-            assert(!dbus->valid());
+            ASSERT(!dbus->valid());
             top->tick();
         }
     }
@@ -60,13 +60,13 @@ WITH {
 // both dbus->store and dbus->load wait for your model to complete
 WITH {
     dbus->store(0, MSIZE4, 0b1111, 0x2048ffff);
-    assert(dbus->load(0, MSIZE4) == 0x2048ffff);
+    ASSERT(dbus->load(0, MSIZE4) == 0x2048ffff);
 } AS("naïve");
 
 // this test is explicitly marked with "SKIP".
 WITH SKIP {
     bool one = 1, three = 3;
-    assert(one + one == three);  // trust me, it must fail
+    ASSERT(one + one == three);  // trust me, it must fail
     // but you should not fail here since it's skipped.
 } AS("akarin!");
 
@@ -85,7 +85,7 @@ WITH /*SKIP*/ {
 
     for (int i = 0; i < 16; i++) {
         auto got = dbus->load(0x100 + 4 * i, MSIZE4);
-        assert(got == a[i]);
+        ASSERT(got == a[i]);
     }
 } AS("strobe");
 
@@ -94,7 +94,7 @@ WITH /*SKIP*/ {
 WITH TRACE /*DEBUG*/ {
     {
         dbus->store(0xc, MSIZE4, 0b1111, 0x12345678);
-        assert(dbus->load(0xc, MSIZE4) == 0x12345678);
+        ASSERT(dbus->load(0xc, MSIZE4) == 0x12345678);
     }
 
     {
@@ -118,9 +118,9 @@ WITH TRACE /*DEBUG*/ {
         b[1] = dbus->loadh(0x106);
         c = dbus->loadw(0x100);
 
-        assert(a[0] == 0xef && a[1] == 0xbe && a[2] == 0xad && a[3] == 0xde);
-        assert(b[0] == 0xccdd && b[1] == 0xaabb);
-        assert(c == 0x19260817);
+        ASSERT(a[0] == 0xef && a[1] == 0xbe && a[2] == 0xad && a[3] == 0xde);
+        ASSERT(b[0] == 0xccdd && b[1] == 0xaabb);
+        ASSERT(c == 0x19260817);
 
         a[0] = dbus->loadb(0x100);
         a[1] = dbus->loadb(0x101);
@@ -130,9 +130,9 @@ WITH TRACE /*DEBUG*/ {
         b[1] = dbus->loadh(0x10a);
         c = dbus->loadw(0x104);
 
-        assert(a[0] == 0x17 && a[1] == 0x08 && a[2] == 0x26 && a[3] == 0x19);
-        assert(b[0] == 0xbeef && b[1] == 0xdead);
-        assert(c == 0xaabbccdd);
+        ASSERT(a[0] == 0x17 && a[1] == 0x08 && a[2] == 0x26 && a[3] == 0x19);
+        ASSERT(b[0] == 0xbeef && b[1] == 0xdead);
+        ASSERT(c == 0xaabbccdd);
     }
 
     {
@@ -149,7 +149,7 @@ WITH TRACE /*DEBUG*/ {
 
         dbus->async_loadw(0xffffc);
         word_t value = dbus->await(128);  // it waits for async_loadw to complete.
-        assert(value == 0x2048ffff);
+        ASSERT(value == 0x2048ffff);
     }
 } AS("ad hoc");
 
@@ -166,7 +166,7 @@ WITH TRACE /*DEBUG*/ {
         p.load(0xc, MSIZE4, &value);
         p.expect(0xc, MSIZE4, 0x12345678);
         p.fence(128);  // above three operations should complete in 128 ticks
-        assert(value == 0x12345678);
+        ASSERT(value == 0x12345678);
     }
 
     {
@@ -200,9 +200,9 @@ WITH TRACE /*DEBUG*/ {
 
         p.fence(2048);
 
-        assert(a[0] == 0xef && a[1] == 0xbe && a[2] == 0xad && a[3] == 0xde);
-        assert(b[0] == 0xccdd && b[1] == 0xaabb);
-        assert(c == 0x19260817);
+        ASSERT(a[0] == 0xef && a[1] == 0xbe && a[2] == 0xad && a[3] == 0xde);
+        ASSERT(b[0] == 0xccdd && b[1] == 0xaabb);
+        ASSERT(c == 0x19260817);
     }
 
     p.fence(0);  // assert that pipeline is empty
@@ -216,7 +216,7 @@ WITH TRACE /*DEBUG*/ {
         // manually update the pipeline
         p.ticks(128);
 
-        assert(value == 0x2048ffff);
+        ASSERT(value == 0x2048ffff);
     }
 
     // NOTE: a p.fence() will be called implicitly when p is being
@@ -233,16 +233,16 @@ WITH {
 
     a.set(0x19260817);
     b = 0xbeef;
-    assert(a.get() == 0x19260817);
-    assert(b.get() == 0x0000beef);
+    ASSERT(a.get() == 0x19260817);
+    ASSERT(b.get() == 0x0000beef);
 
     a = b;
-    assert(b.get() == 0x0000beef);
+    ASSERT(b.get() == 0x0000beef);
 
     c = 0xdead;
-    assert(a.get() == 0xdeadbeef);
-    assert(c.get() == 0x0000dead);
-    assert((a + c) == 0xdeae9d9c);
+    ASSERT(a.get() == 0xdeadbeef);
+    ASSERT(c.get() == 0x0000dead);
+    ASSERT((a + c) == 0xdeae9d9c);
 } AS("memory cell");
 
 /**

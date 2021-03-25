@@ -2,8 +2,6 @@
 
 #include "common.h"
 
-#include <cassert>
-
 #include <vector>
 #include <functional>
 #include <type_traits>
@@ -165,8 +163,15 @@ public:
     auto load(addr_t addr, AXISize size) -> word_t {
         auto got = DBus::load(addr, size);
         auto expected = ref->load(addr, size);
-        assert(got == expected);
+
+        asserts(
+            got == expected,
+            "different outputs from RTL model and reference model."
+            " expected = %08x, got = %08x",
+            expected, got
+        );
         ref->check_internal();
+
         return got;
     }
 

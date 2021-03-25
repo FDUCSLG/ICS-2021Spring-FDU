@@ -7,7 +7,6 @@
 #include <thread>
 #include <functional>
 
-#include <cassert>
 #include <cstdint>
 
 #include <signal.h>
@@ -212,3 +211,93 @@ enum AXILength : uint32_t{
     MLEN8  = 0b0111,
     MLEN16 = 0b1111,
 };
+
+/**
+ * assertion
+ */
+
+#include <cassert>
+
+#ifndef NDEBUG
+
+#define _print_error_header(text) \
+    notify(RED "ERR!" RESET " %s.\n", text);
+#define _print_assert_location \
+    notify("   location: %s @L%d\n", __FILE__, __LINE__);
+#define _print_assert_function \
+    notify("   function: %s\n", __ASSERT_FUNCTION);
+#define _print_assert_predicate(predicate) \
+    notify("  predicate: '%s'\n", #predicate);
+#define _print_assert_message(...) { \
+    notify("    message: '"); \
+    notify(__VA_ARGS__); \
+    notify("'\n"); \
+}
+#define _print_internal_notes { \
+    notify(BLUE "NOTE:" RESET " consider reporting this to TAs with full stack trace.\n"); \
+    notify(BLUE "NOTE:" RESET " use \"coredumpctl gdb\" and \"backtrace\" GDB command to dump stack trace.\n"); \
+}
+#define _print_assert_notes { \
+    notify(BLUE "NOTE:" RESET " please try to understand the message and look into your FST trace.\n"); \
+    _print_internal_notes \
+}
+
+#define ASSERT(predicate) { \
+    if (!static_cast<bool>(predicate)) { \
+        _print_error_header("assertion failed") \
+        _print_assert_location \
+        _print_assert_function \
+        _print_assert_predicate(predicate) \
+        _print_assert_notes \
+        abort(); \
+    } \
+}
+
+#define asserts(predicate, ...) { \
+    if (!static_cast<bool>(predicate)) { \
+        _print_error_header("assertion failed") \
+        _print_assert_location \
+        _print_assert_function \
+        _print_assert_predicate(predicate) \
+        _print_assert_message(__VA_ARGS__) \
+        _print_assert_notes \
+        abort(); \
+    } \
+}
+
+#define internal_assert(predicate, ...) { \
+    if (!static_cast<bool>(predicate)) { \
+        _print_error_header("internal assertion failed") \
+        _print_assert_location \
+        _print_assert_function \
+        _print_assert_predicate(predicate) \
+        _print_assert_message(__VA_ARGS__) \
+        _print_internal_notes \
+        abort(); \
+    } \
+}
+
+#define panic(...) { \
+    _print_error_header("program panicked") \
+    _print_assert_location \
+    _print_assert_function \
+    _print_assert_message(__VA_ARGS__) \
+    _print_assert_notes \
+    abort(); \
+}
+
+#define internal_panic(...) { \
+    _print_error_header("internal error") \
+    _print_assert_location \
+    _print_assert_function \
+    _print_assert_message(__VA_ARGS__) \
+    _print_internal_notes \
+    abort(); \
+}
+
+#else
+#define asserts(...)
+#define internal_assert(...)
+#define panic(...)
+#define internal_panic(...)
+#endif

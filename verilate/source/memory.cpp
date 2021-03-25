@@ -1,7 +1,6 @@
 #include "common.h"
 #include "memory.h"
 
-#include <cassert>
 #include <cstring>
 #include <algorithm>
 
@@ -21,7 +20,7 @@ void MemoryRouter::reset() {
 
 auto MemoryRouter::load(addr_t addr) -> word_t {
     auto e = search(addr);
-    assert(e);
+    asserts(e, "no device at 0x%08x", addr);
 
     auto paddr = e->translate(addr);
     return e->mem->load(paddr);
@@ -29,7 +28,7 @@ auto MemoryRouter::load(addr_t addr) -> word_t {
 
 void MemoryRouter::store(addr_t addr, word_t data, word_t mask) {
     auto e = search(addr);
-    assert(e);
+    asserts(e, "no device at 0x%08x", addr);
 
     auto paddr = e->translate(addr);
     e->mem->store(paddr, data, mask);
@@ -39,7 +38,7 @@ auto MemoryRouter::dump(addr_t addr, size_t size) -> MemoryDump {
     // NOTE: does not support cross module memory dump.
 
     auto e = search(addr);
-    assert(e);
+    asserts(e, "no device at 0x%08x", addr);
 
     auto paddr = e->translate(addr);
     return e->mem->dump(paddr, size);
@@ -47,7 +46,7 @@ auto MemoryRouter::dump(addr_t addr, size_t size) -> MemoryDump {
 
 BlockMemory::BlockMemory(size_t _size, addr_t _offset)
     : _size(_size), _offset(_offset), name("mem") {
-    assert(_size % 4 == 0);
+    asserts(_size % 4 == 0, "size must be multiple of 4");
     mem.resize(_size / 4);
     saved_mem = mem;
 }
@@ -82,7 +81,7 @@ void BlockMemory::reset() {
 
 void BlockMemory::map(addr_t addr, const ByteSeq &data) {
     addr -= _offset;
-    assert(addr + data.size() <= _size);
+    asserts(addr + data.size() <= _size, "memory map out of range");
 
     for (size_t i = 0; i < data.size(); i++) {
         size_t index = (addr + i) / 4;
@@ -95,18 +94,18 @@ void BlockMemory::map(addr_t addr, const ByteSeq &data) {
 }
 
 auto BlockMemory::dump(addr_t addr, size_t size) -> MemoryDump {
-    assert((addr & 0x3) == 0);
-    assert((size & 0x3) == 0);
+    asserts((addr & 0x3) == 0, "addr must be aligned on word boundry");
+    asserts((size & 0x3) == 0, "size must be multiple of 4");
     addr >>= 2;
     size >>= 2;
-    assert(addr + size <= mem.size());
+    asserts(addr + size <= mem.size(), "memory dump out of range");
     return MemoryDump(mem.begin() + addr, mem.begin() + addr + size);
 }
 
 auto BlockMemory::load(addr_t addr) -> word_t {
     addr_t caddr = addr;
     addr -= _offset;
-    assert(addr < _size);
+    asserts(addr < _size, "addr=0x%08x out of range", addr);
 
     size_t index = addr / 4;  // align to 4 bytes
     word_t value = mem[index];
@@ -119,7 +118,7 @@ auto BlockMemory::load(addr_t addr) -> word_t {
 void BlockMemory::store(addr_t addr, word_t data, word_t mask) {
     addr_t caddr = addr;
     addr -= _offset;
-    assert(addr < _size);
+    asserts(addr < _size, "addr=0x%08x out of range", addr);
 
     size_t index = addr / 4;  // align to 4 bytes
     word_t &value = mem[index];

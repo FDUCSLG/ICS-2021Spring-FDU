@@ -1,6 +1,3 @@
-#define SECTION_TEXT __attribute__((section(".text")))
-#define SECTION_START __attribute__((section(".start")))
-
 #define UART_TXD 0xbfaf1000
 #define UART_RXD 0xbfaf1000
 #define UART_LSR 0xbfaf1014

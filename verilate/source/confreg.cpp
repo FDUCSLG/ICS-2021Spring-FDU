@@ -52,15 +52,16 @@ static auto swap_bytes(word_t data) -> word_t {
     return ((data >> 16) & 0xffff) | ((data << 16) & 0xffff0000);
 }
 
-// NOTE: confreg ignores mask.
-void Confreg::store(addr_t addr, word_t data, word_t /*mask*/) {
+// NOTE: confreg often ignores mask.
+void Confreg::store(addr_t addr, word_t data, word_t mask) {
     addr &= ADDR_MASK;
 
     switch (addr) {
         case UART_LSR:
-            // TODO: panic here
+            panic("attempt to write UART's read-only register LSR");
             return;
         case UART_TXD:
+            asserts(mask == 0xff, "UART device only accepts byte writes")
             _uart_put_char(data & 0xff);
             return;
 

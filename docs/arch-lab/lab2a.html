@@ -214,6 +214,7 @@ typedef struct packed {
 <li>将 <code>strobe</code> 设置为 <code>4'b0100</code>。</li>
 </ul>
 <p>这么做可能比较反直觉。DBus 的 byte lanes 来源于 AXI 总线协议，其意图在于兼容只能 4 字节对齐寻址的设备（一般的内存都是这么做的），同时不要求 <code>addr</code> 必须与 4 字节对齐是因为可能会和只能字节寻址的设备交互（例如字符打印）。</p>
+<p>换句话说，当你向 <code>0x1f2</code> 发送读取请求时，DBus 会把 <code>0x1f0</code>、<code>0x1f1</code>、<code>0x1f2</code> 和 <code>0x1f3</code> 这四个地址对应的字节全部返回给你，分别放在 <code>data[7:0]</code>、<code>data[15:8]</code>、<code>data[23:16]</code> 和 <code>data[31:24]</code> 中。同样的，当你向 <code>0x1f2</code> 这个地址写入时，实际上是同时向 <code>0x1f0</code>、<code>0x1f1</code>、<code>0x1f2</code> 和 <code>0x1f3</code> 这四个地址对应的字节写入，不过此时我们可以使用 <code>strobe</code> 信号单独决定每个字节是否真的需要写入。</p>
 <p>下面展示了从地址 <code>0xbfc01fc2</code> 开始连续写入 15 个字节 <code>0x11</code>~<code>0xff</code> 的过程：</p>
 <p><img src="../asset/lab2/byte-lanes.svg" alt="DBus 连续写入示例" /></p>
 <h3 id="ibus"><a class="header" href="#ibus">IBus</a></h3>
@@ -422,7 +423,7 @@ make: *** [verilate/Makefile.vsim.mk:123: vsim] Aborted (core dumped)
 </ul>
 <h3 id="截止时间"><a class="header" href="#截止时间">截止时间</a></h3>
 <p><strong>2021 年 4 月 11 日 23:59:59</strong></p>
-<h2 id="拓展内容"><a class="header" href="#拓展内容">*拓展内容</a></h2>
+<h2 id="思考题"><a class="header" href="#思考题">*思考题</a></h2>
 <ul>
 <li>
 <p>张三在 <code>source/util/CBusMultiplexer.sv</code> 中实现了自己的仲裁器，然而过不了仿真。请指出 <code>CBusMultiplexer</code> 存在的问题。</p>

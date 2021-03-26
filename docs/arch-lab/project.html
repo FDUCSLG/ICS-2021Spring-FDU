@@ -167,7 +167,41 @@
                     <main>
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="挑战课题"><a class="header" href="#挑战课题">挑战课题</a></h1>
-<p>无可奉告。</p>
+<h2 id="方向一流水线性能优化"><a class="header" href="#方向一流水线性能优化">方向一：流水线性能优化</a></h2>
+<blockquote>
+<p>预备条件：通过 <code>test1</code>、<code>test2</code>、<code>test3</code>；未实现的指令 decode 为 <code>NOP</code>。</p>
+</blockquote>
+<p>你将升级你的流水线架构，以获取更高的性能。</p>
+<h3 id="通过标准"><a class="header" href="#通过标准">通过标准</a></h3>
+<ul>
+<li>上板 <code>test1</code>、<code>test2</code>、<code>test3</code> 显示两个绿灯，多次 reset 后仍显示两个绿灯。</li>
+<li>上板 <code>test5</code>，时序无违例。</li>
+</ul>
+<h3 id="评分标准"><a class="header" href="#评分标准">评分标准</a></h3>
+<ul>
+<li>上板 <code>test5</code>，调整开关以运行十个测试，将七段数码管读数记录在 <code>test5_score.xls</code> 中（已上传至 eLearning），得到综合性能分。</li>
+</ul>
+<h3 id="操作步骤"><a class="header" href="#操作步骤">操作步骤</a></h3>
+<p>打开 <code>test5</code> 的 Vivado 工程，导入源文件后，你可以调整你的时钟频率。</p>
+<p><img src="../asset/project/frequency.png" alt="frequency" /></p>
+<p>在 “IP Sources” 中，打开 <code>clk_pll</code>，点击 “Output Clocks”，修改 <code>cpu_clk</code> 的值（上图红圈的内容）为你期望的时钟频率。除了这个值，该 IP 核的其他信息均不允许修改。</p>
+<p>生成 bit 文件后，检查是否出现时序违例：</p>
+<p><img src="../asset/project/wns.png" alt="wns" /></p>
+<p>检查上图红圈的值，不允许为负值。图中是合法值。如果出现负值，请降低你的时钟频率。如果是正值，你可以增加时钟频率，以获得更高的分数。</p>
+<blockquote>
+<p>TIPS：如果你想知道你的 CPU 合法的最高时钟频率，请将时钟频率调整至一个非常高的值 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span>，确保出现时序违例。生成 bit 文件后，假设 WNS 为 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69841em;vertical-align:-0.08333em;"></span><span class="mord">−</span><span class="mord mathnormal">t</span></span></span></span> ns（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65418em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>），那么可以通过以下公式估算最高时钟频率：</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">a</span><span class="mtight">x</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.25744em;vertical-align:-0.936em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.32144em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mord">0</span><span class="mord">0</span><span class="mord">0</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal">t</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mord">0</span><span class="mord">0</span><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></span></p>
+<p>其中 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span> 单位为 MHz, <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathnormal">t</span></span></span></span> 单位为 ns。</p>
+</blockquote>
+<p>上板后，先将所有开关往下调。然后，调整右侧的四个开关，让它们表示十进制数 1 到 10（对应十个测试）。</p>
+<p><img src="../asset/project/score_board.jpg" alt="score_board" /></p>
+<p>上图为 RefCPU 在 7MHz 的频率下，右侧四个开关表示十进制数 1 时的上板现象。七段数码管会有一个读数。如果结果为两个绿灯，则将十个测试的读数依次记录到 <code>test5_scoce.xls</code>（文件已上传至 eLearning，在 “<code>实验部分</code>” 目录下）里。如果某个测试的结果为红灯，该项成绩填 0。</p>
+<p><img src="../asset/project/score_refcpu.png" alt="score_refcpu" /></p>
+<p>上图是 RefCPU 在 7MHz 的频率下，10 个测试的读数。填写完读数后，把表格中的时钟频率改成你 CPU 的时钟频率。图中数据所用的 bit 文件已上传至 eLearning，路径为 “<code>实验部分/refcpu_test5.bit</code>”。</p>
+<h3 id="提交内容"><a class="header" href="#提交内容">提交内容</a></h3>
+<p>待定</p>
+<h3 id="截止时间"><a class="header" href="#截止时间">截止时间</a></h3>
+<p>待定</p>
 
                     </main>
 

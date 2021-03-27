@@ -168,7 +168,7 @@
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="了解-fpga-架构"><a class="header" href="#了解-fpga-架构">了解 FPGA 架构</a></h1>
 <p>FPGA（Field Programmable Gate Array）是可编程逻辑阵列的缩写，我们可以在相关计算机软件的帮助下对电路板结构进行编程，来构建我们自己的集成电路板。</p>
-<p>在 SDAccel 等工具的帮助下，我们不需要太过关心 FPGA 的底层实现。Vivado 中的综合阶段会将 HDL 代码转换成底层资源启用和相互连接，并在运行阶段刻入 FPGA 开发板中。</p>
+<p>Vivado 中的综合阶段会将 HDL 代码转换成底层资源启用和相互连接，并在运行阶段刻入 FPGA 开发板中。</p>
 <p>但是如果想进一步提升我们编写的硬件的性能，或多或少需要对板上的资源有一些了解。</p>
 <p>FPGA 上的基本结构有以下几类：</p>
 <ol>
@@ -197,7 +197,7 @@
 <p>其中 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span></span></span></span> 为 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.664392em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span> 个给定的存储单元。</p>
 <p>通常情况下，Xilinx FPGA 内部使用 6 bit 的查找表。</p>
 <p><img src="../asset/misc/lut.png" alt="2 bit 查找表" /></p>
-<p><strong>思考</strong>：一个可编程的查找表可实现 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.87998em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.87998em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7385428571428572em;"><span style="top:-2.931em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span> 个不同的映射，为什么？</p>
+<p><strong>思考</strong>：一个可编程的查找表可实现 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.87998em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.87998em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7385428571428572em;"><span style="top:-2.931em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span> 个不同的映射，为什么？</p>
 <h2 id="触发器ff"><a class="header" href="#触发器ff">触发器（FF）</a></h2>
 <p>数字逻辑课上讲寄存器时，一定讲到锁存器（latch）与触发器（flip flop）。</p>
 <p>FPGA 开发板上使用触发器作为在线存储的寄存器。</p>
@@ -215,7 +215,6 @@
 <p>BRAM 是一个双端口 RAM 模块，可以提供相对较大的数据保存单元。</p>
 <p>FPGA 开发板上有两种大小的 BRAM 存储器：18k 位 BRAM 和 36k 位 BRAM。</p>
 <p>这些存储器的双端口性质允许对不同位置进行并行，相同时钟周期的访问。</p>
-<p>在 OpenCL 代码中，BRAM 可以直接实现 RAM 和 ROM。</p>
 <p>LUTRAM 则是小型存储器，在设备配置期间（即将 bit 文件写入时）会将 LUT 真值表的内容写入其中。</p>
 <p>我们可以利用 LUTRAM 实现不同位数的存储器，FPGA 支持在任何部分实例化 LUTRAM，可提高电路性能。</p>
 <p><img src="../asset/misc/shift-register.png" alt="移位存储器" /></p>

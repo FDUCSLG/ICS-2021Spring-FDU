@@ -15,6 +15,7 @@
 * [附加资料](misc/README.md)
     * [外部资料](misc/external.md)
     * [指令列表](misc/instruction.md)
+    * [了解 FPGA 架构](misc/fpga.md)
     * [Verilator 仿真](misc/verilate.md)
     * [组合逻辑环与 `UNOPT`](misc/unopt.md)
     * [使用 GTKWave](misc/gtkwave.md)

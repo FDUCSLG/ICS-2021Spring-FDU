@@ -143,14 +143,16 @@ void ModelBase::print_num_monitor(int num) {
 }
 
 void ModelBase::checkout_confreg() {
-    int num = con->get_current_num();
-    int ack = con->get_acked_num();
+    if (con->monitor_enabled()) {
+        int num = con->get_current_num();
+        int ack = con->get_acked_num();
 
-    if (_current_num != num) {
-        asserts(_current_num + 1 == num, "#%d not passed", _current_num + 1);
-        notify(BLUE "(info)" RESET " #%d completed.\n", num);
-        asserts(ack == num, "#%d not passed", _current_num + 1);
-        _current_num = num;
+        if (_current_num != num) {
+            asserts(_current_num + 1 == num, "#%d not passed. num=%d", _current_num + 1, num);
+            notify(BLUE "(info)" RESET " #%d completed.\n", num);
+            asserts(ack == num, "#%d not passed. num=%d, ack=%d", _current_num + 1, num, ack);
+            _current_num = num;
+        }
     }
 
     if (con->has_char() && con->get_char() <= 0x7f)

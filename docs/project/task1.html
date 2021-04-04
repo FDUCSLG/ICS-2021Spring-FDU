@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>挑战课题 - Introduction to NSCSCC</title>
+        <title>流水线性能优化 - Introduction to NSCSCC</title>
         
         
 
@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="../arch-lab/lab2a.html">实验 2a</a></li><li class="chapter-item "><a href="../arch-lab/lab2b.html">实验 2b</a></li><li class="chapter-item "><a href="../arch-lab/lab3a.html">实验 3a</a></li><li class="chapter-item "><a href="../arch-lab/lab3b.html">实验 3b</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li><li class="chapter-item expanded "><a href="../arch-lab/project.html" class="active">挑战课题</a></li></ol></li><li class="chapter-item expanded "><a href="../sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="../misc/fpga.html">了解 FPGA 架构</a></li><li class="chapter-item "><a href="../misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="../arch-lab/lab2a.html">实验 2a</a></li><li class="chapter-item "><a href="../arch-lab/lab2b.html">实验 2b</a></li><li class="chapter-item "><a href="../arch-lab/lab3a.html">实验 3a</a></li><li class="chapter-item "><a href="../arch-lab/lab3b.html">实验 3b</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li></ol></li><li class="chapter-item expanded "><a href="../sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="../project/index.html">挑战课题</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../project/task1.html" class="active">流水线性能优化</a></li></ol></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="../misc/fpga.html">了解 FPGA 架构</a></li><li class="chapter-item "><a href="../misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -166,22 +166,21 @@
                 <div id="content" class="content">
                     <main>
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<h1 id="挑战课题"><a class="header" href="#挑战课题">挑战课题</a></h1>
-<h2 id="方向一流水线性能优化"><a class="header" href="#方向一流水线性能优化">方向一：流水线性能优化</a></h2>
+<h1 id="方向一流水线性能优化"><a class="header" href="#方向一流水线性能优化">方向一：流水线性能优化</a></h1>
 <blockquote>
 <p>预备条件：通过 <code>test1</code>、<code>test2</code>、<code>test3</code>；未实现的指令 decode 为 <code>NOP</code>。</p>
 </blockquote>
 <p>你将升级你的流水线架构，以获取更高的性能。</p>
-<h3 id="通过标准"><a class="header" href="#通过标准">通过标准</a></h3>
+<h2 id="通过标准"><a class="header" href="#通过标准">通过标准</a></h2>
 <ul>
 <li>上板 <code>test1</code>、<code>test2</code>、<code>test3</code> 显示两个绿灯，多次 reset 后仍显示两个绿灯。</li>
 <li>上板 <code>test5</code>，时序无违例。</li>
 </ul>
-<h3 id="评分标准"><a class="header" href="#评分标准">评分标准</a></h3>
+<h2 id="评分标准"><a class="header" href="#评分标准">评分标准</a></h2>
 <ul>
 <li>上板 <code>test5</code>，调整开关以运行十个测试，将七段数码管读数记录在 <code>test5_score.xls</code> 中（已上传至 eLearning），得到综合性能分。</li>
 </ul>
-<h3 id="操作步骤"><a class="header" href="#操作步骤">操作步骤</a></h3>
+<h2 id="操作步骤"><a class="header" href="#操作步骤">操作步骤</a></h2>
 <p>打开 <code>test5</code> 的 Vivado 工程，导入源文件后，你可以调整你的时钟频率。</p>
 <p><img src="../asset/project/frequency.png" alt="frequency" /></p>
 <p>在 “IP Sources” 中，打开 <code>clk_pll</code>，点击 “Output Clocks”，修改 <code>cpu_clk</code> 的值（上图红圈的内容）为你期望的时钟频率。除了这个值，该 IP 核的其他信息均不允许修改。</p>
@@ -198,9 +197,9 @@
 <p>上图为 RefCPU 在 7MHz 的频率下，右侧四个开关表示十进制数 1 时的上板现象（红框处的编号为 7 的开关向上调）。七段数码管会有一个读数。如果结果为两个绿灯，则将十个测试的读数依次记录到 <code>test5_scoce.xls</code>（文件已上传至 eLearning，在 “<code>实验部分</code>” 目录下）里。如果某个测试的结果为红灯，该项成绩填 0。</p>
 <p><img src="../asset/project/score_refcpu.png" alt="score_refcpu" /></p>
 <p>上图是 RefCPU 在 7MHz 的频率下，10 个测试的读数。填写完读数后，把表格中的时钟频率改成你 CPU 的时钟频率。图中数据所用的 bit 文件已上传至 eLearning，路径为 “<code>实验部分/refcpu_test5.bit</code>”。</p>
-<h3 id="提交内容"><a class="header" href="#提交内容">提交内容</a></h3>
+<h2 id="提交内容"><a class="header" href="#提交内容">提交内容</a></h2>
 <p>待定</p>
-<h3 id="截止时间"><a class="header" href="#截止时间">截止时间</a></h3>
+<h2 id="截止时间"><a class="header" href="#截止时间">截止时间</a></h2>
 <p>待定</p>
 
                     </main>
@@ -208,13 +207,13 @@
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="../arch-lab/lab4.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../project/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="../sys-lab/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../misc/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -226,13 +225,13 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="../arch-lab/lab4.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../project/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="../sys-lab/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../misc/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

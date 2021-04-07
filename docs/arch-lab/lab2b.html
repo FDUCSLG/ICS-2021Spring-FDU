@@ -436,9 +436,9 @@ endmodule
 <h3 id="截止时间"><a class="header" href="#截止时间">截止时间</a></h3>
 <p><strong>2021 年 4 月 11 日 23:59:59</strong></p>
 <h2 id="思考题"><a class="header" href="#思考题">*思考题</a></h2>
-<ul>
+<ol>
 <li>
-<p>李四发现 Verilator 仿真的 CONFREG 模块提供了简单的串口交互接口：地址 <code>0xbfaf1000</code> 用于在串口上读写字符，地址 <code>0xbfaf1014</code> 用于检查是否有未读入的字符。于是李四在 <code>misc/echo</code> 下编写了一个汇编程序 <code>echo.s</code>，它会将你在终端上输入的字符显示出来。请先尝试将 <code>echo.s</code> 编译成 <code>.coe</code> 文件。</p>
+<p>李四发现 Verilator 仿真的 CONFREG 模块提供了简单的串口交互接口：地址 <code>0xbfaf1000</code> 用于在串口上读写字符，地址 <code>0xbfaf1014</code> 用于检查是否有未读入的字符。于是李四在 <code>misc/echo</code> 下编写了一个汇编程序 <code>echo.s</code>，它会把你在终端上输入的字符显示出来。请先尝试将 <code>echo.s</code> 编译成 <code>.coe</code> 文件。</p>
 <p>打开一个终端，在仓库根目录下运行 <code>make vpty</code>。这个命令会使用 <code>socat</code> 在 <code>build</code> 目录下创建一个虚拟控制台（pty）。然后再打开一个终端，运行：</p>
 <pre><code class="language-shell">make vsim -j TARGET=mycpu/VTop VSIM_ARGS=&quot;-m [.coe 文件路径]&quot;
 </code></pre>
@@ -452,7 +452,7 @@ endmodule
 <li>
 <p>李四学会了 C 语言，于是他在 <code>misc/greet</code> 目录下写了一份 C 程序 <code>greet.c</code>。这个程序会读入一行文字，比如 “Gromah”，当你按下回车后，程序会在下一行中显示 “Hello, Gromah!”。请尝试将这个程序编译到 <code>.coe</code> 文件，并在你的 CPU 上运行。</p>
 </li>
-</ul>
+</ol>
 
                     </main>
 

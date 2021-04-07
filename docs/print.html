@@ -196,6 +196,7 @@
       </td>
       <td align="center">4.26</td>
       <td align="center">
+        <a href="arch-lab/lab4.html">布置实验 4</a>
       </td>
     </tr>
     <tr>
@@ -205,8 +206,7 @@
       </td>
       <td align="center">5.3</td>
       <td align="center">
-        <span class="green">五一劳动节</span><br>
-        <span class="red">实验 3 提交</span><br>
+        <span class="green">五一劳动节</span>
       </td>
     </tr>
     <tr>
@@ -215,7 +215,7 @@
       </td>
       <td align="center">5.10</td>
       <td align="center">
-        <a href="arch-lab/lab4.html">布置实验 4</a>
+        <span class="red">实验 3 提交</span>
       </td>
     </tr>
     <tr>
@@ -226,6 +226,7 @@
       </td>
       <td align="center">5.17</td>
       <td align="center">
+        <span class="red">实验 4 提交</span>
       </td>
     </tr>
     <tr>
@@ -236,7 +237,6 @@
       </td>
       <td align="center">5.24</td>
       <td align="center">
-        <span class="red">实验 4 提交</span>
       </td>
     </tr>
     <tr>
@@ -261,6 +261,7 @@
     <tr>
       <td align="center">4.19</td>
       <td align="center">
+        <a href="arch-lab/lab3b.html">布置实验 3b</a>
       </td>
       <td align="center">6.14</td>
       <td align="center">
@@ -276,8 +277,8 @@
 <ul>
 <li>实验 0：准备开发环境和测试环境。</li>
 <li>实验 1：基础的五级流水线 MIPS CPU。</li>
-<li>实验 2：访存仲裁和总线延时。</li>
-<li>实验 3：单周期缓存（cache）和多周期乘除法器。</li>
+<li>实验 2：访存仲裁和总线延时（2a）、多周期乘除法器（2b）。</li>
+<li>实验 3：单周期缓存（cache）。</li>
 <li>实验 4：MIPS 异常处理。</li>
 <li>挑战课题：自由选择。</li>
 </ul>
@@ -1020,7 +1021,7 @@ make: *** [verilate/Makefile.vsim.mk:123: vsim] Aborted (core dumped)
 <h3 id="截止时间"><a class="header" href="#截止时间">截止时间</a></h3>
 <p><strong>2021 年 4 月 11 日 23:59:59</strong></p>
 <h2 id="思考题"><a class="header" href="#思考题">*思考题</a></h2>
-<ul>
+<ol>
 <li>
 <p>张三在 <code>source/util/CBusMultiplexer.sv</code> 中实现了自己的仲裁器，然而过不了仿真。请指出 <code>CBusMultiplexer</code> 存在的问题。</p>
 </li>
@@ -1039,7 +1040,7 @@ Hello, world!
 <li>
 <p>王五最近学习了 AXI 总线协议。AXI 是一个双向握手协议。王五推荐你阅读 <a href="arch-lab/../misc/external.html#soc-%E9%83%A8%E5%88%86">“<i class="fa fa-file-pdf-o"></i> AMBA AXI Protocol Specification v1.0”</a>，希望你能了解并总结 AXI 总线的工作方式。</p>
 </li>
-</ul>
+</ol>
 <hr />
 <div class="footnote-definition" id="vtop"><sup class="footnote-definition-label">1</sup>
 <p><code>VTop</code> 用的是将在实验 3a 中介绍的 CBus（cache bus），是 AXI 总线的简化。Verilator 仿真的顶层模块和 Vivado 中不同的原因之一就是 CBus 模拟起来简单一些 <code>:)</code></p>
@@ -1321,9 +1322,9 @@ endmodule
 <h3 id="截止时间-1"><a class="header" href="#截止时间-1">截止时间</a></h3>
 <p><strong>2021 年 4 月 11 日 23:59:59</strong></p>
 <h2 id="思考题-1"><a class="header" href="#思考题-1">*思考题</a></h2>
-<ul>
+<ol>
 <li>
-<p>李四发现 Verilator 仿真的 CONFREG 模块提供了简单的串口交互接口：地址 <code>0xbfaf1000</code> 用于在串口上读写字符，地址 <code>0xbfaf1014</code> 用于检查是否有未读入的字符。于是李四在 <code>misc/echo</code> 下编写了一个汇编程序 <code>echo.s</code>，它会将你在终端上输入的字符显示出来。请先尝试将 <code>echo.s</code> 编译成 <code>.coe</code> 文件。</p>
+<p>李四发现 Verilator 仿真的 CONFREG 模块提供了简单的串口交互接口：地址 <code>0xbfaf1000</code> 用于在串口上读写字符，地址 <code>0xbfaf1014</code> 用于检查是否有未读入的字符。于是李四在 <code>misc/echo</code> 下编写了一个汇编程序 <code>echo.s</code>，它会把你在终端上输入的字符显示出来。请先尝试将 <code>echo.s</code> 编译成 <code>.coe</code> 文件。</p>
 <p>打开一个终端，在仓库根目录下运行 <code>make vpty</code>。这个命令会使用 <code>socat</code> 在 <code>build</code> 目录下创建一个虚拟控制台（pty）。然后再打开一个终端，运行：</p>
 <pre><code class="language-shell">make vsim -j TARGET=mycpu/VTop VSIM_ARGS=&quot;-m [.coe 文件路径]&quot;
 </code></pre>
@@ -1337,12 +1338,337 @@ endmodule
 <li>
 <p>李四学会了 C 语言，于是他在 <code>misc/greet</code> 目录下写了一份 C 程序 <code>greet.c</code>。这个程序会读入一行文字，比如 “Gromah”，当你按下回车后，程序会在下一行中显示 “Hello, Gromah!”。请尝试将这个程序编译到 <code>.coe</code> 文件，并在你的 CPU 上运行。</p>
 </li>
+</ol>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<h1 id="实验-3a高速缓存"><a class="header" href="#实验-3a高速缓存">实验 3a：高速缓存</a></h1>
+<p>高速缓存（cache）对于 CPU 性能十分重要。如果没有缓存，流水线做的所有优化都是徒劳的。本次实验需要实现第一级缓存中的数据缓存（L1d）。由于我们的 CPU 的取指和访存的需求基本一致，因此 L1d 可以直接拿来当 L1i 使用。</p>
+<p><img src="arch-lab/../asset/lab3/cache-hierarchy.svg" alt="缓存层次" /></p>
+<p>上图是目前消费级多核处理器中非常常见的缓存架构。<code>lscpu -C</code> 命令可以列出你的 CPU 上各级缓存的信息：</p>
+<pre><code class="language-plaintext">$ lscpu -C
+NAME ONE-SIZE ALL-SIZE WAYS TYPE        LEVEL SETS PHY-LINE COHERENCY-SIZE
+L1d       32K     128K    8 Data            1   64        1             64
+L1i       32K     128K    8 Instruction     1   64        1             64
+L2       256K       1M    4 Unified         2 1024        1             64
+L3         8M       8M   16 Unified         3 8192        1             64
+</code></pre>
+<p>缓存是利用程序局部性原理的经典例子。32KiB 的 L1d 和 L1i 足以在龙芯杯的性能测试得到 99% 的缓存命中率。</p>
+<h2 id="l1i--l1d"><a class="header" href="#l1i--l1d">L1i &amp; L1d</a></h2>
+<p>一级缓存分为指令缓存和数据缓存，分别服务于取指和访存阶段。原则上 L1i 是只读的，并且不会有程序在运行过程中写入新的指令<sup class="footnote-reference"><a href="#jit">1</a></sup>，因此我们不需要考虑两个缓存之间同步的问题。</p>
+<h2 id="实现-l1d"><a class="header" href="#实现-l1d">实现 L1d</a></h2>
+<p>本次实验要求 L1d 是写分配（write-allocate）以及写回（write-back）缓存。接下来我们将介绍 L1d 的基本结构。</p>
+<h3 id="cache-line"><a class="header" href="#cache-line">Cache Line</a></h3>
+<p>Cache line 包含一段连续的内存的副本，一般情况下它的大小是一个 2 的幂次，并且起始地址和大小对齐。当缓存从内存中读取出一条 cache line 时，缓存可以利用内存的突发传输特性，从而降低每个字节的平均读取延时。我们使用的 32 位 AXI 总线一般可以支持单次最高 16×4 = 64 字节的突发传输，因此我们也建议你在性能测试中使用大小为 64 字节的 cache line。从 L1i 的角度来看，相当于每条 cache line 放了 16 条指令。</p>
+<p>如果选择大小为 64 字节的 cache line，那么内部的偏移量（offset）需要 6 位。对于 L1i，由于指令都是和 4 字节对齐的，因此只需要 4 位。</p>
+<p><img src="arch-lab/../asset/lab3/offset.svg" alt="偏移量" /></p>
+<p><img src="arch-lab/../asset/lab3/offset-pad.svg" alt="偏移量和 4 字节对齐" /></p>
+<h3 id="cache-set"><a class="header" href="#cache-set">Cache Set</a></h3>
+<p>前面说的 cache line 是缓存和内存交互的基本单元。缓存将内存视为一大堆 cache line 的集合。之后我们需要考虑如何在缓存中索引 cache line。</p>
+<p>最常见的做法是把缓存分为若干个桶，每个桶内可以存放一定数量的 cache line，有点类似于哈希表。这些桶在缓存的术语中叫做 cache set。一般地址中除去 offset 后最低的几位会被拿来当作 cache set 的索引（index）：</p>
+<p><img src="arch-lab/../asset/lab3/index-offset.svg" alt="索引和偏移量" /></p>
+<p>每个 cache set 内能同时存储的 cache line 条数称为关联度（associativity）。显然关联度至少为 1。常见的关联度有 2、4、8（也就是所谓的 2 路、4 路、8 路缓存）。由于很多的 cache line 会被映射到同一个 cache set 内，我们必须用地址中剩下的位对它们进行区分。这些位通常也称作标签（tag）：</p>
+<p><img src="arch-lab/../asset/lab3/tag-index-offset.svg" alt="标签、索引和偏移量" /></p>
+<p>当我们索引 cache line 时，通常会在 cache set 内并行地比较 tag。因此，关联度太大会导致缓存中比较器消耗的硬件资源过多，反而会降低缓存性能。</p>
+<blockquote>
+<p><strong>为什么使用低位作为索引值？</strong></p>
+<p>看一个现实生活中的例子：</p>
+<img alt="杨浦区某快餐店" src="arch-lab/../asset/lab3/mcdonalds.jpg" width=65% />
+<center class="fig-caption">（杨浦区某快餐店的外卖暂存区。右下角应该是数字 “9”）</center>
+<p>上图中货架上每个数字下面写着 “订单尾号”。</p>
+<p>该快餐店的订单号是按顺序生成的。因此用低位作为索引有助于充分利用货架上的每个隔间。也正因为顺序生成的订单号，所以在一段时间内产生的外卖的订单号的高位都是一样的。如果用高位，就会导致大量的外卖放在同一层内。</p>
+</blockquote>
+<p>总结一下：</p>
+<ul>
+<li>offset 用于 cache line 内的寻址。</li>
+<li>index 用于索引到 cache set。</li>
+<li>tag 用于区分同一个 cache set 内不同的 cache line。</li>
 </ul>
+<h3 id="替换策略"><a class="header" href="#替换策略">替换策略</a></h3>
+<p>缓存的大小通常远小于内存的大小，所以一个程序运行过程中所需要用到的所内存大概率不能都放入缓存中。缓存的主要目标是把程序近期会用到的内存全部装入缓存，这些内存通常也称为工作集（working set）。因此，缓存经常需要把不常用的 cache line 从缓存中清出去，为接下来需要访问的 cache line 腾出空间。</p>
+<p>举个例子，对于一个 4 路缓存，某个 cache set 已经有 4 条 cache line 了，然后 CPU 访问的下一个地址对应的 cache line 不在缓存中，但也是映射到这个 cache set 的。此时缓存必须把这个 cache set 内已有的某条 cache line 替换掉，从而能够存放新的 cache line。那么此时应该将哪条 cache line 替换出去呢？</p>
+<p>想必各位在 ICS 课上已经了解过各种替换策略了，因此这里不会再一一列举。简单来说，如果我们知道程序的访存顺序，那么我们只需要将下次访问时间最晚的 cache line 替换掉即可。这个贪心算法可以证明是最优的。但显然我们无法准确得知程序的行为。LRU 算法和它的各种变种是缓存中常用的替换算法。LRU 在大多数情况下的效果都比较接近最优贪心算法的效果<sup class="footnote-reference"><a href="#lru">2</a></sup>。最原始的 LRU 算法需要维护 cache set 内每条 cache line 的顺序，在硬件上实现可能比较消耗资源，因此出现了一些 LRU 的变种算法。此外，随机替换策略在缓存关联度足够大的时候也有不错的表现。并且随机替换不需要在访存缓存时更新替换算法的状态，也不需要每个 cache set 都存放额外信息。相比于 LRU 系列，随机替换可以节约大量的硬件资源。</p>
+<p>本次实验中你可以实现任意的替换策略。</p>
+<h3 id="状态机"><a class="header" href="#状态机">状态机</a></h3>
+<p>缓存的状态机可以有两种理解：</p>
+<ol>
+<li>缓存本身是一个大的状态机，下面管着很多的 cache line。</li>
+<li>缓存先索引到一个 cache line，然后每条 cache line 都有一个独立的状态机。</li>
+</ol>
+<p>在我们的实验中，上面两种理解没有太大区别。对于有多个端口且支持并发访问的缓存而言（例如 L2），可能第二种理解更加贴切。</p>
+<p>Cache line 有三种基本的状态<sup class="footnote-reference"><a href="#mosei">3</a></sup>：</p>
+<ul>
+<li>Invalid：无效状态。这条 cache line 还没有被装入任何有效的数据。</li>
+<li>Valid：有效状态。这条 cache line 中有数据，且和内存中的内容相同。</li>
+<li>Dirty：已被写入状态。这条 cache line 中有数据，但是先前被 CPU 写入了新的数据，导致 cache line 中的内容和内存中对应位置处的内容不一致。</li>
+</ul>
+<p>这三种状态一般称为稳定状态（stable states）。当然，从 invalid 变到 valid 需要进行一次突发传输，这需要经过多个周期才能完成，因此需要设立额外的过渡状态（transient states）。</p>
+<p>你需要设计一个维护每条 cache line 状态的状态机。具体而言，你的状态机至少需要能处理下面几种事件：</p>
+<ul>
+<li>缓存命中（cache hit）：CPU 发出请求，并且在缓存内找到了对应的处于 valid/dirty 状态的 cache line。</li>
+<li>缓存不命中（cache miss）：CPU 发出请求，但是没有找到对应的处于 valid/dirty 状态的 cache line。</li>
+<li>读取 cache line：突发传输中返回了新的数据。</li>
+<li>写回 cache line：当 dirty 的 cache line 被替换时，需要使用突发传输将整个 cache line 写回到内存中。</li>
+</ul>
+<h3 id="存储和索引"><a class="header" href="#存储和索引">存储和索引</a></h3>
+<p>对于每条 cache line，我们需要存储：</p>
+<ul>
+<li>cache line 的数据。</li>
+<li>cache line 的 tag、状态信息。通常称为元数据（metadata）。</li>
+</ul>
+<p>对于每个 cache set，你需要存储一个 cache line 的数组。</p>
+<p>假设 index 和 offset 都是 6 位，关联度为 4，下面是一个简略的实现：</p>
+<pre><code class="language-verilog">typedef i20 tag_t;
+typedef i6 index_t;
+typedef i6 offset_t;
+typedef i2 position_t;  // cache set 内部的下标
+
+typedef struct packed {
+    tag_t tag;
+    logic valid;  // cache line 是否有效？
+    logic dirty;  // cache line 是否被写入了？
+} meta_t;
+typedef meta_t [3:0] meta_set_t;
+
+typedef word_t [15:0] cache_line_t;
+typedef cache_line_t [3:0] cache_set_t;
+
+// 存储单元（寄存器）
+meta_set_t [63:0] meta;
+cache_set_t [63:0] data;
+
+// 解析地址
+tag_t tag;
+index_t index;
+offset_t offset;
+assign {tag, index, offset} = dreq.addr;
+
+// 访问元数据
+meta_set_t foo;
+assign foo = meta[index];
+
+// 搜索 cache line
+position_t position;
+always_comb begin
+    position = 2'b00;  // 防止出现锁存器
+
+    unique if (foo[0].tag == tag)
+        position = 2'b00;
+    else if (foo[1].tag == tag)
+        position = 2'b01;
+    else if (foo[2].tag == tag)
+        position = 2'b10;
+    else if (foo[3].tag == tag)
+        position = 2'b11;
+end
+
+// 访问 cache line
+cache_line_t bar;
+assign bar = data[index][position];
+assign dreq.data = bar[offset[5:2]];  // 4 字节对齐
+</code></pre>
+<p>针对缓存的实现，我们有如下的建议：</p>
+<ul>
+<li>
+<p><strong>实现参数化</strong>。主要是为了方便修改缓存的大小。你可以在 <code>DCache</code> 模块的声明处添加自定义的参数，例如：</p>
+<pre><code class="language-verilog">module DCache #(
+    parameter int OFFSET_BITS = 4,
+    parameter int INDEX_BITS = 2,
+
+    localparam int TAG_BITS = 32 - OFFSET_BITS - INDEX_BITS
+) (
+    // 接口列表
+);
+</code></pre>
+<p>上面的 <code>parameter</code> 是外部可以改动的参数，例如</p>
+<pre><code class="language-verilog">DCache #(.OFFSET_BITS(6)) dcache_inst(.*);
+</code></pre>
+<p>而 <code>localparam</code> 仅限模块内部使用，类似于常量值（比如 C++ 中的 <code>constexpr</code>）。</p>
+</li>
+<li>
+<p><strong>强烈建议初次调试时不要使用太大的缓存</strong>。我们推荐最开始调试的时候使用 4 位的 offset 和 2 位的 index，并且关联度不要超过 4。这相当于每条 cache line 存储 4 条指令，缓存中只有 4 个 cache set。过长的 cache line 会让突发传输的过程太长，而过多的 cache set 和过大的关联度会增加在缓存中寻找问题的难度。一般 4 个足以测试出绝大部分的问题。</p>
+</li>
+<li>
+<p>*使用 LUTRAM 存储 cache line。我们在 <code>source/ram</code> 目录下提供了 <code>LUTRAM.sv</code> 和 <code>LUTRAMTest.sv</code>，它们分别是 LUTRAM IP 核的封装和测试<sup class="footnote-reference"><a href="#bram">4</a></sup>。使用 LUTRAM 可以大幅减少你的缓存消耗的硬件资源。你可以在 Vivado 中观察 <code>LUTRAMTest.sv</code> 的仿真波形图，或者是阅读 <code>LUTRAM.sv</code> 内的行为级模型的 SystemVerilog 代码，来了解 LUTRAM 的行为。我们也提供了 <code>source/refcpu/StupidBuffer.sv</code> 作为使用 LUTRAM 的示例。</p>
+</li>
+</ul>
+<h2 id="接口"><a class="header" href="#接口">接口</a></h2>
+<p>缓存是放在 CPU 流水线和内存之间的，因此：</p>
+<ul>
+<li>缓存对 CPU 提供一个 DBus 的接口，并且保证缓存是透明（transparent）的。即从 CPU 来看，无论有没有缓存，访存的接口应该都是一致。</li>
+<li>缓存在内存这边使用 CBus 接口，方便利用突发传输。</li>
+</ul>
+<h3 id="缓存总线cbus"><a class="header" href="#缓存总线cbus">缓存总线（CBus）</a></h3>
+<p>CBus 是对 AXI 总线突发传输接口的简化。</p>
+<pre><code class="language-verilog">typedef struct packed {
+    logic    valid;     // 是否发出请求
+    logic    is_write;  // 是否是写请求
+    msize_t  size;      // 单次传输的字节数
+    addr_t   addr;      // 突发传输起始地址
+    strobe_t strobe;    // 单次传输中的写使能信号
+    word_t   data;      // 单次传输中的写数据
+    mlen_t   len;       // 总传输次数
+} cbus_req_t;
+
+typedef struct packed {
+    logic  ready;  // 上一次传输是否完成
+    logic  last;   // 最后一次传输是否完成
+    word_t data;   // 单次传输读取的数据
+} cbus_resp_t;
+</code></pre>
+<p>CBus 的突发传输实际上就是 AXI 总线中的 WRAP 类型的突发传输。在 AXI 总线中，每次突发传输称为一次事务（transaction）。事务内可以有多次数据传输的总线握手（burst）。</p>
+<p>事务有几个基本属性：</p>
+<ul>
+<li>是否有效：<code>valid</code> 为 1 表明事务有效。</li>
+<li>写事务/读事务：由 <code>is_write</code> 决定。</li>
+<li>单次读写大小：由 <code>size</code> 决定。可以为 <code>MSIZE1</code>（单字节）、<code>MSIZE2</code>（双字节）或者 <code>MSIZE4</code>（4 字节）。</li>
+<li>起始地址：由 <code>addr</code> 给出。</li>
+<li>总传输/握手次数：由 <code>len</code> 给出。可以为 <code>MLEN1</code>、<code>MLEN2</code>、<code>MLEN4</code>、<code>MLEN8</code> 和 <code>MLEN16</code> 中的一种。</li>
+</ul>
+<p><strong>以上 5 项作为事务的属性，在事务进行中是不能变更的</strong>。</p>
+<p>和 DBus 类似，CBus 的握手也是在时钟周期上升沿时进行的。其中 <code>ready</code> 为 1 表示操作完成，而 <code>last</code> 为 1 表明这是这个事务中最后一次握手。当 <code>last</code> 为 1 的握手完成之后，如果接下来没有其它事务需要进行了，那么 <code>valid</code> 应该设为 0。当然你是知道总共会做多少次传输的，所以 <code>last</code> 可以换成你自己的计数器。</p>
+<p>前面还剩下 <code>strobe</code> 和 <code>data</code> 两个信号没有说明。首先，这两个信号和 DBus 中类似，也相当于有 4 个 byte lane，这里就不再赘述。其次，这两个信号是单次传输时用到的信号，因此在事务进行过程中可以变动。每当 <code>ready</code> 信号握手成功后，<code>strobe</code> 和 <code>data</code> 就应该换成下一次传输的数据。你可能注意到 <code>addr</code> 在这个过程中是不变的，这是因为每次传输时的具体位置 <code>real_addr</code> 是从 <code>addr</code> 开始累加的，即每次传输成功后，<code>real_addr</code> 加上 <code>size</code>。此外，由于我们用的是 WRAP 类型的传输，所以事务传输的范围是和 <code>size</code>×<code>len</code> 个字节对齐的。例如，当 <code>size</code> 是 <code>MSIZE4</code>，而 <code>len</code> 是 <code>MLEN4</code> 时，会和 4×4 = 16 字节对齐。如果 <code>addr</code> 是 <code>0x1f8</code>，那么 <code>real_addr</code> 将依次为 <code>0x1f8</code>、<code>0x1fc</code>、<code>0x1f0</code> 和 <code>0x1f4</code>。</p>
+<p>特别的，AXI 事务传输允许 <code>addr</code> 不用和 <code>size</code> 对齐。此时第一次传输相当于非对齐传输，而之后传输依然会按照对齐的地址进行传输。例如，当 <code>size</code> 是 <code>MSIZE4</code>，而 <code>addr</code> 是 <code>0x1f5</code> 时，<code>real_addr</code> 依次为 <code>0x1f5</code>、<code>0x1f8</code>、<code>0x1fc</code>...</p>
+<p>下图是一个从地址 <code>0xbfc01fc1</code> 开始连续传输 15 个字节 <code>0x11</code>~<code>0xff</code> 的示例：</p>
+<p><img src="arch-lab/../asset/lab3/cbus-transaction.svg" alt="CBus 事务传输" /></p>
+<p>上图中，四次握手的实际地址分别为 <code>0xbfc01fc1</code>、<code>0xbfc01fc4</code>、<code>0xbfc01fc8</code> 和 <code>0xbfc01fcc</code>。</p>
+<p>在 <code>verilate/include/axi.h</code> 有 AXI WRAP 突发传输的 C++ 描述。</p>
+<h3 id="参考实现"><a class="header" href="#参考实现">参考实现</a></h3>
+<p><code>source/refcpu/StupidBuffer.sv</code> 是一个参考实现。<code>StupidBuffer</code> 中展示了如何进行突发传输，并且同时将突发传输中的数据保存到 LUTRAM。</p>
+<h2 id="模块级测试"><a class="header" href="#模块级测试">模块级测试</a></h2>
+<p>本次实验使用 Verilator 对缓存做专门的测试。</p>
+<p>与之前不同，这次用了一个新的名为 <code>VCacheTop</code> 的顶层模块，它只接入了缓存，没有带上流水线。同时，测试你的缓存的 C++ 代码也放到了 <code>verilate/source/mycpu/VCacheTop</code> 下面。</p>
+<p>用下面的命令运行模块级测试：</p>
+<pre><code class="language-shell">make vsim -j TARGET=mycpu/VCacheTop VSIM_OPT=1
+</code></pre>
+<p>加入 <code>VSIM_OPT=1</code> 的原因是后面的单元测试非常大，不进行编译器优化会非常慢。</p>
+<p>如果测试全部通过，最后应该能看到：</p>
+<pre><code class="language-plaintext">(info) 27 tests passed.
+</code></pre>
+<h3 id="单元测试"><a class="header" href="#单元测试">单元测试</a></h3>
+<p>这中间最重要的文件是 <code>verilate/source/refcpu/VCacheTop/tests.inl</code>，这里面包含了本次实验所有的单元测试。<code>mycpu/VCacheTop</code> 文件夹下的 <code>tests.cpp</code> 里面直接 <code>include</code> 了 <code>tests.inl</code>，也就是说我们将用测试 <code>StupidBuffer</code> 的单元测试来测试你的缓存。每个单元测试形如：</p>
+<pre><code class="language-c++">// this test is explicitly marked with &quot;SKIP&quot;.
+WITH SKIP {
+    bool one = 1, three = 3;
+    ASSERT(one + one == three);  // trust me, it must fail
+    // but you should not fail here since it's skipped.
+} AS(&quot;akarin~&quot;);
+</code></pre>
+<p>可以看到，单元测试的代码用 <code>WITH</code>...<code>AS(&quot;...&quot;)</code> 包起来，<code>AS</code> 后面的字符串是这个单元测试的名字。测试内部使用 <code>ASSERT</code> 检查测试状态。如果状态与预期不符，<code>ASSERT</code> 会直接中断这个测试并报错。此外，<code>WITH</code> 后面可以带上一些插件（plugin），例如上面的 <code>SKIP</code>，表明这个测试会直接跳过。</p>
+<p>具体的测试内容需要你自己阅读 <code>tests.inl</code>。</p>
+<h3 id="对照测试"><a class="header" href="#对照测试">对照测试</a></h3>
+<p>有些测试使用了 <code>CMP_TO</code> 插件，例如：</p>
+<pre><code class="language-c++">WITH CMP_TO(ref) {
+    for (size_t i = 0; i &lt; CMP_SCAN_SIZE / 4; i++) {
+        dbus-&gt;storew(4 * i, randi&lt;uint32_t&gt;());
+        dbus-&gt;loadw(4 * i);
+    }
+} AS(&quot;cmp: word&quot;);
+</code></pre>
+<p>此时需要你自己编写你的缓存的对照模型（reference model）。所谓对照模型，就是用 C++ 描述你的缓存的各种行为。其中会包含诸如替换策略、内部状态等各种信息。测试框架会在运行 verilated 模型的同时也运行你的对照模型，并且在每次访存操作（load 或者 store）完成后，将对照模型的内部状态和 verilated 模型进行比较，如果不一致就报错（由 <code>CacheRefModel::compare_internal</code> 实现）。并且，在单个测试结束时，也会将对照模型的内存和 verilated 模型中的内存进行比较（由 <code>CacheRefModel::compare_memory</code> 实现）。</p>
+<p>你需要将 <code>cache_ref.h</code> 和 <code>cache_ref.cpp</code> 中的所有 <code>TODO</code> 全部实现，然后才能通过这些测试。</p>
+<p>请注意：对照模型的仿真不是以时钟周期为单位的，而是以访存操作为单位的。也就是说：</p>
+<pre><code class="language-c++">auto CacheRefModel::load(addr_t addr, AXISize size) -&gt; word_t {
+    // ...
+}
+void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data) {
+    // ...
+}
+</code></pre>
+<p>分别表示向缓存读取和写入的操作，而这两个函数的目标是计算操作完成后，理论上缓存的内部状态是怎么样的。测试框架在向 verilated 模型发送请求并等待 verilated 模型完成后，将先调用对应的函数，然后调用 <code>compare_internal</code> 来检查内部状态。</p>
+<h3 id="调试工具"><a class="header" href="#调试工具">调试工具</a></h3>
+<p>在单元测试的 <code>WITH</code> 后面加上 <code>TRACE</code>，就会在运行测试的中途记录 FST 波形图。默认会把波形图放在 <code>build</code> 文件夹下面。例如：</p>
+<pre><code class="language-c++">WITH TRACE {
+    // ...
+} AS(&quot;example test 1&quot;);
+</code></pre>
+<p>将会把波形图记录到 <code>build/example-test-1.fst</code> 这个文件中。</p>
+<p>类似的，在 <code>WITH</code> 后面加上 <code>DEBUG</code>，将会在终端打印所有访存操作。对比较小的测试可能有用。</p>
+<h3 id="参考实现-1"><a class="header" href="#参考实现-1">参考实现</a></h3>
+<p><code>verilate/source/refcpu/VCacheTop</code> 下面有 <code>StupidBuffer</code> 的配套代码。这可能是唯一比较靠谱的参考代码了 <code>:)</code></p>
+<h3 id="性能监测"><a class="header" href="#性能监测">*性能监测</a></h3>
+<p><code>tests.inl</code> 最后的四个测试分别会在你的缓存上运行 <code>std::sort</code>、<code>std::stable_sort</code>、堆排序和二叉树插入和搜索算法。它们都使用了一个名为 <code>STAT</code> 的插件。此时你需要实现 <code>mycache.h</code> 和 <code>mycache.cpp</code> 下面的所有 TODO，主要是 <code>reset_statistics</code>、<code>update_statistics</code> 和 <code>print_statistics</code> 这三个函数。它们分别表示重置统计信息、更新统计信息和打印统计信息。</p>
+<p>你可以在这里统计你的缓存的命中率、突发传输所用周期数等信息。测试框架在每个单元测试开始的时候会调用 <code>reset_statistics</code>；然后在仿真过程中，每个周期都会调用一次 <code>update_statistics</code>；测试结束时，会调用 <code>print_statistics</code> 来打印这个测试的统计信息。<code>StupidBuffer</code> 的配套代码中，实现了 <code>StupidBuffer</code> 各个状态所用周期数的计数器，在测试中会输入如下的内容：</p>
+<pre><code class="language-plaintext">&quot;std::sort&quot;: [IDLE]=8441412, [FETCH]=143504004, [READY]=8441412, [FLUSH]=19608616
+[OK] std::sort (11921ms)
+&quot;std::stable_sort&quot;: [IDLE]=5331138, [FETCH]=90629346, [READY]=5331138, [FLUSH]=2550000
+[OK] std::stable_sort (7313ms)
+&quot;heap sort&quot;: [IDLE]=5569012, [FETCH]=94673204, [READY]=5569012, [FLUSH]=2550000
+[OK] heap sort (7054ms)
+&quot;binary search tree&quot;: [IDLE]=7868866, [FETCH]=133770722, [READY]=7868866, [FLUSH]=34292706
+[OK] binary search tree (10670ms)
+</code></pre>
+<h3 id="自定义测试"><a class="header" href="#自定义测试">*自定义测试</a></h3>
+<p>如果有需要，你可参照已有的单元测试代码，在 <code>mycpu/VCacheTop/tests.cpp</code> 中编写你自己的单元测试。</p>
+<p>如果你尝试对缓存进行优化，你也可以用单元测试来检测优化的效果。</p>
+<h3 id="并行测试"><a class="header" href="#并行测试">*并行测试</a></h3>
+<p>为了加快测试速度，你可以使用下面的命令：</p>
+<pre><code class="language-shell">make vsim -j TARGET=mycpu/VCacheTop VSIM_OPT=1 VSIM_ARGS=&quot;-j4&quot;
+</code></pre>
+<p>其中 <code>-j4</code> 表示使用 4 个进程一起跑单元测试<sup class="footnote-reference"><a href="#fork">5</a></sup>。</p>
+<h2 id="实验提交-2"><a class="header" href="#实验提交-2">实验提交</a></h2>
+<p><strong>本次实验和实验 3b 一起提交</strong>。</p>
+<pre><code class="language-plaintext">18307130024/
+├── report/   （报告所在目录）
+├── source/   （源文件所在目录）
+└── verilate/ （仿真代码所在目录）
+</code></pre>
+<p>用 <code>zip -r 18307130024.zip 18307130024/</code> 打包。用 <code>unzip 18307130024.zip</code> 检查，应在当前目录下有学号目录。</p>
+<h3 id="通过标准-1"><a class="header" href="#通过标准-1">通过标准</a></h3>
+<ul>
+<li>通过模块级测试。
+<ul>
+<li><code>make vsim -j TARGET=mycpu/VCacheTop VSIM_OPT=1</code></li>
+<li><code>make vsim -j TARGET=mycpu/VCacheTop VSIM_OPT=1 VSIM_ARGS=&quot;-p 0.5&quot;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="实验报告要求-1"><a class="header" href="#实验报告要求-1">实验报告要求</a></h3>
+<ul>
+<li>格式：PDF</li>
+<li>内容：
+<ul>
+<li>简要描述你设计的缓存。</li>
+<li>如果你尝试做了优化，请举例说明优化的效果。</li>
+<li>写好姓名学号。附上测试通过时的照片或截图。</li>
+</ul>
+</li>
+</ul>
+<h3 id="截止时间-2"><a class="header" href="#截止时间-2">截止时间</a></h3>
+<p><strong>2021 年 5 月 10 日 12:00</strong></p>
+<h2 id="思考题-2"><a class="header" href="#思考题-2">*思考题</a></h2>
+<ol>
+<li>在关联度为 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.849108em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span></span></span></span> 的缓存中实现 LRU 算法时，每个 cache set 最少需要为 LRU 算法记录多少位的额外信息？</li>
+<li>缓存在重置（reset）的时候，除元信息外，是否需要将每条 cache line 内的数据也重置？如果不重置会有什么影响？如果重置又会有什么影响？</li>
+<li>模块级测试的最后四个测试使用了 <code>MemoryCell</code>，它表示 verilated 模型中指定地址处的一个小内存单元。所有读写类型为 <code>MemoryCell</code> 的变量的操作都会被重定向到 verilated 模型的仿真上。这样一来就能非常方便地在你的缓存上跑各种算法了。
+<ul>
+<li>请尝试使用 <code>MemoryCell</code> 编写一个新的单元测试。你可以在这个测试内跑任意算法。</li>
+<li><code>MemoryCell</code> 是否真的把所有的访存操作都重定向了？如果是，请说明理由。如果不是，请指出有哪些访存没有被重定向。</li>
+<li>你有不同于 <code>MemoryCell</code> 的解决方案吗？</li>
+</ul>
+</li>
+<li>张三发现，在先前 <code>lscpu -C</code> 的例子中，L1i/L1d 的 set 数量（SETS）只有 64，远小于 L2 的 set 数量，但是 L1i/L1d 的关联度（WAYS）是 8，反而比 L2 大。为什么它不选择把 L1i/L1d 的关联度降到 4，并且把 set 数量提高到 128 呢？</li>
+<li>文档中 <code>lscpu -C</code> 的输出来自 Intel 的 Coffee Lake 微架构的 i5 8300H。该 CPU 的 L3 是一个 (strictly) inclusive cache<sup class="footnote-reference"><a href="#inclusive">6</a></sup>。结合 <a href="https://en.wikichip.org/wiki/intel/microarchitectures/coffee_lake#Memory_Hierarchy">WikiChip</a> 上的信息，请尝试解释为什么 L3 的关联度是 16。</li>
+</ol>
+<hr />
+<div class="footnote-definition" id="jit"><sup class="footnote-definition-label">1</sup>
+<p>但实际上像 JVM、Javascript V8 这种利用 JIT 技术的软件可能会有这种需求。MIPS 架构中提供了 <code>CACHE</code> 指令来解决这个问题。</p>
+</div>
+<div class="footnote-definition" id="lru"><sup class="footnote-definition-label">2</sup>
+<p>如果是在链表上做更新，Sleator &amp; Tarjan 证明了 LRU 算法和最优算法的操作数是同一个级别的：<a href="https://dl.acm.org/doi/10.1145/2786.2793">“Amortized Efficiency of List Update and Paging Rules”</a>。</p>
+</div>
+<div class="footnote-definition" id="mosei"><sup class="footnote-definition-label">3</sup>
+<p>在多核的缓存系统中，由于需要维护缓存一致性，可能会有更多的状态。例如在 MOSEI 缓存一致性协议中，每条 cache line 的状态可能是 Modified、Owner、Shared、Exclusive 或者 Invalid 中的一种。</p>
+</div>
+<div class="footnote-definition" id="bram"><sup class="footnote-definition-label">4</sup>
+<p>你可能发现 <code>source/ram</code> 目录下还有一个 <code>BRAM.sv</code>。我们在本次实验中不推荐你用 BRAM，因为 BRAM 的读写有至少一个周期的延时。</p>
+</div>
+<div class="footnote-definition" id="fork"><sup class="footnote-definition-label">5</sup>
+<p>由于并行测试用到了 <code>fork</code>，所以目前仅支持在 Linux 环境中使用。</p>
+</div>
+<div class="footnote-definition" id="inclusive"><sup class="footnote-definition-label">6</sup>
+<p>参见 <a href="https://en.wikipedia.org/wiki/CPU_cache#INCLUSIVE">Wikipedia</a> 以及网上的资料。</p>
+</div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<h1 id="实验-3a"><a class="header" href="#实验-3a">实验 3a</a></h1>
-<p>无可奉告。</p>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<h1 id="实验-3b"><a class="header" href="#实验-3b">实验 3b</a></h1>
+<h1 id="实验-3b接入流水线"><a class="header" href="#实验-3b接入流水线">实验 3b：接入流水线</a></h1>
 <p>无可奉告。</p>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="实验-4"><a class="header" href="#实验-4">实验 4</a></h1>
@@ -1362,7 +1688,7 @@ endmodule
 <p>预备条件：通过 <code>test1</code>、<code>test2</code>、<code>test3</code>；未实现的指令 decode 为 <code>NOP</code>。</p>
 </blockquote>
 <p>你将升级你的流水线架构，以获取更高的性能。</p>
-<h2 id="通过标准-1"><a class="header" href="#通过标准-1">通过标准</a></h2>
+<h2 id="通过标准-2"><a class="header" href="#通过标准-2">通过标准</a></h2>
 <ul>
 <li>上板 <code>test1</code>、<code>test2</code>、<code>test3</code> 显示两个绿灯，多次 reset 后仍显示两个绿灯。</li>
 <li>上板 <code>test5</code>，时序无违例。</li>
@@ -1390,7 +1716,7 @@ endmodule
 <p>上图是 RefCPU 在 7MHz 的频率下，10 个测试的读数。填写完读数后，把表格中的时钟频率改成你 CPU 的时钟频率。图中数据所用的 bit 文件已上传至 eLearning，路径为 “<code>实验部分/refcpu_test5.bit</code>”。</p>
 <h2 id="提交内容"><a class="header" href="#提交内容">提交内容</a></h2>
 <p>待定</p>
-<h2 id="截止时间-2"><a class="header" href="#截止时间-2">截止时间</a></h2>
+<h2 id="截止时间-3"><a class="header" href="#截止时间-3">截止时间</a></h2>
 <p>待定</p>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="附加资料"><a class="header" href="#附加资料">附加资料</a></h1>
@@ -1941,6 +2267,7 @@ page_divisor 4
 <li><code>mycpu_top.sv</code>：接入龙芯杯的测试的顶层模块。</li>
 <li><code>SRAMTop.sv</code>：使用类 SRAM 接口时 CPU 的顶层模块。</li>
 <li><code>VTop.sv</code>：使用 AXI 接口时或者进行 Verilator 仿真时 CPU 的顶层模块。</li>
+<li><code>VCacheTop.sv</code>：测试缓存时的顶层模块。</li>
 </ul>
 <h3 id="sourcerefcpu"><a class="header" href="#sourcerefcpu"><code>source/refcpu</code></a></h3>
 <p>RefCPU 的源代码。目录结构和 <code>source/mycpu</code> 是类似的。</p>
@@ -1958,6 +2285,33 @@ page_divisor 4
 <h1 id="常见问题"><a class="header" href="#常见问题">常见问题</a></h1>
 <p>关于实验内容的答疑，请前往 <a href="https://fducslg.slack.com">FDUCSLG</a> 的 Slack 平台的 #sig-architecture 频道提问。如果你不想公开提问，可以单独询问助教。</p>
 <p>本页面不定期更新。</p>
+<h3 id="为什么运行-make-vsim-显示-coe-file-should-begin-with-memory_initialization_radix--"><a class="header" href="#为什么运行-make-vsim-显示-coe-file-should-begin-with-memory_initialization_radix--">为什么运行 <code>make vsim</code> 显示 “<code>COE file should begin with &quot;memory_initialization_radix = &quot;</code>”？</a></h3>
+<p>请检查 <code>misc/nscscc</code> 目录下的 <code>.coe</code> 文件内容是否正确。它们都是 Linux 软链接，正常情况下，可以使用 <code>ls -l misc/nscscc</code> 查看到软链接到位置：</p>
+<pre><code class="language-shell">$ ls -l misc/nscscc
+total 3400
+lrwxrwxrwx 1 riteme riteme      58 Feb 27 12:55 bitcount.coe -&gt; ../../vivado/test5/soft/perf_func/obj/bitcount/axi_ram.coe
+lrwxrwxrwx 1 riteme riteme      61 Feb 27 12:55 bubble_sort.coe -&gt; ../../vivado/test5/soft/perf_func/obj/bubble_sort/axi_ram.coe
+lrwxrwxrwx 1 riteme riteme      58 Feb 27 12:56 coremark.coe -&gt; ../../vivado/test5/soft/perf_func/obj/coremark/axi_ram.coe
+lrwxrwxrwx 1 riteme riteme      55 Feb 27 12:56 crc32.coe -&gt; ../../vivado/test5/soft/perf_func/obj/crc32/axi_ram.coe
+lrwxrwxrwx 1 riteme riteme      59 Feb 27 12:56 dhrystone.coe -&gt; ../../vivado/test5/soft/perf_func/obj/dhrystone/axi_ram.coe
+-rwxr-xr-x 1 riteme riteme 1299476 Feb 20 12:07 func_test.coe
+-rw-r--r-- 1 riteme riteme 2157055 Feb 20 12:07 func_test.txt
+lrwxrwxrwx 1 riteme riteme      60 Feb 27 12:57 quick_sort.coe -&gt; ../../vivado/test5/soft/perf_func/obj/quick_sort/axi_ram.coe
+lrwxrwxrwx 1 riteme riteme      61 Feb 27 12:57 select_sort.coe -&gt; ../../vivado/test5/soft/perf_func/obj/select_sort/axi_ram.coe
+lrwxrwxrwx 1 riteme riteme      53 Feb 27 12:57 sha.coe -&gt; ../../vivado/test5/soft/perf_func/obj/sha/axi_ram.coe
+lrwxrwxrwx 1 riteme riteme      61 Feb 27 12:57 stream_copy.coe -&gt; ../../vivado/test5/soft/perf_func/obj/stream_copy/axi_ram.coe
+lrwxrwxrwx 1 riteme riteme      62 Feb 27 12:58 stringsearch.coe -&gt; ../../vivado/test5/soft/perf_func/obj/stringsearch/axi_ram.coe
+lrwxrwxrwx 1 riteme riteme      45 Mar 19 23:27 test1.coe -&gt; ../../vivado/test1/soft/func/obj/inst_ram.coe
+lrwxrwxrwx 1 riteme riteme      35 Mar 19 23:27 test1.txt -&gt; ../../vivado/test1/golden_trace.txt
+lrwxrwxrwx 1 riteme riteme      45 Mar 19 23:27 test2.coe -&gt; ../../vivado/test2/soft/func/obj/inst_ram.coe
+lrwxrwxrwx 1 riteme riteme      35 Mar 19 23:27 test2.txt -&gt; ../../vivado/test2/golden_trace.txt
+lrwxrwxrwx 1 riteme riteme      45 Mar 19 23:27 test3.coe -&gt; ../../vivado/test3/soft/func/obj/inst_ram.coe
+lrwxrwxrwx 1 riteme riteme      35 Mar 19 23:27 test3.txt -&gt; ../../vivado/test3/golden_trace.txt
+lrwxrwxrwx 1 riteme riteme      45 Mar 19 23:27 test4.coe -&gt; ../../vivado/test4/soft/func/obj/inst_ram.coe
+</code></pre>
+<p>如果你的输出没有显示链接到 <code>vivado</code> 目录，说明你有可能是在非 *nix 环境下（比如 Windows）做的 git clone。你可以尝试重新 clone，或者直接在 <code>VSIM_ARGS</code> 中手动指定 <code>-m</code> 和 <code>-r</code> 参数。</p>
+<h3 id="为什么编译时报错-undefined-reference-to-"><a class="header" href="#为什么编译时报错-undefined-reference-to-">为什么编译时报错 “<code>undefined reference to ...</code>”？</a></h3>
+<p>一般是我们更新了代码后会出现这种问题。你可以尝试先 <code>make clean</code> 后再重新编译。</p>
 <h3 id="为什么-verilator-会报告-unoptunoptflat"><a class="header" href="#为什么-verilator-会报告-unoptunoptflat">为什么 Verilator 会报告 <code>UNOPT</code>/<code>UNOPTFLAT</code>？</a></h3>
 <p>这是因为你的代码中可能存在组合逻辑环。请根据 Verilator 输出的文件位置检查是否真的有逻辑环。</p>
 <p>如果你认为并不存在逻辑环，并且 Vivado 布线时也没有报告逻辑环，有可能是遇到了 <a href="misc/unopt.html">“组合逻辑环与 <code>UNOPT</code>”</a> 中提到的情形。</p>

@@ -38,3 +38,7 @@ code {
 .schedule-table td {
     height: 2.6em;
 }
+
+.fig-caption {
+    color: rgb(161, 161, 161);
+}

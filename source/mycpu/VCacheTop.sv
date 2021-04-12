@@ -11,6 +11,11 @@ module VCacheTop (
 );
     `include "bus_decl"
 
+    cbus_req_t  dcreq;
+    cbus_resp_t dcresp;
+
+    assign creq = dcreq;
+    assign dcresp = cresp;
     DCache top(.*);
 
     /**

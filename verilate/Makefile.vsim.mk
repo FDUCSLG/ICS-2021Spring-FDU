@@ -18,7 +18,9 @@ CXX_FILES := \
 	$(VERILATOR_ROOT)/verilated_fst_c.cpp
 	# $(VERILATOR_ROOT)/verilated_threads.cpp
 
-CXX_TARGET_HEADERS := $(wildcard $(VSOURCE)/$(VROOT)/*.h)
+CXX_TARGET_HEADERS := \
+	$(wildcard $(VSOURCE)/$(VROOT)/*.h) \
+	$(wildcard $(VSOURCE)/$(VROOT)/*.inl)
 CXX_HEADERS := \
 	$(wildcard $(VINCLUDE)/*.h) \
 	$(wildcard $(VINCLUDE)/thirdparty/*.h)

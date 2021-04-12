@@ -1,7 +1,7 @@
 VERILATOR = verilator
 GTKWAVE = gtkwave
 
-.PHONY: help clean
+.PHONY: help clean system-info dump-instructions
 
 help:
 	@echo 'Available commands:'

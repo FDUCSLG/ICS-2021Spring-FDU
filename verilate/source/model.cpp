@@ -46,11 +46,16 @@ void ModelBase::enable_fst_trace(bool enable) {
 void ModelBase::start_fst_trace(const std::string &path) {
     asserts(!_fst_avail(), "FST trace has been already opened");
 
+    if (_fst_folder.empty())
+        _fst_path = path;
+    else
+        _fst_path = _fst_folder + "/" + path;
+
     _fst_tfp = new VerilatedFstC;
     _fst_count = 0;
     trace(_fst_tfp, FST_TRACE_MAX_DEPTH);
-    _fst_tfp->open(path.data());
-    asserts(_fst_tfp->isOpen(), "failed to open \"%s\"", path.data());
+    _fst_tfp->open(_fst_path.data());
+    asserts(_fst_tfp->isOpen(), "failed to open \"%s\"", _fst_path.data());
 
     enable_fst_trace();
     fst_dump(+0);
@@ -58,7 +63,7 @@ void ModelBase::start_fst_trace(const std::string &path) {
 
 void ModelBase::stop_fst_trace() {
     if (_fst_avail()) {
-        notify("FST trace: stop @%zu\n", fst_time());
+        info("\"%s\": stop @%zu\n", _fst_path.data(), fst_time());
         eval();
 
         enable_fst_trace();
@@ -149,7 +154,7 @@ void ModelBase::checkout_confreg() {
 
         if (_current_num != num) {
             asserts(_current_num + 1 == num, "#%d not passed. num=%d", _current_num + 1, num);
-            notify(BLUE "(info)" RESET " #%d completed.\n", num);
+            info(BLUE "(info)" RESET " #%d completed.\n", num);
             asserts(ack == num, "#%d not passed. num=%d, ack=%d", _current_num + 1, num, ack);
             _current_num = num;
         }
@@ -162,4 +167,12 @@ void ModelBase::checkout_confreg() {
 void ModelBase::open_pty(const std::string &path) {
     if (con)
         con->uart_open_pty(path);
+}
+
+void ModelBase::set_num_workers(int n_workers) {
+    _num_workers = n_workers;
+}
+
+void ModelBase::set_fst_folder(const std::string &folder) {
+    _fst_folder = folder;
 }

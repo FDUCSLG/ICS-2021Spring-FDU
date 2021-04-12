@@ -19,7 +19,7 @@ void RefCPU::print_status() {
 void RefCPU::print_request() {
     auto req = get_oreq();
     if (resetn && req.valid()) {
-        debug(
+        log_debug(
             BLUE "[%s]" RESET " "
             "addr=%08x, data=%08x, len=%u, size=%u, strb=%x\n",
             req.is_write() ? "W" : "R",
@@ -40,7 +40,7 @@ void RefCPU::print_writeback() {
         auto value = ctx.r(id);
         text_dump(con->trace_enabled(), ctx.pc(), id, value);
 
-        // debug("R[%d \"%s\"] <- %08x\n",
+        // log_debug("R[%d \"%s\"] <- %08x\n",
         //     id, nameof::nameof_enum(id).data(), value);
     }
 }

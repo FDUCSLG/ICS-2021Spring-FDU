@@ -14,7 +14,7 @@ module StupidBuffer (
         FETCH,
         READY,
         FLUSH
-    } state_t;
+    } state_t /* verilator public */;
 
     typedef union packed {
         word_t data;
@@ -24,7 +24,7 @@ module StupidBuffer (
     typedef i4 offset_t;
 
     // registers
-    state_t    state;
+    state_t    state /* verilator public_flat_rd */;
     dbus_req_t req;  // dreq is saved once addr_ok is asserted.
     offset_t   offset;
 

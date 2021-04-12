@@ -11,4 +11,4 @@ doc-serve:
 	cd doc; $(MDBOOK) serve
 
 doc-sync:
-	$(RSYNC) -avP doc/book $(SYNC_DESTINATION)
+	$(RSYNC) -avzP doc/book $(SYNC_DESTINATION)

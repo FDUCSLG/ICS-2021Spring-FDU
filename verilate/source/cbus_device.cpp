@@ -17,7 +17,7 @@ auto CBusDevice::eval_resp() -> CBusResp {
         // fetch data if needed
         word_t data = 0;
         if (!tx.is_write) {
-            auto addr = tx.Address_N();
+            auto addr = tx.addr;
             data = mem->load(addr);
         }
 
@@ -35,7 +35,9 @@ void CBusDevice::eval_req(const CBusReq &req) {
         // simple sanity checks
         asserts(req.valid(), "req.valid should be 1 during CBus transaction");
         asserts(req.is_write() == tx.is_write, "type of CBus transaction should not change");
+        asserts((1 << req.size()) == tx.Number_Bytes, "size of CBus transaction should not change.");
         asserts(req.addr() == tx.Start_Address, "address of CBus transaction should not change");
+        asserts(req.len() + 1 == tx.Burst_Length, "len of CBus transaction should not change.");
 
         // pass arguments to commit
         _strobe = req.strobe();
@@ -44,11 +46,8 @@ void CBusDevice::eval_req(const CBusReq &req) {
         // evaluate next transaction state
         if (tx.last())
             ntx.reset();
-        else {
-            if (tx.on_boundry())
-                ntx.is_wrapped = true;
-            ntx.N++;
-        }
+        else
+            ntx.sync();
     } else if (req.valid()) {
         // no transaction in progress, so we kick off a new one.
         ntx.init(
@@ -65,7 +64,7 @@ void CBusDevice::sync() {
     if (enable) {
         if (tx.busy && tx.is_write) {
             // perform write operation if needed
-            auto addr = tx.Address_N();
+            auto addr = tx.addr;
             auto mask = STROBE_TO_MASK[_strobe];
             mem->store(addr, _data, mask);
             _strobe = _data = 0;
@@ -74,7 +73,7 @@ void CBusDevice::sync() {
         tx = ntx;
     }
 
-    enable = randf(0.0, 1.0) >= p_disable;
+    enable = p_disable == 0 || randf(0.0, 1.0) >= p_disable;
 }
 
 auto CBusDevice::dump(addr_t addr, size_t size) -> MemoryDump {

@@ -59,6 +59,9 @@ public:
     // NOTE: CONFREG class does not allow close pty
     void open_pty(const std::string &path);
 
+    void set_num_workers(int n_workers);
+    void set_fst_folder(const std::string &folder);
+
     virtual void reset() = 0;
     virtual void tick() = 0;
     virtual void run() = 0;
@@ -68,6 +71,9 @@ public:
 protected:
     std::shared_ptr<Confreg> con;
     std::shared_ptr<CBusDevice> dev;
+
+    int _num_workers = 1;
+    std::string _fst_folder = "";
 
     auto fst_time() -> size_t;
     void fst_advance(size_t incr = 1);
@@ -87,6 +93,7 @@ private:
     int _current_num;
 
     VerilatedFstC *_fst_tfp;
+    std::string _fst_path;
     FILE *_text_tfp;
     TextDiff _text_diff;
 

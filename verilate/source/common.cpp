@@ -52,6 +52,17 @@ auto trim(const std::string &text) -> std::string {
     return text.substr(i, j - i);
 }
 
+auto escape(const std::string &text) -> std::string {
+    std::string result = text;
+
+    for (char &c : result) {
+        if (!std::isalnum(c))
+            c = '-';
+    }
+
+    return result;
+}
+
 static void feed(ByteSeq &seq, std::ifstream &fp, int base) {
     std::string buf;
 
@@ -141,18 +152,11 @@ auto parse_memory_file(const std::string &path) -> ByteSeq {
  * simple logging
  */
 
-static struct {
-    std::mutex lock;
-    bool debug_enabled;
-    bool log_enabled;
-    bool status_enabled;
-    bool in_status_line;
-    std::string char_buffer;
-} _ctx;
+_log_ctx_t _ctx;
 
 static void check_status_line(FILE *fp = stdout) {
     if (_ctx.in_status_line) {
-        fprintf(fp, CLEAR_ALL MOVE_TO_FRONT);
+        fprintf(fp, MOVE_TO_FRONT CLEAR_TO_RIGHT);
         fflush(fp);
         _ctx.in_status_line = false;
     }
@@ -179,9 +183,8 @@ void enable_status_line(bool enable) {
     va_end(args); \
 }
 
-void debug(const char *message, ...) {
-    if (_ctx.log_enabled && _ctx.debug_enabled)
-        VPRINT(stdout);
+void _log_debug(const char *message, ...) {
+    VPRINT(stdout);
 }
 
 void info(const char *message, ...) {
@@ -253,7 +256,7 @@ SimpleTimer::~SimpleTimer() {
         rate /= 1e3;
     }
 
-    notify(BLUE "(info)" RESET " testbench finished in %d cycles (%.3lf %s).\n",
+    info(BLUE "(info)" RESET " testbench finished in %d cycles (%.3lf %s).\n",
         _cycles, rate, use_mhz ? "MHz" : "KHz");
 
 }

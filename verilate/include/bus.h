@@ -326,11 +326,11 @@ public:
     /**
      * asynchronous/synchronous load/store interface
      *
-     * asynchronous version only issue the corresponding request to dbus
-     * and does not handle data placement when the data is ready.
+     * functions with no size specifiers only issue the corresponding request
+     * to dbus and does not handle data placement when the data is ready.
      *
-     * synchronous version will handle data placement by shifting right
-     * when return to the caller.
+     * for asynchronous operations, you have to use await to wait and obtain
+     * the loaded value.
      *
      * both versions DO NOT check address alignment.
      * as a result, you can issue unaligned memory access as long as your
@@ -433,7 +433,7 @@ public:
                 return data;
         }
 
-        panic("no response from DBus in %llu cycle(s)", max_count);
+        panic("await timeout: no response from DBus in %llu cycle(s)", max_count);
     }
 
 protected:
@@ -487,7 +487,7 @@ public:
             auto u = ongoing.front();
             ongoing.pop();
 
-            debug(
+            log_debug(
                 "pipeline: %s \"%08x\" @0x%x → got \"%08x\" (size=%d, strobe=%x)\n",
                 u.is_load() ? (u.dest ? "load" : "expect") : "store",
                 u.data, u.addr, data,
@@ -582,7 +582,11 @@ public:
             count++;
         }
 
-        internal_assert(empty(), "all queues should be empty");
+        internal_assert(
+            empty(),
+            "fence timeout: all queues should be empty. max_count=%llu",
+            max_count
+        );
     }
 
 private:

@@ -26,7 +26,19 @@ code {
     color: rgb(184, 31, 31);
 }
 
+.green {
+    color: rgb(41, 155, 41);
+}
+
 .content img {
     display: block;
     margin: 0 auto;
+}
+
+.schedule-table td {
+    height: 2.6em;
+}
+
+.fig-caption {
+    color: rgb(161, 161, 161);
 }

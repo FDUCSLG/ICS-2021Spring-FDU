@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <string>
 #include <vector>
 #include <random>
@@ -10,6 +11,9 @@
 #include <cstdint>
 
 #include <signal.h>
+
+// detect Linux
+#define ICS_ON_LINUX __linux__
 
 // to control initialization order of global variables
 #define INIT_PRIORITY(value) \
@@ -45,6 +49,7 @@ constexpr word_t STROBE_TO_MASK[] = {
 
 void hook_signal(int sig, handler_t *handler);
 auto trim(const std::string &text) -> std::string;
+auto escape(const std::string &text) -> std::string;
 auto parse_memory_file(const std::string &path) -> ByteSeq;
 
 template <typename T>
@@ -114,11 +119,26 @@ auto randi() -> T {
 
 constexpr size_t LOG_MAX_BUFFER_SIZE = 1024;
 
+extern struct _log_ctx_t{
+    std::mutex lock;
+    bool debug_enabled;
+    bool log_enabled;
+    bool status_enabled;
+    bool in_status_line;
+    std::string char_buffer;
+} _ctx;
+
 void enable_logging(bool enable = true);
 void enable_debugging(bool enable = true);
 void enable_status_line(bool enable = true);
 
-void debug(const char *message, ...);
+void _log_debug(const char *message, ...);
+
+#define log_debug(...) { \
+    if (_ctx.log_enabled && _ctx.debug_enabled) \
+        _log_debug(__VA_ARGS__); \
+}
+
 void info(const char *message, ...);
 void warn(const char *message, ...);
 void notify(const char *message, ...);

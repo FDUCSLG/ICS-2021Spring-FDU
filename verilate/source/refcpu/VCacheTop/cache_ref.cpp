@@ -7,7 +7,7 @@ CacheRefModel::CacheRefModel(StupidBuffer *_top, size_t memory_size)
 }
 
 void CacheRefModel::reset() {
-    debug("ref: reset()\n");
+    log_debug("ref: reset()\n");
 
     mem.reset();
 }
@@ -20,14 +20,14 @@ void CacheRefModel::fetch(addr_t addr) {
 }
 
 auto CacheRefModel::load(addr_t addr, AXISize size) -> word_t {
-    debug("ref: load(0x%x, %d)\n", addr, 1 << size);
+    log_debug("ref: load(0x%x, %d)\n", addr, 1 << size);
 
     fetch(addr);
     return buffer[addr % 64 / 4];
 }
 
 void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data) {
-    debug("ref: store(0x%x, %d, %x, \"%08x\")\n", addr, 1 << size, strobe, data);
+    log_debug("ref: store(0x%x, %d, %x, \"%08x\")\n", addr, 1 << size, strobe, data);
 
     fetch(addr);
 
@@ -38,7 +38,7 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 }
 
 void CacheRefModel::check_internal() {
-    debug("ref: check_internal()\n");
+    log_debug("ref: check_internal()\n");
 
     for (int i = 0; i < 16; i++) {
         asserts(
@@ -51,7 +51,7 @@ void CacheRefModel::check_internal() {
 }
 
 void CacheRefModel::check_memory() {
-    debug("ref: check_memory()\n");
+    log_debug("ref: check_memory()\n");
 
     asserts(mem.dump(0, mem.size()) == top->dump(), "reference model's memory content is different from RTL model");
 }

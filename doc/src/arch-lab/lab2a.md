@@ -130,7 +130,7 @@ assign flushW = ~d_data_ok;
 
 完成后，你应该能够通过 `vivado/test1` 的测试。
 
-### *实现仲裁器
+### \*实现仲裁器
 
 我们已经提供了一个简单的仲裁器实现，在 `source/util/CBusArbiter.sv` 中。`VTop` 默认使用 `CBusArbiter`：
 
@@ -303,7 +303,7 @@ gtkwave build/trace.fst
 
 * 修改取指和访存阶段的逻辑，支持多周期访存。
     * 在 Vivado 仿真中通过 `test1`。
-* *在 `MyArbiter.sv` 中实现仲裁器。
+* \*在 `MyArbiter.sv` 中实现仲裁器。
 * 根据 [“指令列表”](../misc/instruction.md) 添加新的指令。
     * 在 Vivado 仿真中通过 `test2`。
 * 修改 `verilate/source/mycpu/VTop` 下的 C++ 代码。
@@ -343,27 +343,27 @@ gtkwave build/trace.fst
 
 **2021 年 4 月 11 日 23:59:59**
 
-## *思考题
+## \*思考题
 
-* 张三在 `source/util/CBusMultiplexer.sv` 中实现了自己的仲裁器，然而过不了仿真。请指出 `CBusMultiplexer` 存在的问题。
-* 龙芯杯的测试框架中有一个叫做 CONFREG 的模块[^confreg]，用来控制 FPGA 上的各种硬件资源，例如 LED 数码管、按钮。CONFREG 是一个 memory-mapped 设备。其中地址 `0xbfaffff0` 是一个简化的 UART 打印接口，往这个地址写入 ASCII 码就可在仿真中输出文字。特别的，如果写入的值是 `0xff`，就会立即停止仿真。
+1. 张三在 `source/util/CBusMultiplexer.sv` 中实现了自己的仲裁器，然而过不了仿真。请指出 `CBusMultiplexer` 存在的问题。
+2. 龙芯杯的测试框架中有一个叫做 CONFREG 的模块[^confreg]，用来控制 FPGA 上的各种硬件资源，例如 LED 数码管、按钮。CONFREG 是一个 memory-mapped 设备。其中地址 `0xbfaffff0` 是一个简化的 UART 打印接口，往这个地址写入 ASCII 码就可在仿真中输出文字。特别的，如果写入的值是 `0xff`，就会立即停止仿真。
 
-  李四写了一段汇编程序 `hello.s`，放在 `misc/hello` 目录下，它会打印 “Hello, world!”。但是李四买不起 CPU。请尝试将这段汇编代码编译成 `.coe` 文件，然后使用
+    李四写了一段汇编程序 `hello.s`，放在 `misc/hello` 目录下，它会打印 “Hello, world!”。但是李四买不起 CPU。请尝试将这段汇编代码编译成 `.coe` 文件，然后使用
 
-  ```shell
-  make vsim -j TARGET=mycpu/VTop VSIM_ARGS="-m [.coe 文件路径]"
-  ```
+    ```shell
+    make vsim -j TARGET=mycpu/VTop VSIM_ARGS="-m [.coe 文件路径]"
+    ```
 
-  在你的 CPU 上运行这个程序。如果没有出错，`vmain` 最后会输出：
+    在你的 CPU 上运行这个程序。如果没有出错，`vmain` 最后会输出：
 
-  ```plaintext
-  ./build/gcc/mycpu/VTop/vmain -m misc/hello/hello.coe
-  Hello, world!
-  (info) testbench finished in 652 cycles (515.101 KHz).
-  ```
+    ```plaintext
+    ./build/gcc/mycpu/VTop/vmain -m misc/hello/hello.coe
+    Hello, world!
+    (info) testbench finished in 652 cycles (515.101 KHz).
+    ```
 
-  至此，你<del>李四</del>可以尝试在你的 CPU 上运行更加复杂的程序了。
-* 王五最近学习了 AXI 总线协议。AXI 是一个双向握手协议。王五推荐你阅读 [“<i class="fa fa-file-pdf-o"></i> AMBA AXI Protocol Specification v1.0”](../misc/external.md#soc-部分)，希望你能了解并总结 AXI 总线的工作方式。
+    至此，你<del>李四</del>可以尝试在你的 CPU 上运行更加复杂的程序了。
+3. 王五最近学习了 AXI 总线协议。AXI 是一个双向握手协议。王五推荐你阅读 [“<i class="fa fa-file-pdf-o"></i> AMBA AXI Protocol Specification v1.0”](../misc/external.md#soc-部分)，希望你能了解并总结 AXI 总线的工作方式。
 
 ---
 

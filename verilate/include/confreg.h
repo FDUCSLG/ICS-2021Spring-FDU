@@ -113,5 +113,11 @@ private:
         std::deque<uchar> ififo;
         ThreadWorker worker;
     } uart;
-    std::unordered_map<addr_t, word_t> changes, mem;
+    std::unordered_map<addr_t, word_t> mem;
+
+    struct change_t {
+        addr_t addr;
+        word_t data;
+    };
+    std::vector<change_t> changes;
 };

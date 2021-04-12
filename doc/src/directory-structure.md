@@ -35,6 +35,7 @@ RTL 源代码所在的文件夹。
 * `mycpu_top.sv`：接入龙芯杯的测试的顶层模块。
 * `SRAMTop.sv`：使用类 SRAM 接口时 CPU 的顶层模块。
 * `VTop.sv`：使用 AXI 接口时或者进行 Verilator 仿真时 CPU 的顶层模块。
+* `VCacheTop.sv`：测试缓存时的顶层模块。
 
 ### `source/refcpu`
 

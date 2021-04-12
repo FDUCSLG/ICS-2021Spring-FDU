@@ -70,7 +70,7 @@ module mult (
 endmodule
 ```
 
-## *多周期乘除法器
+## \*多周期乘除法器
 
 > 参见：“Computer Architecture: A Quantitative Approach (6th Edition)”: Appendix J
 
@@ -89,7 +89,6 @@ RefCPU 采用了单周期乘除法器。打开 `test5` 的 Vivado 工程 → 添
 > 某程序有 500 条指令（无分支跳转），其中 10 条是除法指令，其余指令的数据通路延迟都很低。
 >
 > * 使用单周期除法器的 CPU，时钟周期为 100ns，运行这个程序需要约 500 个周期，即 50,000ns。
->
 > * 使用多周期除法器的 CPU，时钟周期为 12ns，除法指令需要 50 个周期执行，运行这个程序需要约 1000 个周期，即 12,000ns。
 
 ### 乘法器
@@ -187,13 +186,70 @@ endmodule
 
 本方法使用了 32 层加法器实现了乘法。如果是 $n$ 位无符号数的乘法，本方法使用的加法器层数为 $\mathrm O(n)$。Wallace tree 和 signed-digit tree 是加法器层数为 $\mathrm O(\log n)$ 的算法，如果你对此感兴趣，可以查阅参考书 J.9 章节。
 
-然而，我们发现，利用 DSP 资源，单周期乘法的性能已经不错了。如果我们采用 DSP 来实现多周期乘法，很可能两个周期乘法器的延迟就可以令人满意。
+然而，我们发现，利用 DSP 资源，单周期乘法的性能已经不错了。
 
 ![single_mult_use_dsp_path](../asset/lab2/single_mult_use_dsp_path.png)
 
 上图为使用 DSP 资源的单周期乘法器的关键路径。左侧的两个端口很多的元件 `DSP48E1` 即为 DSP ，右侧的若干 `CARRY4` 为加法逻辑。每片 `DSP48E1` 内置一个 25 位乘 18 位的乘法器，集成了乘加 $a \times b + c$ 的功能。
 
 如果你想用 DSP 实现乘法器，请查阅 `DSP48E1` 的有关资料与手册。
+
+Vivado 在解析乘法运算符时，默认采用 DSP 实现。我们可以将 32 位的乘法拆成若干个乘法，使每个乘法的位宽可以被 DSP 内置的乘法器所容纳，然后再将这些乘积进行移位相加。这样，在使用乘法运算符时，综合器就会简单地采用 DSP 中的乘法器。
+
+下面的代码是一个简单的实现方案：将 32 位的乘法拆成四部分，两个乘数的前 16 位和后 16 位分别相乘，这样就是四个 16 位的乘法，可以用上 DSP 的乘法器。最后的加法里，两个低 16 位相乘的结果无需移位，高 16 位乘低 16 位的结果需要左移 16 位，两个高 16 位相乘的结果需要左移 32 位：
+
+```verilog
+// c = (a[31:16] * b[31:16] << 32) + (a[15:0] * b[31:16] << 16) +
+//     (a[31:16] * b[15:0] << 32) + (a[15:0] * b[15:0])
+module multiplier_multicycle_dsp (
+    input logic clk, resetn, valid,
+	input i32 a, b,
+    output logic done,
+    output i64 c // c = a * b
+);
+    logic [3:0][31:0]p, p_nxt;
+    assign p_nxt[0] = a[15:0] * b[15:0];
+    assign p_nxt[1] = a[15:0] * b[31:16];
+    assign p_nxt[2] = a[31:16] * b[15:0];
+    assign p_nxt[3] = a[31:16] * b[31:16];
+
+    always_ff @(posedge clk) begin
+        if (~resetn) begin
+            p <= '0;
+        end else begin
+            p <= p_nxt;
+        end
+    end
+    logic [3:0][63:0] q;
+    assign q[0] = {p[0]};
+    assign q[1] = {p[1], 16'b0};
+    assign q[2] = {p[2], 16'b0};
+    assign q[3] = {p[3], 32'b0};
+    assign c = q[0] + q[1] + q[2] + q[3];
+
+    enum logic {INIT, DOING} state, state_nxt;
+    always_ff @(posedge clk) begin
+        if (~resetn) begin
+            state <= INIT;
+        end else begin
+            state <= state_nxt;
+        end
+    end
+    always_comb begin
+        state_nxt = state;
+        if (state == DOING) begin
+            state_nxt = INIT;
+        end else if (valid) begin
+            state_nxt = DOING;
+        end
+    end
+    assign done = state_nxt == INIT;
+endmodule
+```
+
+本方法延迟约为 5.3ns，需要两个周期：第一个周期做四个并行的 16 位乘法（关键路径，延迟约为 5.3ns），第二个周期做剩余的加法（延迟约为 4.6ns）。这个方法用单周期实现，延迟约为 9.6ns。在接入流水线时，可能需要加一级输入寄存器。
+
+本方法仅利用了 DSP 的乘法器和一层寄存器（经检测，乘法结果的那一级寄存器没有使用额外资源），没有利用乘加的功能，16 位的划分也不一定是最优方案，但性能已经令人满意。
 
 ### 除法器
 
@@ -317,29 +373,33 @@ MIPS 将乘除法指令的结果写入 `HI` 和 `LO` 寄存器，而非通用寄
 
 **本实验和实验 2a 一起提交。**
 
+### 通过标准
+
+* 上板通过 `test3` 的测试。
+
 ### 截止时间
 
 **2021 年 4 月 11 日 23:59:59**
 
-## *思考题
+## \*思考题
 
-* 李四发现 Verilator 仿真的 CONFREG 模块提供了简单的串口交互接口：地址 `0xbfaf1000` 用于在串口上读写字符，地址 `0xbfaf1014` 用于检查是否有未读入的字符。于是李四在 `misc/echo` 下编写了一个汇编程序 `echo.s`，它会将你在终端上输入的字符显示出来。请先尝试将 `echo.s` 编译成 `.coe` 文件。
+1. 李四发现 Verilator 仿真的 CONFREG 模块提供了简单的串口交互接口：地址 `0xbfaf1000` 用于在串口上读写字符，地址 `0xbfaf1014` 用于检查是否有未读入的字符。于是李四在 `misc/echo` 下编写了一个汇编程序 `echo.s`，它会把你在终端上输入的字符显示出来。请先尝试将 `echo.s` 编译成 `.coe` 文件。
 
-  打开一个终端，在仓库根目录下运行 `make vpty`。这个命令会使用 `socat` 在 `build` 目录下创建一个虚拟控制台（pty）。然后再打开一个终端，运行：
+    打开一个终端，在仓库根目录下运行 `make vpty`。这个命令会使用 `socat` 在 `build` 目录下创建一个虚拟控制台（pty）。然后再打开一个终端，运行：
 
-  ```shell
-  make vsim -j TARGET=mycpu/VTop VSIM_ARGS="-m [.coe 文件路径]"
-  ```
+    ```shell
+    make vsim -j TARGET=mycpu/VTop VSIM_ARGS="-m [.coe 文件路径]"
+    ```
 
-  此时 `vmain` 会自动接入到之前 `make vpty` 创建的虚拟控制台的一端，并且会在仿真的终端打印一行 “`CONFREG: connected to pty "build/vpty".`”。最后再打开一个终端，运行串口软件。以 GNU `screen` 为例：
+    此时 `vmain` 会自动接入到之前 `make vpty` 创建的虚拟控制台的一端，并且会在仿真的终端打印一行 “`CONFREG: connected to pty "build/vpty".`”。最后再打开一个终端，运行串口软件。以 GNU `screen` 为例：
 
-  ```shell
-  screen build/pty
-  ```
+    ```shell
+    screen build/pty
+    ```
 
-  然后尝试输入字符，你会看到这些字符在串口软件的终端里能显示出来。此时如果杀死 `vmain` 进程，再到串口软件上输入时，就看不到新输入的字符了。
+    然后尝试输入字符，你会看到这些字符在串口软件的终端里能显示出来。此时如果杀死 `vmain` 进程，再到串口软件上输入时，就看不到新输入的字符了。
 
-  此时，你<del>李四</del>可以尝试编写在终端上交互的程序了。李四的 `echo.s` 还不支持 backspace 键，你可以思考一下如何实现 backspace。
+    此时，你<del>李四</del>可以尝试编写在终端上交互的程序了。李四的 `echo.s` 还不支持 backspace 键，你可以思考一下如何实现 backspace。
 
-  **提示**：你可以使用 `showkey` 查看键盘上每个按键对应的 ASCII 码。
-* 李四学会了 C 语言，于是他在 `misc/greet` 目录下写了一份 C 程序 `greet.c`。这个程序会读入一行文字，比如 “Gromah”，当你按下回车后，程序会在下一行中显示 “Hello, Gromah!”。请尝试将这个程序编译到 `.coe` 文件，并在你的 CPU 上运行。
+    **提示**：你可以使用 `showkey` 查看键盘上每个按键对应的 ASCII 码。
+2. 李四学会了 C 语言，于是他在 `misc/greet` 目录下写了一份 C 程序 `greet.c`。这个程序会读入一行文字，比如 “Gromah”，当你按下回车后，程序会在下一行中显示 “Hello, Gromah!”。请尝试将这个程序编译到 `.coe` 文件，并在你的 CPU 上运行。

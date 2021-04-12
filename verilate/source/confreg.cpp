@@ -89,7 +89,7 @@ void Confreg::store(addr_t addr, word_t data, word_t mask) {
             break;
     }
 
-    changes[addr] = data;
+    changes.push_back({addr, data});
 }
 
 void Confreg::sync() {
@@ -98,12 +98,12 @@ void Confreg::sync() {
         internal_assert(!uart.ififo.empty(), "UART input FIFO should not be empty");
         std::lock_guard guard(uart.lock);
         uchar c = uart.ififo.front();
-        debug("CONFREG: uart: get: %u (0x%x)\n", c, c);
+        log_debug("CONFREG: uart: get: %u (0x%x)\n", c, c);
         uart.ififo.pop_front();
     }
     if (ctx.uart_written && uart.opty) {
         uchar c = ctx.uart_data;
-        debug("CONFREG: uart: put: %u (0x%x)\n", c, c);
+        log_debug("CONFREG: uart: put: %u (0x%x)\n", c, c);
         fputc(ctx.uart_data, uart.opty);
         fflush(uart.opty);
     }
@@ -143,7 +143,7 @@ void Confreg::uart_open_pty(const std::string &path) {
     if (!uart.opty)
         return;
 
-    notify("CONFREG: connected to pty \"%s\".\n", path.data());
+    info("CONFREG: connected to pty \"%s\".\n", path.data());
 
     // fetch UART input in the background
     uart.worker = ThreadWorker::loop([this] {

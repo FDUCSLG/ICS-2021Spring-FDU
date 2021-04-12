@@ -97,19 +97,23 @@ TEST_STD_FILE = misc/std/$(TEST).txt
 override VSIM_ARGS += -m $(TEST_COE_FILE)
 
 ifneq ($(wildcard $(TEST_REF_FILE)),)
+
 override VSIM_ARGS += -r $(TEST_REF_FILE)
+
 else ifneq ($(wildcard $(TEST_STD_FILE)),)
 
 # only add std trace for RefCPU
 ifeq ($(TARGET), refcpu/VTop)
 override VSIM_ARGS += -r $(TEST_STD_FILE) --force-diff
-endif
+endif  # ifeq
 
-else
-override VSIM_ARGS += -r ''
-endif
+# else
 
-endif
+# override VSIM_ARGS += -r ''
+
+endif  # ifneq
+
+endif  # ifneq ($(TEST),)
 
 ifneq ($(FST),)
 override VSIM_ARGS += -f $(FST)

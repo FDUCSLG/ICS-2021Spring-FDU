@@ -12,7 +12,7 @@ loop:
     lbu     $t0, 0($v1)
     beq     $t0, $0, exit
     sb      $t0, 0($v0)
-    addi    $v1, $v1, 1
+    addiu   $v1, $v1, 1
     b       loop
 
 exit:

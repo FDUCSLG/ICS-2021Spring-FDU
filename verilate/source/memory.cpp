@@ -110,7 +110,7 @@ auto BlockMemory::load(addr_t addr) -> word_t {
     size_t index = addr / 4;  // align to 4 bytes
     word_t value = mem[index];
 
-    debug("%s[%08x] => %08x\n", name, caddr, value);
+    log_debug("%s[%08x] => %08x\n", name, caddr, value);
 
     return value;
 }
@@ -124,5 +124,5 @@ void BlockMemory::store(addr_t addr, word_t data, word_t mask) {
     word_t &value = mem[index];
     value = (value & ~mask) | (data & mask);
 
-    debug("%s[%08x] <- %08x\n", name, caddr, value);
+    log_debug("%s[%08x] <- %08x\n", name, caddr, value);
 }

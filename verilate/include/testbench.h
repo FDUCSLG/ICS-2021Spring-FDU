@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "cell.h"
 
 #include <vector>
 #include <functional>
@@ -18,7 +19,7 @@ using DeferHook = std::function<void(void)>;
 auto _testbench_pretest_hook() -> PretestHook &;
 auto _testbench_posttest_hook() -> PosttestHook &;
 
-void run_testbench();
+void run_testbench(int n_workers = 1);
 void abort_testbench();
 
 class ITestbench {
@@ -127,19 +128,36 @@ public:
 #define SKIP { return Skipped; }
 #endif
 
-#define ENABLE_WITH_FN(controller, fn) { \
+#define ENABLE_WITH_BOTH_FN(controller, pre_fn, post_fn) { \
     controller(true); \
-    fn(); \
-    _.defer([] { \
+    pre_fn(); \
+    _.defer([this] { \
+        (void) this; \
+        post_fn(); \
         controller(false); \
     }); \
 }
+#define ENABLE_WITH_FN(controller, fn) ENABLE_WITH_BOTH_FN(controller, fn, [] {})
 #define ENABLE(controller) ENABLE_WITH_FN(controller, [] {})
 
 #define LOG ENABLE(enable_logging)
 #define DEBUG ENABLE(enable_debugging)
 #define STATUS ENABLE(enable_status_line)
-#define TRACE ENABLE_WITH_FN(top->enable_fst_trace, top->reset)
+
+#define TRACE ENABLE_WITH_BOTH_FN( \
+    top->enable_fst_trace, \
+    [this] { \
+        top->start_fst_trace(escape(name) + ".fst"); \
+        top->reset(); \
+    }, \
+    top->stop_fst_trace \
+)
+
+#define STAT ENABLE_WITH_BOTH_FN( \
+    top->enable_statistics, \
+    top->reset_statistics, \
+    [this] { top->print_statistics(name); } \
+)
 
 // hacks DBus::load and DBus::store to compare the results with
 // reference implementation.
@@ -184,6 +202,13 @@ public:
 private:
     RefModel *ref;
 };
+
+// hook MemoryCell's generic bus interface.
+// since the wrapper mimics DBusGen, so the implementation
+// can be directly inherited.
+template <typename U, typename V>
+struct GenericBusInterface<_TestbenchDBusWrapperGen<U, V>>
+    : public GenericBusInterfaceDBusGen<_TestbenchDBusWrapperGen<U, V>> {};
 
 // NOTE: macro CMP_TO will shadow global variable dbus in order to hack in
 #define CMP_TO(reference) \

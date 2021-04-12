@@ -49,7 +49,7 @@ void MyCPU::print_writeback() {
     auto value = get_writeback_value();
 
     if (get_writeback_wen() != 0) {
-        // debug("R[%d] <- %08x\n", id, value);
+        // log_debug("R[%d] <- %08x\n", id, value);
         text_dump(con->trace_enabled(), pc, id, value);
     }
 }

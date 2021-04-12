@@ -17,14 +17,18 @@ module VCacheTop (
      * TODO (Lab3, optional) expose internal memory to simulator
      *
      * NOTE: it will slow down FST tracing significantly, especially
-     *       if your cache is large. you may want to speed up by adding
+     *       if your cache is large, you may want to speed up by adding
      *       "// verilator tracing_off" before the declaration of
      *       the variable mem.
      */
 
     /**
-     * the following is an example. Suppose your cache contains four cache lines,
-     * each of which consists of 16 consecutive words in memory.
+     * the following is an example. Suppose that you used LUTRAM and
+     * your cache contains only four cache lines, each of which consists of
+     * 16 consecutive words in memory.
+     *
+     * later you can access the variable mem from C++ via VCacheTop->mem.
+     * it will possibly become a 1d array of uint32_t.
      */
     // typedef word_t [15:0] cache_line_t;
     //

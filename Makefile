@@ -80,8 +80,10 @@ system-info:
 	-$(GTKWAVE) --version
 	-$(CXX) --version
 	-which g++
+	-g++ --version
 	-which g++-9
 	-which clang++
+	-clang++ --version
 	-which clang++-10
 	-ls /usr/share/verilator/include
 

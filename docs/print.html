@@ -99,7 +99,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="arch-lab/lab2a.html">实验 2a</a></li><li class="chapter-item "><a href="arch-lab/lab2b.html">实验 2b</a></li><li class="chapter-item "><a href="arch-lab/lab3a.html">实验 3a</a></li><li class="chapter-item "><a href="arch-lab/lab3b.html">实验 3b</a></li><li class="chapter-item "><a href="arch-lab/lab4.html">实验 4</a></li></ol></li><li class="chapter-item expanded "><a href="sys-lab/index.html">操作系统部分</a></li><li class="chapter-item expanded "><a href="project/index.html">挑战课题</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="project/task1.html">流水线性能优化</a></li></ol></li><li class="chapter-item expanded "><a href="misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="misc/external.html">外部资料</a></li><li class="chapter-item "><a href="misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="misc/fpga.html">了解 FPGA 架构</a></li><li class="chapter-item "><a href="misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="contributors.html">贡献者</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="arch-lab/lab2a.html">实验 2a</a></li><li class="chapter-item "><a href="arch-lab/lab2b.html">实验 2b</a></li><li class="chapter-item "><a href="arch-lab/lab3a.html">实验 3a</a></li><li class="chapter-item "><a href="arch-lab/lab3b.html">实验 3b</a></li><li class="chapter-item "><a href="arch-lab/lab4.html">实验 4</a></li></ol></li><li class="chapter-item expanded "><a href="project/index.html">挑战课题</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="project/task1.html">流水线性能优化</a></li></ol></li><li class="chapter-item expanded "><a href="misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="misc/external.html">外部资料</a></li><li class="chapter-item "><a href="misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="misc/fpga.html">了解 FPGA 架构</a></li><li class="chapter-item "><a href="misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="contributors.html">贡献者</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -273,14 +273,13 @@
 </table>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="体系结构部分"><a class="header" href="#体系结构部分">体系结构部分</a></h1>
-<p>本学期体系结构部分的实验将会实现一个 MIPS32 架构的基础 5 级流水线 CPU，并且将在 FPGA 开发板上进行测试。体系结构部分一共有 4 个需要提交的实验和一个挑战课题。</p>
+<p>本学期体系结构部分的实验将会实现一个 MIPS32 微架构的基础 5 级流水线 CPU，并且将在 FPGA 开发板上进行测试。体系结构部分一共有 4 个需要提交的实验。</p>
 <ul>
 <li>实验 0：准备开发环境和测试环境。</li>
 <li>实验 1：基础的五级流水线 MIPS CPU。</li>
 <li>实验 2：访存仲裁和总线延时（2a）、多周期乘除法器（2b）。</li>
 <li>实验 3：单周期缓存（cache）。</li>
 <li>实验 4：MIPS 异常处理。</li>
-<li>挑战课题：自由选择。</li>
 </ul>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="实验-0开发环境"><a class="header" href="#实验-0开发环境">实验 0：开发环境</a></h1>
@@ -759,7 +758,7 @@ assign debug_wb_rf_wen = top.core.writeback.aha ? 4'b1111 : 4'b0;
 <h2 id="17-思考"><a class="header" href="#17-思考">1.7 *思考</a></h2>
 <ol>
 <li>流水线寄存器的 flush 信号，需要让所有信号都清零吗？</li>
-<li>转发的成本是什么？有哪些限制？（板子上的组合逻辑基本部件为 LUT6 ，6 输入 1 输出，可实现 6 输入的任何给定逻辑式）</li>
+<li>转发的成本是什么？有哪些限制？（板子上的组合逻辑基本部件为 LUT6，6 输入 1 输出，可实现 6 输入的任何给定逻辑式）</li>
 <li>不同指令需要用到的流水线阶段可能不同：加法指令似乎不需要经过 Memory 阶段。能让它跳过 M 阶段吗？</li>
 </ol>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
@@ -1366,6 +1365,10 @@ endmodule
 <p>MIPS 将乘除法指令的结果写入 <code>HI</code> 和 <code>LO</code> 寄存器，而非通用寄存器，并通过 <code>MFLO</code> 和 <code>MFHI</code> 来读取结果到通用寄存器内。编译器有时会在乘除法指令后插入几条不相关的普通指令，再用 <code>MFLO</code> 和 <code>MFHI</code> 来读取结果。这样，在计算乘除法结果的这几个周期里，流水线可以继续执行；遇到接下来的第一条 <code>MFLO</code> 或 <code>MFHI</code> 时，如果没计算完毕，再阻塞；如果已计算完毕，就直接读取结果，相当于乘除法指令没有造成任何阻塞。这是一种潜在的优化，优化的效果取决于编译器。</p>
 <h2 id="实验提交-1"><a class="header" href="#实验提交-1">实验提交</a></h2>
 <p><strong>本实验和实验 2a 一起提交。</strong></p>
+<h3 id="通过标准-1"><a class="header" href="#通过标准-1">通过标准</a></h3>
+<ul>
+<li>上板通过 <code>test3</code> 的测试。</li>
+</ul>
 <h3 id="截止时间-1"><a class="header" href="#截止时间-1">截止时间</a></h3>
 <p><strong>2021 年 4 月 11 日 23:59:59</strong></p>
 <h2 id="思考题-1"><a class="header" href="#思考题-1">*思考题</a></h2>
@@ -1402,7 +1405,8 @@ L3         8M       8M   16 Unified         3 8192        1             64
 <h2 id="l1i--l1d"><a class="header" href="#l1i--l1d">L1i &amp; L1d</a></h2>
 <p>一级缓存分为指令缓存和数据缓存，分别服务于取指和访存阶段。原则上 L1i 是只读的，并且不会有程序在运行过程中写入新的指令<sup class="footnote-reference"><a href="#jit">1</a></sup>，因此我们不需要考虑两个缓存之间同步的问题。</p>
 <h2 id="实现-l1d"><a class="header" href="#实现-l1d">实现 L1d</a></h2>
-<p>本次实验要求 L1d 是写分配（write-allocate）以及写回（write-back）缓存。接下来我们将介绍 L1d 的基本结构。</p>
+<p>本次实验要求 L1d 是写分配（write-allocate）和写回（write-back）的缓存。你需要在 <code>DCache.sv</code> 中编写你的实现。</p>
+<p>接下来我们将介绍 L1d 的基本结构。</p>
 <h3 id="cache-line"><a class="header" href="#cache-line">Cache Line</a></h3>
 <p>Cache line 包含一段连续的内存的副本，一般情况下它的大小是一个 2 的幂次，并且起始地址和大小对齐。当缓存从内存中读取出一条 cache line 时，缓存可以利用内存的突发传输特性，从而降低每个字节的平均读取延时。我们使用的 32 位 AXI 总线一般可以支持单次最高 16×4 = 64 字节的突发传输，因此我们也建议你在性能测试中使用大小为 64 字节的 cache line。从 L1i 的角度来看，相当于每条 cache line 放了 16 条指令。</p>
 <p>如果选择大小为 64 字节的 cache line，那么内部的偏移量（offset）需要 6 位。对于 L1i，由于指令都是和 4 字节对齐的，因此只需要 4 位。</p>
@@ -1659,7 +1663,7 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 └── verilate/ （仿真代码所在目录）
 </code></pre>
 <p>用 <code>zip -r 18307130024.zip 18307130024/</code> 打包。用 <code>unzip 18307130024.zip</code> 检查，应在当前目录下有学号目录。</p>
-<h3 id="通过标准-1"><a class="header" href="#通过标准-1">通过标准</a></h3>
+<h3 id="通过标准-2"><a class="header" href="#通过标准-2">通过标准</a></h3>
 <ul>
 <li>通过模块级测试。
 <ul>
@@ -1716,12 +1720,106 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="实验-3b接入流水线"><a class="header" href="#实验-3b接入流水线">实验 3b：接入流水线</a></h1>
-<p>无可奉告。</p>
+<p>完成缓存的模块测试后，你的 L1i/L1d 应该能够无缝接入流水线了 <code>:)</code></p>
+<h2 id="实验步骤"><a class="header" href="#实验步骤">实验步骤</a></h2>
+<p>实验 3a 中，我们要求大家在 <code>DCache.sv</code> 里面实现 L1d。接下来将介绍接入流水线的步骤。</p>
+<h3 id="l1i"><a class="header" href="#l1i">L1i</a></h3>
+<p>我们提供的代码里面，L1i 是写在 <code>ICache.sv</code> 里面，并且直接使用 L1d：</p>
+<pre><code class="language-verilog">    // simply use DCache as ICache
+    DCache proxy(
+        .dreq(`IREQ_TO_DREQ(ireq)),
+        .dresp(iresp),
+        .dcreq(icreq),
+        .dcresp(icresp),
+        .*
+    );
+</code></pre>
+<p>得益于 IBus 是 DBus 的子集，我们不需要做总线的转换。</p>
+<p><del>如果你精力旺盛，可以专门实现一个 L1i</del>。</p>
+<h3 id="替换转接器"><a class="header" href="#替换转接器">替换转接器</a></h3>
+<p>在 <code>VTop.sv</code> 中，你需要将模块实例 <code>icvt</code> 和 <code>dcvt</code> 的模块名 <code>IBusToCBus</code>、<code>DBusToCBus</code> 分别换成 <code>ICache</code>、<code>DCache</code>。我们特意把缓存的模块接口做的和 <code>DBusToCBus</code> 这些总线转接器一样，方便我们继续使用 SystemVerilog 的 <code>.*</code> 语法。</p>
+<pre><code class="language-verilog">    ibus_req_t  ireq;
+    ibus_resp_t iresp;
+    dbus_req_t  dreq;
+    dbus_resp_t dresp;
+    cbus_req_t  icreq,  dcreq;
+    cbus_resp_t icresp, dcresp;
+
+    MyCore core(.*);
+    /*IBusToCBus*/ ICache icvt(.*);
+    /*DBusToCBus*/ DCache dcvt(.*);
+</code></pre>
+<h3 id="处理地址映射"><a class="header" href="#处理地址映射">处理地址映射</a></h3>
+<p>然而，单纯将总线接口替换掉还不够，因为并不是所有的内存区域都是可以被缓存的。一类是访问外设，显然我们不希望写入 UART 设备的字符要等到对应的 cache line 被替换掉时才发出。此外，这些外设可能也不支持突发传输。</p>
+<p>那我们怎么知道可不可以缓存呢？MIPS 规范将内存空间划分为了若干段：</p>
+<p><img src="arch-lab/../asset/lab3/memory-segments.png" alt="" /></p>
+<p>上图左侧是每个段的名称（例如 <code>useg</code>、<code>kseg0</code>）以及对应的地址范围。右侧是段的属性，这些属性的意义如下：</p>
+<ul>
+<li>User/Supervisor/Kernel：访问这一段的最低权限。我们暂时可以不用管。</li>
+<li>Mapped/Unmapped：这一段内的地址是否需要经过 TLB 翻译。我们暂时不用实现 TLB，因此所有 mapped 的段也不用管。</li>
+<li>Uncached：这一段内的所有访存要求不能经过缓存。</li>
+</ul>
+<p>先前我们做了 <code>kseg0</code> 和 <code>kseg1</code> 的地址翻译。这里可以看到，<code>kseg1</code> 内的访存是要求不能过缓存的，而 <code>kseg0</code> 是允许的。CPU 的重置 PC（<code>0xbfc00000</code>）是在 <code>kseg1</code> 的，这是为了避免缓存在机器起动的时候需要初始化。同时龙芯杯的 CONFREG 模块也是映射到 <code>kseg1</code> 内的（<code>0xbfaf0000</code>~<code>0xbfafffff</code>）。<code>kseg0</code> 和 <code>kseg1</code> 都映射到同样的物理地址区域上。</p>
+<p>总而言之，你需要能够允许有不经过缓存的访存路径。<strong>你需要自己思考该如何在 <code>VTop</code> 中处理这些事情</strong>。一种思路是：</p>
+<ul>
+<li>在缓存之前做地址翻译，地址翻译输出一个 <code>uncached</code> 信号表明当前访存的地址是否能经过缓存。</li>
+<li>增加更多的访存接口，一些接到缓存，另一些直接使用 <code>IBusToCBus</code>、<code>DBusToCBus</code> 转为 CBus 接口。</li>
+<li>最后把所有输出的 CBus 接口（最多应该有 4 个）用仲裁器合并为一个 CBus 接口输出。我们提供的 <code>CBusArbiter</code> 支持参数化（通过 <code>NUM_INPUTS</code> 参数），可以支持多于两个输入的仲裁。</li>
+</ul>
+<p>另一种思路是直接在缓存内部决定是否经过缓存。</p>
+<h3 id="测试"><a class="header" href="#测试">测试</a></h3>
+<p>完成上面的事情后，用 <code>test1</code>~<code>test3</code> 来测试你的 CPU。你应该能观察到接入缓存后这些测试花费的时间和周期数都少了很多。</p>
+<p>*我们推荐你用<a href="arch-lab/../project/task1.html">性能测试</a>算算分。有缓存后应该能够得到比较好的分数了 <code>:)</code></p>
+<h2 id="优化缓存"><a class="header" href="#优化缓存">*优化缓存</a></h2>
+<p>接下来介绍几个简单的优化技巧。</p>
+<h3 id="skid-buffer"><a class="header" href="#skid-buffer">*Skid Buffer</a></h3>
+<p>流水线和缓存的交互容易产生非常长的关键路径，例如：</p>
+<p><img src="arch-lab/../asset/lab3/long-path.svg" alt="长关键路径" /></p>
+<p>上图展示了一种可能的关键路径：</p>
+<ul>
+<li>访存阶段发出请求。在发请求前需要做一点组合逻辑判断是否需要发出请求（<code>valid</code>）。</li>
+<li>缓存搜索请求的地址是否在缓存中，并由此决定 <code>addr_ok</code>。</li>
+<li>流水线根据 <code>addr_ok</code> 决定是否需要阻塞，产生 <code>stall</code> 信号。</li>
+</ul>
+<p><code>stall</code> 信号需要跨过多个流水线阶段，所以往往走线延时比较长。这里的问题主要出在握手信号（<code>valid</code> 和 <code>addr_ok</code>）之间有组合逻辑。Skid buffer 可以缓解这个问题。</p>
+<p><img src="arch-lab/../asset/lab3/skid-buffer-interface.svg" alt="skid buffer 接口" /></p>
+<p>Skid buffer 是插入在总线之间的。它的效果是切断 <code>valid</code> 和 <code>addr_ok</code> 之间的组合逻辑。实际上 skid buffer 类似于一个长度为 1 的队列。在 skid buffer 内部有一个缓冲区：</p>
+<p><img src="arch-lab/../asset/lab3/skid-buffer-mux.svg" alt="skid buffer 缓冲区" /></p>
+<ul>
+<li>如果缓冲区不为空，发送缓冲区内的请求。否则发送流水线的请求。</li>
+<li>当流水线的请求在当前周期不能发出时，可以将其缓存。</li>
+<li>当内部缓冲区被占用时，流水线一侧的 <code>addr_ok</code> 设为 0，从而阻塞流水线。</li>
+<li>当缓存一侧的 <code>addr_ok</code> 为 1 时，请求完成，可以清空内部缓存区。</li>
+</ul>
+<p>这里最重要的一点是，只要内部缓存区为空（<code>empty</code> 信号），skid buffer 就能将流水线一侧的 <code>addr_ok</code> 拉起，而不用关心缓存一侧的 <code>addr_ok</code> 是否为 1。<code>empty</code> 使用一个寄存器存储。这样就能把流水线一侧的 <code>valid</code> 和 <code>addr_ok</code> 之间的组合逻辑切开。同时，我们可以看到整个过程不需要额外的时钟周期。</p>
+<p>这里有一个参考实现：<a href="https://github.com/NSCSCC-2020-Fudan/FDU1.1-NSCSCC/blob/master/cache/src/util/RequestBuffer.sv">RequestBuffer.sv</a></p>
+<h3 id="利用-wrap-突发传输"><a class="header" href="#利用-wrap-突发传输">*利用 WRAP 突发传输</a></h3>
+<p>缓存从内存读取 cache line 的时候不一定需要从 cache line 的第一个字节开始读取。利用 WRAP 突发传输，可以从 cache line 的任意位置开始读取。如果流水线访存地址的偏移量不是在 cache line 的起始位置，那么利用 WRAP 突发传输，我们可以从访存地址的偏移量处开始突发传输。那么当第一个数据从 CBus 返回时，就能直接将这个数据返回给流水线。这样流水线就不用等待整个突发传输完成了。</p>
+<h3 id="非阻塞缓存non-blocking-cache"><a class="header" href="#非阻塞缓存non-blocking-cache">*非阻塞缓存（Non-Blocking Cache）</a></h3>
+<p>更进一步，对于正在读取的 cache line，如果访存地址的偏移量对应部分的 cache line 已经读取到了，那么可以直接返回。此时可能需要维护一个 bit 数组记录 cache line 的哪些地方已经读到了。</p>
+<h3 id="后台写回"><a class="header" href="#后台写回">*后台写回</a></h3>
+<p>当 cache line 被写回时，可以不用阻塞住整个缓存。只要流水线访存的 cache line 还在缓存内，缓存就应该能继续服务。</p>
+<h2 id="实验提交-3"><a class="header" href="#实验提交-3">实验提交</a></h2>
+<p><strong>本次实验和实验 3a 一起提交</strong>。</p>
+<h3 id="通过标准-3"><a class="header" href="#通过标准-3">通过标准</a></h3>
+<ul>
+<li>上板通过 <code>test1</code>、<code>test2</code> 和 <code>test3</code> 的测试。</li>
+</ul>
+<h3 id="截止时间-3"><a class="header" href="#截止时间-3">截止时间</a></h3>
+<p><strong>2021 年 5 月 10 日 12:00</strong></p>
+<h2 id="思考题-3"><a class="header" href="#思考题-3">*思考题</a></h2>
+<ol>
+<li>文档中描述的 skid buffer 没有把流水线一侧的 <code>valid</code> 和缓存一侧的 <code>valid</code> 之间的组合逻辑切开。你有什么改进办法能把这两个信号之间的组合逻辑切开吗？这样做会有什么代价吗？</li>
+<li>张三设计了一个流水线阻塞机制：相邻的流水线阶段 X 和 Y 间有一对握手信号 <code>valid</code> 和 <code>ready</code>。阶段 X 在阶段 Y 之前。<code>valid</code> 表示阶段 X 已经执行完成，可以进入到阶段 Y。<code>ready</code> 表示阶段 Y 已经执行完成，阶段 X 的数据可以进入。
+<ul>
+<li>假设流水线只有最后一个阶段可能需要多个周期，其余阶段只需要一个周期。请说明最后一个阶段该如何阻塞第一个阶段的执行。这之间握手信号的延时如何？</li>
+<li>如何减少上一问中握手信号的延时？</li>
+</ul>
+</li>
+<li>如果你实现了 skid buffer，请尝试模仿实验 3a 中的方式，为你的 skid buffer 编写单元测试。</li>
+</ol>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="实验-4"><a class="header" href="#实验-4">实验 4</a></h1>
-<p>无可奉告。</p>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<h1 id="操作系统部分"><a class="header" href="#操作系统部分">操作系统部分</a></h1>
 <p>无可奉告。</p>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="挑战课题"><a class="header" href="#挑战课题">挑战课题</a></h1>
@@ -1735,7 +1833,7 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 <p>预备条件：通过 <code>test1</code>、<code>test2</code>、<code>test3</code>；未实现的指令 decode 为 <code>NOP</code>。</p>
 </blockquote>
 <p>你将升级你的流水线架构，以获取更高的性能。</p>
-<h2 id="通过标准-2"><a class="header" href="#通过标准-2">通过标准</a></h2>
+<h2 id="通过标准-4"><a class="header" href="#通过标准-4">通过标准</a></h2>
 <ul>
 <li>上板 <code>test1</code>、<code>test2</code>、<code>test3</code> 显示两个绿灯，多次 reset 后仍显示两个绿灯。</li>
 <li>上板 <code>test5</code>，时序无违例。</li>
@@ -1763,7 +1861,7 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 <p>上图是 RefCPU 在 7MHz 的频率下，10 个测试的读数。填写完读数后，把表格中的时钟频率改成你 CPU 的时钟频率。图中数据所用的 bit 文件已上传至 eLearning，路径为 “<code>实验部分/refcpu_test5.bit</code>”。</p>
 <h2 id="提交内容"><a class="header" href="#提交内容">提交内容</a></h2>
 <p>待定</p>
-<h2 id="截止时间-3"><a class="header" href="#截止时间-3">截止时间</a></h2>
+<h2 id="截止时间-4"><a class="header" href="#截止时间-4">截止时间</a></h2>
 <p>待定</p>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="附加资料"><a class="header" href="#附加资料">附加资料</a></h1>

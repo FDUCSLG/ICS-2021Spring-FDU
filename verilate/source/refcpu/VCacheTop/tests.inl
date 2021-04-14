@@ -15,7 +15,7 @@ extern CacheRefModel *ref;
 /**
  * NOTE: if you want to add some debug prints, don't forget to revert them
  *       before submitting your work to eLearning.
- *       generally, you are NOT ALLOWED to modify the tests.
+ *       generally, you are NOT ALLOWED to modify any unless stated.
  */
 
 /**
@@ -29,9 +29,9 @@ WITH {
 } AS("void");
 
 WITH {
-    // NOTE: it depends.
+    // NOTE: it depends on your design.
     //       maybe your cache likes to set addr_ok to false.
-    //       in that case, change the following lines to match your design.
+    //       in that case, change following lines to match your design.
     ASSERT(dbus->addr_ok() == true);
     ASSERT(dbus->data_ok() == false);
     ASSERT(dbus->rdata() == 0);
@@ -77,7 +77,7 @@ WITH SKIP {
 } AS("akarin~");
 
 // if your cache does not support partial writes, you can simply skip
-// this test "strobe".
+// this test by marking it with SKIP.
 WITH /*SKIP*/ {
     // S iterates over 0b0000 to 0b1111.
     std::vector<word_t> a;  // to store the correct value
@@ -225,8 +225,8 @@ WITH /*TRACE*/ /*DEBUG*/ {
         ASSERT(value == 0x2048ffff);
     }
 
-    // NOTE: a p.fence() will be called implicitly when p is being
-    //       destructed.
+    // NOTE: p.fence() will be called implicitly when p is being
+    //       destructed here.
 } AS("pipelined");
 
 WITH {
@@ -299,7 +299,7 @@ WITH CMP_TO(ref) {
 WITH CMP_TO(ref) {
     for (size_t i = 0; i < CMP_SCAN_SIZE; i++) {
         dbus->storeb(i, randi<uint8_t>());
-        dbus->loadh(i);
+        dbus->loadb(i);
     }
 } AS("cmp: byte");
 

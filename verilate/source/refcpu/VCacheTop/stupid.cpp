@@ -55,7 +55,7 @@ void StupidBuffer::print_statistics(const std::string &title) {
 
     for (int i = 0; i < 4; i++) {
         /**
-         * nameof is handy for get the name of enumerations.
+         * nameof is handy for getting the name of enumerations.
          * try it if your compiler supports nameof.
          */
         // auto s = static_cast<BufferState>(i);

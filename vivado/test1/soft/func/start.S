@@ -285,7 +285,7 @@ locate:
     la t1, kseg1_kseg0 #####
     li t2, 0x20000000  ###
     subu t9, t1, t2    #kseg1 -> kseg0
-    jr t9              ###
+    jr t1              ###
     nop                #####
 kseg1_kseg0:
 inst_test:
@@ -294,9 +294,9 @@ inst_test:
     jal wait_1s
     nop
 
-    la t9, kseg0_kseg1 #####
+/*     la t9, kseg0_kseg1 #####
     jr t9              #kseg0 -> kseg1
-    nop                #####
+    nop                ##### */
 
 kseg0_kseg1:
     jal n2_addu_test   #addu

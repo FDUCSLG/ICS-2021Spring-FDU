@@ -3,7 +3,8 @@
 #include "mycpu.h"
 
 constexpr int MAX_CYCLE = 100000000;
-constexpr addr_t TEST_END_PC = 0xbfc00100;
+constexpr addr_t TEST_END_PC = 0x9fc00100;
+constexpr addr_t TEST_END_PC_MASK = 0xdfffffff;
 
 auto MyCPU::get_writeback_pc() const -> addr_t {
     /**
@@ -88,7 +89,7 @@ void MyCPU::tick() {
     checkout_confreg();
 
     // check for the end of tests
-    if (get_writeback_pc() == TEST_END_PC + 4 ||
+    if ((get_writeback_pc() & TEST_END_PC_MASK) == TEST_END_PC + 4 ||
         (con->has_char() && con->get_char() == 0xff))
         test_finished = true;
 }

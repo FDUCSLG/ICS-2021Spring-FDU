@@ -1819,8 +1819,96 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 <li>如果你实现了 skid buffer，请尝试模仿实验 3a 中的方式，为你的 skid buffer 编写单元测试。</li>
 </ol>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<h1 id="实验-4"><a class="header" href="#实验-4">实验 4</a></h1>
-<p>无可奉告。</p>
+<h1 id="实验-4mips-异常与中断"><a class="header" href="#实验-4mips-异常与中断">实验 4：MIPS 异常与中断</a></h1>
+<p>参考资料： <a href="arch-lab/../misc/external.html#mips-%E6%9E%B6%E6%9E%84">MIPS 手册 Ⅲ</a></p>
+<h2 id="异常种类"><a class="header" href="#异常种类">异常种类</a></h2>
+<p>实现以下几种类型的异常：</p>
+<ul>
+<li>读地址错和写地址错。</li>
+<li>溢出、<code>break</code> 指令和 <code>syscall</code> 指令（Execution Exceptions）。</li>
+<li>保留指令（Instruction Validity Exceptions）。</li>
+<li>中断。</li>
+</ul>
+<p>中断包括软件中断和硬件中断。软件中断是由软件通过执行某些指令来产生的。硬件中断包括外部的中断（CPU 的接口 <code>ext_int</code>）和时钟中断。MIPS 支持 6 个硬件中断和 2 个软件中断。</p>
+<h2 id="cp0-寄存器"><a class="header" href="#cp0-寄存器">CP0 寄存器</a></h2>
+<p>为了支持中断，MIPS 添加了协处理器（coprocessor）CP0。</p>
+<p>CP0 是一组 32 位的寄存器，用 5 位 index 和 3 位 sel 来进行索引。本实验中只需实现 sel 为 0 的一些寄存器。</p>
+<p>需要实现的寄存器：</p>
+<ul>
+<li>BadVAddr（8 号寄存器，地址错异常时记录该虚拟地址）。</li>
+<li>Count（9 号寄存器，是一个计时器，每两个时钟周期加一）。
+<ul>
+<li>该寄存器是软件可写的，软件写入的优先级高于硬件自增。</li>
+</ul>
+</li>
+<li>Compare（11 号寄存器，和 Count 寄存器比较以产生时钟中断）。
+<ul>
+<li>当 Compare 寄存器被设置过，且 Compare 和 Count 寄存器值相等时，产生时钟中断信号并保持。</li>
+<li>当 Compare 寄存器被软件修改时，清除时钟中断信号。</li>
+</ul>
+</li>
+<li>Status（12 号寄存器，记录处理器的运行状态）。</li>
+<li>Cause（13 号寄存器，记录最近一次异常的原因）。</li>
+<li>EPC（14 号寄存器，用于异常处理结束后的恢复）。</li>
+</ul>
+<p><code>cp0.Cause</code> 和 <code>cp0.Status</code> 有很多个 field，本实验中需要实现的 field 将在下文中提到，没提到的部分可实现为只读恒为 0。</p>
+<p>CP0 寄存器不能作为算术指令的源寄存器和目的寄存器，软件需要通过 <code>mfc0</code> 和 <code>mtc0</code> 来读取或写入它们。</p>
+<p>CP0 寄存器的写入，包括两种情况：</p>
+<ul>
+<li>软件通过 <code>mtc0</code> 指令写入 CP0 寄存器。需要注意 CP0 寄存器和通用寄存器不同，有些寄存器不是每一位都允许软件进行写入，手册上的 <code>R/W</code> 权限描述了各个寄存器每一位的软件读写权限。</li>
+<li>硬件写入。</li>
+</ul>
+<p>对于它们的优先级，请先用单周期 CPU 模型进行讨论，再思考五级流水线中的做法。</p>
+<h2 id="处理异常"><a class="header" href="#处理异常">处理异常</a></h2>
+<p>异常的处理是由软件和硬件共同完成的。硬件主要处理异常检测与异常恢复。</p>
+<h3 id="异常检测"><a class="header" href="#异常检测">异常检测</a></h3>
+<p>五级流水线的前四个阶段都可能产生异常，但不一定要在当个流水段就响应，可以产生一个异常使能信号，通过流水线寄存器传到 M 阶段再进行统一处理。</p>
+<p>中断产生的条件包括：</p>
+<ul>
+<li><code>cp0.Status.IE</code> 为 1，全局硬件中断使能为有效。</li>
+<li><code>cp0.Status.EXL</code> 为 0，CPU 在执行异常处理程序时，不允许中断。</li>
+<li>中断源产生中断（包括 <code>ext_int[5:0]</code>, <code>cp0.Cause.IP[7:0]</code> 和时钟中断），且对应的中断使能 <code>cp0.Status.IM[7:0]</code> 为有效。时钟中断对应的 mask 为 <code>IM[7]</code>，外部硬件中断对应的 mask 为 <code>IM[7:2]</code>。可用以下代码来表示：<code>interrupt_info = ({exception.ext_int, 2'b00} | cp0_cause.IP | {cp0.timer_interrupt, 7'b0}) &amp; cp0_status.IM;</code>。</li>
+</ul>
+<p>分析中断信号与各个异常信号，只要有一个为有效，则产生异常。检测到异常后，硬件需要做以下几件事：</p>
+<ul>
+<li>清空流水线，并把下一条指令的 PC 设置为 <code>0xbfc00380</code>。本实验中，这是统一的异常处理入口。</li>
+<li>根据异常优先级（手册 page 55~56），得到产生异常的原因，按照手册 138 的对应关系生成异常代码 <code>exccode</code>，写入 <code>cp0.Cause.ExcCode</code>。本实验需要实现的 code 包括：<code>Int</code>、<code>AdEL</code>、<code>AdES</code>、<code>Sys</code>、<code>BP</code>、<code>RI</code>、<code>Ov</code>。</li>
+<li>如果是地址错异常，将出错的虚拟地址写入 <code>cp0.BadVAddr</code>。</li>
+<li>如果 <code>cp0.Status.EXL</code> 为 0，设置 <code>cp0.EPC</code> 和 <code>cp0.Cause.BD</code>。如果产生异常的指令不在分支延迟槽中，将 <code>cp0.EPC</code> 设为该指令的 PC，并将 <code>cp0.Cause.BD</code> 设为 0；否则，将 <code>cp0.EPC</code> 设置为分支/跳转指令的 PC（即当前 PC 减 4），并将 <code>cp0.Cause.BD</code> 设为 1。</li>
+<li>将 <code>cp0.Status.EXL</code> 设置为 1。</li>
+</ul>
+<h3 id="异常恢复"><a class="header" href="#异常恢复">异常恢复</a></h3>
+<p>软件通过 <code>eret</code> 指令来恢复异常。</p>
+<p>此时，硬件需要：</p>
+<ul>
+<li>清空流水线，并将下一条指令的 PC 置为 <code>cp0.EPC</code>。</li>
+<li><code>cp0.Status.EXL</code> ← 0。</li>
+</ul>
+<p>有些教科书上说，对于 <code>syscall</code> 类型的异常，当异常返回时，应该返回到下一条指令。在 MIPS 里，这件事情由软件完成（<code>cp0.EPC</code> 是软件可写的）。</p>
+<h2 id="添加指令"><a class="header" href="#添加指令">添加指令</a></h2>
+<p>添加以下指令：</p>
+<ul>
+<li><code>add</code>、<code>addi</code>、<code>sub</code>（可能产生溢出异常）。</li>
+<li><code>break</code>、<code>syscall</code>。</li>
+<li><code>mfc0</code>、<code>mtc0</code>（读取/写入 CP0 寄存器）。</li>
+<li><code>eret</code>。</li>
+</ul>
+<h2 id="实验提交-4"><a class="header" href="#实验提交-4">实验提交</a></h2>
+<pre><code>18307130024/
+├── report/   （报告所在目录）
+├── source/   （源文件所在目录）
+└── verilate/ （仿真代码所在目录）
+</code></pre>
+<p>用 <code>zip -r 18307130024.zip 18307130024/</code> 打包。用 <code>unzip 18307130024.zip</code> 检查，应在当前目录下有学号目录。</p>
+<h3 id="通过标准-4"><a class="header" href="#通过标准-4">通过标准</a></h3>
+<p>上板通过 test1~test5，并且 <code>make verilate</code> 编译通过。</p>
+<p>test4 是异常与中断的测试，仅测试了所要求的异常与软件中断。</p>
+<p>test5 包含了十个测试，通过调整开关来执行这十个测试。test5 的默认时钟频率是 50MHz。如果生成 bit 文件时产生时序违例（比如当你的除法器是单周期实现时），请调整时钟频率至 7MHz。助教在测试时会避开时序违例。</p>
+<h3 id="调试建议"><a class="header" href="#调试建议">调试建议</a></h3>
+<p>test5 的十个测试很难用 Vivado 的仿真进行调试，可以用 Verilator 进行调试。不像 test1~test4，测试参数为 <code>TEST=test1</code> 这种，测试 test5 是对每个小测试运行一次 <code>make vsim</code>，参数为 <code>TEST=sha</code> 之类，各个测试的名字在 <code>misc/nscscc</code> 里可以查看到。这些测试没有 trace 文件，无法直接定位到寄存器写入错误的位置，出错了只能看波形图。</p>
+<p>你也可以用 Verilator 运行一遍 <code>func_test</code> 测试，它集成了 test1~test4 的全部测试。</p>
+<h3 id="截止时间-4"><a class="header" href="#截止时间-4">截止时间</a></h3>
+<p><strong>2021 年 5 月 17 日 12:00</strong></p>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="挑战课题"><a class="header" href="#挑战课题">挑战课题</a></h1>
 <p>TRY YOUR BEST!</p>
@@ -1833,7 +1921,7 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 <p>预备条件：通过 <code>test1</code>、<code>test2</code>、<code>test3</code>；未实现的指令 decode 为 <code>NOP</code>。</p>
 </blockquote>
 <p>你将升级你的流水线架构，以获取更高的性能。</p>
-<h2 id="通过标准-4"><a class="header" href="#通过标准-4">通过标准</a></h2>
+<h2 id="通过标准-5"><a class="header" href="#通过标准-5">通过标准</a></h2>
 <ul>
 <li>上板 <code>test1</code>、<code>test2</code>、<code>test3</code> 显示两个绿灯，多次 reset 后仍显示两个绿灯。</li>
 <li>上板 <code>test5</code>，时序无违例。</li>
@@ -1861,7 +1949,7 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 <p>上图是 RefCPU 在 7MHz 的频率下，10 个测试的读数。填写完读数后，把表格中的时钟频率改成你 CPU 的时钟频率。图中数据所用的 bit 文件已上传至 eLearning，路径为 “<code>实验部分/refcpu_test5.bit</code>”。</p>
 <h2 id="提交内容"><a class="header" href="#提交内容">提交内容</a></h2>
 <p>待定</p>
-<h2 id="截止时间-4"><a class="header" href="#截止时间-4">截止时间</a></h2>
+<h2 id="截止时间-5"><a class="header" href="#截止时间-5">截止时间</a></h2>
 <p>待定</p>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="附加资料"><a class="header" href="#附加资料">附加资料</a></h1>

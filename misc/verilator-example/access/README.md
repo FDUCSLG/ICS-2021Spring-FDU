@@ -1,0 +1,4 @@
+```shell
+make
+./a.out
+```

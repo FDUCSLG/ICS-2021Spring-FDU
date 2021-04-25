@@ -10,6 +10,14 @@ typedef struct packed {
     logic [7:0] d;
 } abcd_t;
 
+typedef struct packed {
+    logic valid;
+    logic dirty;
+    logic accessed;
+} meta_t;
+
+typedef logic [15:0][31:0] cache_line_t;
+
 /**
  * this helper macro is also defined in access.svh
  *
@@ -35,36 +43,45 @@ module Bits (
     output logic [1:0][1:0][31:0] e,
     output logic [127:0] f,
     output pair_t g,
-    output abcd_t h
+    output abcd_t h,
+    output meta_t [2:0] i,
+    output cache_line_t [2:0] j
 );
+    // a
     assign a = 32'h19260817;
 
+    // b
     assign b[0] = 8'hab;
     assign b[1] = 8'hcd;
 
+    // c
     assign c[0][0] = 8'h12;
     assign c[0][1] = 8'h34;
     assign c[1][0] = 8'h56;
     assign c[1][1] = 8'h78;
 
+    // d
     assign d[0] = 32'h14253647;
     assign d[1] = 32'h44332211;
 
+    // e
     assign e[0][0] = 32'h11223344;
     assign e[0][1] = 32'h55667788;
     assign e[1][0] = 32'haabbccdd;
     assign e[1][1] = 32'h8855bbff;
 
+    // f
     assign f = 128'h11223344_55667788_aabbccdd_8855bbff;
 
+    // g
     assign g.first = 32'h12345678;
     assign g.second = 32'hdeadbeef;
 
-    // verilator lint_off VARHIDDEN
-    function logic get_a(abcd_t e);
+    // h
+    function logic get_a(abcd_t value);
         /* verilator public */
-        automatic logic _unused_ok = &{1'b0, e, 1'b0};
-        return e.a;
+        automatic logic _unused_ok = &{1'b0, value, 1'b0};
+        return value.a;
     endfunction
 
     `STRUCT_ACCESSOR(abcd_t, b, logic [1:0]);
@@ -75,4 +92,58 @@ module Bits (
     assign h.b = 2'b11;        // 3
     assign h.c = 4'b1011;      // 11
     assign h.d = 8'b11001010;  // 202
+
+    // i
+    function meta_t get_meta_from_array(meta_t [2:0] array, int index);
+        /* verilator public */
+        return array[index];
+    endfunction
+
+    `STRUCT_ACCESSOR(meta_t, valid, logic);
+    `STRUCT_ACCESSOR(meta_t, dirty, logic);
+    `STRUCT_ACCESSOR(meta_t, accessed, logic);
+
+    assign i[0] = meta_t'{ valid: 1'b1, dirty: 1'b1, accessed: 1'b0 };
+    assign i[1] = meta_t'{ valid: 1'b0, dirty: 1'b0, accessed: 1'b1 };
+    assign i[2] = meta_t'{ valid: 1'b1, dirty: 1'b0, accessed: 1'b1 };
+
+    function logic get_valid(meta_t [2:0] array, int index);
+        /* verilator public */
+        return array[index].valid;
+    endfunction
+
+    function logic get_dirty(meta_t [2:0] array, int index);
+        /* verilator public */
+        return array[index].dirty;
+    endfunction
+
+    function logic get_accessed(meta_t [2:0] array, int index);
+        /* verilator public */
+        return array[index].accessed;
+    endfunction
+
+    // j
+    function logic check_cache_line(
+        meta_t [2:0] meta,
+        cache_line_t [2:0] target,
+        int index,
+        cache_line_t expected
+    );
+        /* verilator public */
+
+        if (meta[index].valid) begin
+            for (int k = 0; k < 16; k++) begin
+                if (target[index][k] != expected[k])
+                    return 1'b0;
+            end
+        end
+
+        return 1'b1;
+    endfunction
+
+    for (genvar l = 0; l < 3; l++) begin
+        for (genvar k = 0; k < 16; k++) begin
+            assign j[l][k] = 3 * k + l + 1;
+        end
+    end
 endmodule

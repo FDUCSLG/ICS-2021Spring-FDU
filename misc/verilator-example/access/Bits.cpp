@@ -52,7 +52,7 @@ int main() {
 
     auto scope = top->Bits;
 
-    // top->h: SData;
+    // top->h: SData
     auto h = top->h;
     printf(
         "h: {a: %u, b: %u, c: %u, d: %u}\n",
@@ -61,6 +61,36 @@ int main() {
         scope->abcd_t_c(h),
         scope->abcd_t_d(h)
     );
+
+    // top->i: CData
+    auto i = top->i;
+    auto i0 = scope->get_meta_from_array(i, 0);
+
+    printf("i: {\n");
+    printf("    {valid: %d, dirty: %d, accessed: %d},\n",
+        scope->meta_t_valid(i0),
+        scope->meta_t_dirty(i0),
+        scope->meta_t_accessed(i0));
+    printf("    {valid: %d, dirty: %d, accessed: %d},\n",
+        scope->get_valid(i, 1),
+        scope->get_dirty(i, 1),
+        scope->get_accessed(i, 1));
+    printf("    {valid: %d, dirty: %d, accessed: %d}\n",
+        scope->get_valid(i, 2),
+        scope->get_dirty(i, 2),
+        scope->get_accessed(i, 2));
+    printf("}\n");
+
+    // top->j: WData[48]
+    WData expected[16];
+    for (int k = 0; k < 16; k++) {
+        expected[k] = 3 * k + 1;
+    }
+    printf("check_cache_line(0): %d\n", scope->check_cache_line(top->i, top->j, 0, expected));
+
+    memset(expected, 0, sizeof(expected));
+    printf("check_cache_line(1): %d\n", scope->check_cache_line(top->i, top->j, 1, expected));
+    printf("check_cache_line(2): %d\n", scope->check_cache_line(top->i, top->j, 2, expected));
 
     return 0;
 }

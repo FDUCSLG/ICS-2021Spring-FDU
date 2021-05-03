@@ -9,8 +9,9 @@ VINCLUDE = verilate/include
 VSOURCE = verilate/source
 
 CXX_BUILD = $(BUILD_ROOT)/$(TARGET)/obj#    # build/gcc/refcpu/VTop/obj
+CXX_ROOT = $(VSOURCE)/$(VROOT)
 
-CXX_TARGET_FILES := $(wildcard $(VSOURCE)/$(VROOT)/*.cpp)
+CXX_TARGET_FILES := $(wildcard $(CXX_ROOT)/*.cpp)
 CXX_FILES := \
 	$(wildcard $(VSOURCE)/*.cpp) \
 	$(CXX_TARGET_FILES) \
@@ -19,8 +20,8 @@ CXX_FILES := \
 	# $(VERILATOR_ROOT)/verilated_threads.cpp
 
 CXX_TARGET_HEADERS := \
-	$(wildcard $(VSOURCE)/$(VROOT)/*.h) \
-	$(wildcard $(VSOURCE)/$(VROOT)/*.inl)
+	$(wildcard $(CXX_ROOT)/*.h) \
+	$(wildcard $(CXX_ROOT)/*.inl)
 CXX_HEADERS := \
 	$(wildcard $(VINCLUDE)/*.h) \
 	$(wildcard $(VINCLUDE)/thirdparty/*.h)
@@ -32,7 +33,7 @@ CXX_LIBS := $(addprefix $(CXX_BUILD)/, $(CXX_FILES:%.cpp=%.o))
 CXX_INCLUDES = \
 	-I$(SV_BUILD) \
 	-I$(VINCLUDE) \
-	-I$(VSOURCE)/$(VROOT) \
+	-I$(CXX_ROOT) \
 	-I$(VERILATOR_ROOT) \
 	-I$(VERILATOR_ROOT)/vltstd/
 
@@ -78,6 +79,9 @@ $(CXX_TARGET_LIBS): $(CXX_TARGET_HEADERS) $(SV_READY)
 $(CXX_LIBS): $(CXX_BUILD)/%.o : %.cpp $(CXX_HEADERS)
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $< -c -o $@
+
+# add customed dependencies.
+-include $(CXX_ROOT)/Makefile.deps.mk
 
 $(VLIBRARY): $(SV_READY) $(SV_FILES)
 	cd $(SV_BUILD); $(MAKE) -f $(notdir $(SV_MKFILE)) CXX=$(CXX)

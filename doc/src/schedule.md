@@ -59,7 +59,8 @@
       </td>
       <td align="center">5.17</td>
       <td align="center">
-        <span class="red">实验 4 提交</span>
+        <span class="red">实验 4 提交</span><br>
+        <span class="red">组队结束</span>
       </td>
     </tr>
     <tr>
@@ -89,6 +90,7 @@
       </td>
       <td align="center">6.7</td>
       <td align="center">
+        <span class="red">中期报告</span>
       </td>
     </tr>
     <tr>

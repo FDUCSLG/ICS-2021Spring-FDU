@@ -153,6 +153,11 @@ WITH /*TRACE*/ /*DEBUG*/ {
 
         top->ticks(2048);
 
+        // stop issuing store.
+        dbus->clear();
+        top->ticks(2048);
+
+        // issue a new load.
         dbus->async_loadw(0xffffc);
         word_t value = dbus->await(2048);  // it waits for async_loadw to complete.
         ASSERT(value == 0x2048ffff);

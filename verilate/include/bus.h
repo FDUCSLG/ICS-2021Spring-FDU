@@ -410,13 +410,22 @@ public:
      * await doesn't know type of request you have issued, so you
      * have to handle data placement on yourself.
      */
-    template <bool WaitDataOk = true, bool WaitAddrOk = true, bool EvalFirst = true>
+    template <
+        bool WaitDataOk = true,
+        bool WaitAddrOk = true,
+        bool EvalFirst = true,
+        bool ClearValid = true>
     auto await(uint64_t max_count = UINT64_MAX) -> word_t {
+        enum : uint32_t {
+            ADDR_OK = 1,
+            DATA_OK = 2,
+        };
+
         uint32_t remain = 0;
         if (WaitDataOk)
-            remain |= 1 << 1;
+            remain |= DATA_OK;
         if (WaitAddrOk)
-            remain |= 1 << 0;
+            remain |= ADDR_OK;
 
         if (EvalFirst)
             top->eval();
@@ -424,11 +433,15 @@ public:
         uint64_t count = 0;
         while (count < max_count) {
             word_t data = rdata();
-            remain ^= scope->dbus_handshake(ports.resp, remain);
+            uint32_t acked = scope->dbus_handshake(ports.resp, remain);
 
             count++;
             top->tick();
 
+            if (ClearValid && (acked & ADDR_OK))
+                clear();
+
+            remain ^= acked;
             if (remain == 0)
                 return data;
         }

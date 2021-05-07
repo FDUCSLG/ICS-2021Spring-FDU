@@ -401,6 +401,7 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 }
 </code></pre>
 <p>分别表示向缓存读取和写入的操作，而这两个函数的目标是计算操作完成后，理论上缓存的内部状态是怎么样的。测试框架在向 verilated 模型发送请求并等待 verilated 模型完成后，将先调用对应的函数，然后调用 <code>compare_internal</code> 来检查内部状态。</p>
+<p>编写对照时需要从 C++ 访问 SystemVerilog 模块中的变量。请注意 Verilator 会把所有变量默认当作 bit 数组处理（类似于 C++ 中的 <code>std::bitset</code>），所以位数较多的多维数组和结构体在 C++ 的 verilated model 中都是整型数组。目录 <code>misc/verilator-example/access</code> 下的 <code>Bits.sv</code> 和 <code>Bits.cpp</code> 包含了一些 C++ 访问 SystemVerilog 变量的例子。你可以参考这个例子来实现 <code>check_internal</code> 和 <code>check_memory</code>。</p>
 <h3 id="调试工具"><a class="header" href="#调试工具">调试工具</a></h3>
 <p>在单元测试的 <code>WITH</code> 后面加上 <code>TRACE</code>，就会在运行测试的中途记录 FST 波形图。默认会把波形图放在 <code>build</code> 文件夹下面。例如：</p>
 <pre><code class="language-c++">WITH TRACE {

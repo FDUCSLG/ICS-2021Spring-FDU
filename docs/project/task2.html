@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>缓存 - Introduction to NSCSCC</title>
+        <title>访存 - Introduction to NSCSCC</title>
         
         
 
@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="../arch-lab/lab2a.html">实验 2a</a></li><li class="chapter-item "><a href="../arch-lab/lab2b.html">实验 2b</a></li><li class="chapter-item "><a href="../arch-lab/lab3a.html">实验 3a</a></li><li class="chapter-item "><a href="../arch-lab/lab3b.html">实验 3b</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li></ol></li><li class="chapter-item expanded "><a href="../project/index.html">挑战课题</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../project/task1.html">流水线</a></li><li class="chapter-item expanded "><a href="../project/task2.html" class="active">缓存</a></li><li class="chapter-item "><a href="../project/task3.html">外设</a></li></ol></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="../misc/fpga.html">了解 FPGA 架构</a></li><li class="chapter-item "><a href="../misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../schedule.html">课程安排</a></li><li class="chapter-item expanded "><a href="../arch-lab/index.html">体系结构部分</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../arch-lab/lab0.html">实验 0</a></li><li class="chapter-item "><a href="../arch-lab/lab1.html">实验 1</a></li><li class="chapter-item "><a href="../arch-lab/lab2a.html">实验 2a</a></li><li class="chapter-item "><a href="../arch-lab/lab2b.html">实验 2b</a></li><li class="chapter-item "><a href="../arch-lab/lab3a.html">实验 3a</a></li><li class="chapter-item "><a href="../arch-lab/lab3b.html">实验 3b</a></li><li class="chapter-item "><a href="../arch-lab/lab4.html">实验 4</a></li></ol></li><li class="chapter-item expanded "><a href="../project/index.html">挑战课题</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../project/task1.html">流水线</a></li><li class="chapter-item expanded "><a href="../project/task2.html" class="active">访存</a></li><li class="chapter-item "><a href="../project/task3.html">外设</a></li></ol></li><li class="chapter-item expanded "><a href="../misc/index.html">附加资料</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../misc/external.html">外部资料</a></li><li class="chapter-item "><a href="../misc/instruction.html">指令列表</a></li><li class="chapter-item "><a href="../misc/fpga.html">了解 FPGA 架构</a></li><li class="chapter-item "><a href="../misc/verilate.html">Verilator 仿真</a></li><li class="chapter-item "><a href="../misc/unopt.html">组合逻辑环与 UNOPT</a></li><li class="chapter-item "><a href="../misc/gtkwave.html">使用 GTKWave</a></li></ol></li><li class="chapter-item expanded "><a href="../directory-structure.html">仓库目录结构</a></li><li class="chapter-item expanded affix "><a href="../faq.html">常见问题</a></li><li class="chapter-item expanded affix "><a href="../contributors.html">贡献者</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -166,8 +166,65 @@
                 <div id="content" class="content">
                     <main>
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<h1 id="方向二缓存"><a class="header" href="#方向二缓存">方向二：缓存</a></h1>
-<p>无可奉告。</p>
+<h1 id="方向二访存性能优化"><a class="header" href="#方向二访存性能优化">方向二：访存性能优化</a></h1>
+<p>实验 3 实现了基本的 cache 后，就可以开始在访存这块挤牙膏了。</p>
+<h2 id="uncached-访存"><a class="header" href="#uncached-访存">Uncached 访存</a></h2>
+<p>MIPS 架构中，<code>kseg1</code> 是 uncached 的。CPU 启动时和访存外设的时候都会从 <code>kseg1</code> 访问。以 UART 字符设备为例，它的访存显然是不能乱序、不能缓存、不能合并 store、不能 store 往访问同一个地址的 load 做转发的。因此 <code>kseg1</code> 内的访存只能按照顺序一个一个来。这极大地限制了访存的优化空间。</p>
+<p>当然我们还是能用 store buffer 消除掉等待 store 的 <code>data_ok</code> 的延时。因为 load 不能乱序到 store 前面，因此 load 必须等待 store buffer 为空才能进行。一些乱序执行的流水线会选择把 load 也加入到 store buffer 内，这样可以同时处理多个 load/store。</p>
+<h2 id="cached-访存"><a class="header" href="#cached-访存">Cached 访存</a></h2>
+<p>经过 cache 的访存是优化的重点。访存性能指标主要有延时、带宽这两方面。</p>
+<h3 id="pipelined-cache"><a class="header" href="#pipelined-cache">Pipelined Cache</a></h3>
+<p>当 cache 的逻辑变得复杂以后，加上大容量 cache 访存的延时，如果要求 cache 单周期返回数据可能会拉低整个 CPU 的频率。经典的解决办法就是把 cache 切成多级流水线。这样虽然增加了访存的延时，但是提高了访存并行度，从而提高了 cache 的带宽。</p>
+<p>可以参考 2019 年龙芯杯清华队伍的三级 cache 的设计：<a href="../misc/external.html#%E5%85%B6%E5%AE%83">“NSCSCC 2019 Final Report”</a>。</p>
+<h3 id="address-generation-unit-agu"><a class="header" href="#address-generation-unit-agu">Address Generation Unit (AGU)</a></h3>
+<p>很多乱序流水线中都有地址生成单元（AGU）：</p>
+<p><img src="../asset/project/amd19h.png" alt="AMD 19h" /></p>
+<center class="fig-caption">AMD family 19h processor</center>
+<p><img src="../asset/project/riscv-boom.png" alt="RISC-V BOOM" /></p>
+<center class="fig-caption">RISC-V BOOM</center>
+<p>单独的 AGU 可以减轻 ALU 的计算压力。同时，这些微架构都会把 store 变成两个 μop：store-address 和 store-data。这在 Intel 的微架构图上体现得更清楚：</p>
+<p><img src="../asset/project/icelake.png" alt="Intel Icelake" /></p>
+<center class="fig-caption">Intel Icelake</center>
+<p>上图中 “STA” 就是 store-address。这是因为 store 需要读两个寄存器。将 store 拆成两个 μop 可以增加指令并行度。Icelake 微架构对 load、store-address 和 store-data 各有一个 buffer。特别的，如果和当前 store 相关的两个寄存器都是可以直接读取，不会造成阻塞时，Icelake 会把 store-address 和 store-data 这两个 μop “macro-fuse” 成单独的 store。</p>
+<h3 id="使用-lutrambram"><a class="header" href="#使用-lutrambram">使用 LUTRAM/BRAM</a></h3>
+<p>在实验三中已经介绍过 LUTRAM 了。LUTRAM 和 FF 寄存器相比，更加节省 FPGA 板上的资源。我们使用的 FPGA 板上还有存储密度更大的 Block RAM（BRAM）。下面两张图对比了 256KB 的 LUTRAM 和 BRAM 板上资源的占用：</p>
+<p><img src="../asset/project/lutram-vs-bram.png" alt="LUTRAM v.s. BRAM" /></p>
+<p>与 LUTRAM 不同的是，BRAM 需要至少一个时钟周期的延时。这和实验 1 中的情况类似。此外，因为 BRAM 在 FPGA 板上的分布比较固定，而且间距比较大，所以 BRAM 的布线延时不一定比 LUTRAM 优秀。</p>
+<p>我们在 <code>source/ram/BRAM.sv</code> 中提供了一个双端口 BRAM 的封装。你也可以直接使用 Xilinx 的 <code>xpm_memory_*</code> 系列的 XPM 模块。XPM 模块的使用请参考：<a href="../misc/external.html#soc-%E9%83%A8%E5%88%86">“UltraScale Architecture Libraries Guide”</a>。我们已经把 <code>xpm_memory_*</code> 模块移植到 Verilator 上了，以方便你使用 Verilator 仿真。</p>
+<h3 id="banked-cache"><a class="header" href="#banked-cache">Banked Cache</a></h3>
+<p>RAM 模块一般不会有很多端口。即便是 BRAM，也只会提供两个独立的端口。当多个端口同时写入同一个位置时，会发生冲突。如果没有仲裁，此时就有可能损坏数据。在仿真中，BRAM 发生读写冲突时，数据都会变成 <code>X</code>，以提醒你避免写冲突的出现。</p>
+<p>为了增加 cache 的访存并行度，cache 需要提供更多的端口。一种方法是使用 banked RAM。我们可以把一条 cache line 分别存储在多个 RAM 上：</p>
+<p><img src="../asset/project/bank.svg" alt="banked cache line" /></p>
+<p>上图中，假设 cache line 大小是 64 字节。我们建立 4 个 bank，每个 bank 存储 32 位（4 字节）字宽的数据。按照交替的方式将每条 cache line 划分到四个 bank 上。如果 RAM 模块只有一个读写口，那么此时相当于 cache 提供了 4 个读写口。</p>
+<p>Bank 方式需要处理端口冲突：如果两个访存同时访问同一个 bank，需要进行仲裁。而上面之所以按照交替的方式来组织 bank，是因为减少连续读写 4 字节大小的数据时的 bank 冲突。</p>
+<p><strong>问题</strong>：如何快速确定访存地址对应的 bank？</p>
+<p><strong>问题</strong>：如果是连续读写单字节的数据（例如读写字符串），是否会有 bank 冲突？有什么缓解办法吗？</p>
+<h3 id="banked-metadata"><a class="header" href="#banked-metadata">Banked Metadata</a></h3>
+<p>元数据也可以分 bank 存储。一般是每一路（way）的信息用一个 bank 存起来。由于全关联搜索需要访问每一路的 tag 信息，所以对元数据分 bank 的同时往往也会加上 way predictor，即提前预测这次的访存会用哪一路的数据。这个预测器和分支预测类似。做出预测后，只用读取一个 bank 的元数据中的 tag 并比较即可。如果预测失败，就只能把所有 tag 读出来再搜索了。</p>
+<h3 id="storefillvictim-buffer"><a class="header" href="#storefillvictim-buffer">Store/Fill/Victim Buffer</a></h3>
+<p>为了隐藏比较耗时的操作带来的延时，往往会引入各种各样的缓冲区队列。</p>
+<p>Store buffer 早在实验 2 就已经提及了，它消除了流水线上由 store 带来的阻塞。对 cache 而言，比较耗时的事情是从主存抓取 cache line（fill）和将 cache line 写回到主存中（victim）。我们也可以用缓冲来提高 cache 的访存并发度。</p>
+<p>例如，当某个访存未命中时，我们可以把它放入 fill buffer。之后 cache 可以继续服务其它的访存。这也就是所谓的 “hit under miss”。支持这种功能的 cache 一般称为非阻塞 cache（non-blocking cache）。同样的，如果某次访存触发了 dirty 的 cache line 的换出，我们同样可以把这个 dirty 的 cache line 放入 victim buffer，以避免其阻塞后面的访存。</p>
+<p>这需要缓存有多个读写端口。之前的分 bank 技术已经解决了这个问题。</p>
+<h3 id="early-store"><a class="header" href="#early-store">Early Store</a></h3>
+<p>当 store 操作 cache miss 时，即使新的 cache line 还没有完全从主存抓取过来，store 也是可以执行的。需要避免主存过来的数据覆盖掉已经完成的 store 的数据的情况。</p>
+<h3 id="store-forwardingcombining"><a class="header" href="#store-forwardingcombining">Store Forwarding/Combining</a></h3>
+<p>和流水线上的转发类似，store 的数据可以直接转发到 store 后面的 load 上。</p>
+<p>对同一个地址的连续的 store，后面的 store 数据可以直接覆盖掉前面 store 数据。有些时候可以考虑将多个小数据合并成一个大数据来写入（例如 4 个单字节的写入合并为 1 个 4 字节的写入）。</p>
+<p>这些优化一般是由 store buffer 实现的。</p>
+<h3 id="prefetch"><a class="header" href="#prefetch">Prefetch</a></h3>
+<p>预取（prefetch）是流水线隐藏访存延时的有力手段。目前大部分商用乱序核都有预取的能力。</p>
+<p>预取分为硬件预取（hardware prefetch）和软件预取（software prefetch）。MIPS 架构提供了 <code>prefetch</code> 指令来做软件预取。</p>
+<p>通常在 cache 空闲（比如 fill buffer 为空）时进行预取。预取需要根据之前的访存记录，判断之后访存会访问哪条 cache line。Intel 的微架构支持识别等距（stride）的访存模式，无论是顺序还是倒序，然后计算出下一次访存的 cache line。这是针对顺序访存的优化。对于乱序访存，如果 cache 发现这些访存都在某个小范围内，比如 4KB，cache 也可以考虑把这 4KB 的内存全部载入到 cache 中。</p>
+<h3 id="自定义总线soc"><a class="header" href="#自定义总线soc">自定义总线/SoC</a></h3>
+<p>在前几次实验中，IBus 总线宽度只有 32 位，这将成为超标量流水线的瓶颈。你完全可以自定义流水线和 cache 之间的总线，以满足流水线的性能需求。比如，你可以扩宽 IBus 总线，或者提供多个访存接口。</p>
+<p>同样的，龙芯提供的 SoC 用的是 32 位的 AXI 总线，这也极大的限制了内存带宽。可以考虑自行修改 SoC 部分，增加 AXI 总线宽度。现代计算机的 DRAM 虽然延时很高，但是带宽也会很大。</p>
+<p>此外，也可以考虑设计一个二级缓存，然后在一级缓存和二级缓存之间提供大带宽的总线。</p>
+<h3 id="non-temporal-access"><a class="header" href="#non-temporal-access">Non-Temporal Access</a></h3>
+<p>“Non-temporal” 是程序员提供给 CPU 的 hint，表示这次访存访问到的部分在接下来的一小段时间内不会再次被访问到。例如，把矩阵初始化为全 0，很可能这个矩阵不会马上就用上。当 CPU 发现访存 cache miss 并且有这样的 hint 时，会考虑直接访问主存，而不将对应的 cache line 读取到 cache 中。这样可以避免把其它更有用的 cache line 换出。或者是给 non-temporal 的访存专门准备一个单独的 cache line，以合并连续的写入，从而能够利用主存的突发传输。</p>
+<p>这种 hint 貌似是要有特定的指令编码的。x86 中有专门的 non-temporal 访存指令，特别是 SSE 指令。我暂时不知道怎么在 MIPS 中实现这种 idea。</p>
+<h2 id="其它"><a class="header" href="#其它">其它</a></h2>
+<p>由于龙芯杯的性能测试比较小，所以 32KB 的一级缓存基本上都能达到 99% 的命中率。为了能够测试出各种优化策略的效果，我们建议你使用 2KB 或者 4KB 的一级缓存来做测试。</p>
 
                     </main>
 

@@ -214,9 +214,6 @@
 <p>Bank 方式需要处理端口冲突：如果两个访存同时访问同一个 bank，需要进行仲裁。而上面之所以按照交替的方式来组织 bank，是因为减少连续读写 4 字节大小的数据时的 bank 冲突。</p>
 <p><strong>问题</strong>：如何快速确定访存地址对应的 bank？</p>
 <p><strong>问题</strong>：如果是连续读写单字节的数据（例如读写字符串），是否会有 bank 冲突？有什么缓解办法吗？</p>
-<h3 id="banked-metadata"><a class="header" href="#banked-metadata">Banked Metadata</a></h3>
-<p>元数据也可以分 bank 存储。一般是每一路（way）的信息用一个 bank 存起来。由于全关联搜索需要访问每一路的 tag 信息，所以对元数据分 bank 的同时往往也会加上 way predictor，即提前预测这次的访存会用哪一路的数据。这个预测器和分支预测类似。做出预测后，只用读取一个 bank 的元数据中的 tag 并比较即可。如果预测失败，就只能把所有 tag 读出来再搜索了。</p>
-<p>关于 way predictor，可以参阅《量化方法》一书中的对应章节。</p>
 <h3 id="storefillvictim-buffer"><a class="header" href="#storefillvictim-buffer">Store/Fill/Victim Buffer</a></h3>
 <p>为了隐藏比较耗时的操作带来的延时，往往会引入各种各样的缓冲队列。</p>
 <p>Store buffer 早在实验 2 就已经提及了，它消除了流水线上由 store 带来的阻塞。对 cache 而言，比较耗时的事情是从主存抓取 cache line（fill）和将 cache line 写回到主存中（victim）。我们也可以用缓冲来提高 cache 的访存并发度。</p>

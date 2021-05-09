@@ -277,7 +277,7 @@ position_t position;
 always_comb begin
     position = 2'b00;  // 防止出现锁存器
 
-    unique if (foo[0].tag == tag)
+    if (foo[0].tag == tag)
         position = 2'b00;
     else if (foo[1].tag == tag)
         position = 2'b01;

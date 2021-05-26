@@ -148,7 +148,7 @@ position_t position;
 always_comb begin
     position = 2'b00;  // 防止出现锁存器
 
-    unique if (foo[0].tag == tag)
+    if (foo[0].tag == tag)
         position = 2'b00;
     else if (foo[1].tag == tag)
         position = 2'b01;
@@ -314,6 +314,8 @@ void CacheRefModel::store(addr_t addr, AXISize size, word_t strobe, word_t data)
 ```
 
 分别表示向缓存读取和写入的操作，而这两个函数的目标是计算操作完成后，理论上缓存的内部状态是怎么样的。测试框架在向 verilated 模型发送请求并等待 verilated 模型完成后，将先调用对应的函数，然后调用 `compare_internal` 来检查内部状态。
+
+编写对照时需要从 C\+\+ 访问 SystemVerilog 模块中的变量。请注意 Verilator 会把所有变量默认当作 bit 数组处理（类似于 C\+\+ 中的 `std::bitset`），所以位数较多的多维数组和结构体在 C\+\+ 的 verilated model 中都是整型数组。目录 `misc/verilator-example/access` 下的 `Bits.sv` 和 `Bits.cpp` 包含了一些 C\+\+ 访问 SystemVerilog 变量的例子。你可以参考这个例子来实现 `check_internal` 和 `check_memory`。
 
 ### 调试工具
 

@@ -12,7 +12,7 @@
     * [实验 4](arch-lab/lab4.md)
 * [挑战课题](project/README.md)
     * [流水线](project/task1.md)
-    * [缓存](project/task2.md)
+    * [访存](project/task2.md)
     * [外设](project/task3.md)
 * [附加资料](misc/README.md)
     * [外部资料](misc/external.md)

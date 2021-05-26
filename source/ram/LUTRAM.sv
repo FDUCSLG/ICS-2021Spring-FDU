@@ -52,7 +52,6 @@ module LUTRAM #(
     `ASSERTS(NUM_BYTES == 16 || NUM_BYTES == 32 || NUM_BYTES == 64,
         "The size of LUTRAM must be 16, 32 or 64 bytes.");
 
-
 if (BACKEND == "behavioral") begin: behavioral
 
     rview_t [NUM_WORDS - 1:0] mem = 0;
@@ -72,7 +71,9 @@ if (BACKEND == "behavioral") begin: behavioral
 
 end else begin: xilinx_xpm
 
-`ifndef VERILATOR
+`ifdef ICS_WITH_XPM
+    // verilator lint_off PINMISSING
+
     // xpm_memory_spram: Single Port RAM
     // Xilinx Parameterized Macro, version 2019.2
     xpm_memory_spram #(
@@ -110,8 +111,10 @@ end else begin: xilinx_xpm
         .injectsbiterra(0)
     );
     // End of xpm_memory_spram_inst instantiation
+
+    // verilator lint_on PINMISSING
 `else
-    `UNUSED_OK({clk, addr, strobe, wdata, rdata});
+    $error("XPM modules are disabled.");
 `endif
 
 end

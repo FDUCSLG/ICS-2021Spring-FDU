@@ -27,8 +27,8 @@ CXX_HEADERS := \
 	$(wildcard $(VINCLUDE)/thirdparty/*.h)
 
 CXX_MODEL_LIB = $(CXX_BUILD)/$(VSOURCE)/model.o
-CXX_TARGET_LIBS := $(addprefix $(CXX_BUILD)/, $(CXX_TARGET_FILES:%.cpp=%.o))
-CXX_LIBS := $(addprefix $(CXX_BUILD)/, $(CXX_FILES:%.cpp=%.o))
+CXX_TARGET_LIBS := $(addprefix $(CXX_BUILD)/,$(CXX_TARGET_FILES:%.cpp=%.o))
+CXX_LIBS := $(addprefix $(CXX_BUILD)/,$(CXX_FILES:%.cpp=%.o))
 
 CXX_INCLUDES = \
 	-I$(SV_BUILD) \
@@ -47,7 +47,7 @@ CXX_WARNINGS = \
 CXX_LINKS = -lz -lpthread
 
 # link to filesystem library to make legacy compilers happy.
-ifeq ($(USE_CLANG), 1)
+ifeq ($(USE_CLANG),1)
 # TODO: auto-detect libc++fs.
 # CXX_LINKS += -lc++fs
 else
@@ -61,15 +61,15 @@ CXXFLAGS += \
 	$(CXX_EXTRA_FLAGS)
 	# -DVL_THREADED
 
-ifeq ($(USE_CLANG), 1)
+ifeq ($(USE_CLANG),1)
 CXXFLAGS += -stdlib=libc++ -Wno-unknown-warning-option
 endif
 
-ifeq ($(VSIM_OPT), 1)
+ifeq ($(VSIM_OPT),1)
 CXXFLAGS += -O2 -march=native -flto
 endif
 
-ifeq ($(VSIM_SANITIZE), 1)
+ifeq ($(VSIM_SANITIZE),1)
 CXXFLAGS += -fsanitize=undefined,address
 endif
 
@@ -109,7 +109,7 @@ override VSIM_ARGS += -r $(TEST_REF_FILE)
 else ifneq ($(wildcard $(TEST_STD_FILE)),)
 
 # only add std trace for RefCPU
-ifeq ($(TARGET), refcpu/VTop)
+ifeq ($(TARGET),refcpu/VTop)
 override VSIM_ARGS += -r $(TEST_STD_FILE) --force-diff
 endif  # ifeq
 

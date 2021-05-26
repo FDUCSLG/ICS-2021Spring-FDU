@@ -9,4 +9,4 @@ using VModelScope = VModel_VCacheTop;
 
 using CBusWrapper = CBusWrapperGen<VModelScope>;
 
-using BufferState = VModelScope::top__DOT__state_t;
+using BufferState = VScope::state_t;

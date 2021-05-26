@@ -16,6 +16,12 @@
  */
 
 module BRAM #(
+`ifdef VERILATOR
+    parameter `STRING BACKEND = "behavioral",
+`else
+    parameter `STRING BACKEND = "xilinx_xpm",
+`endif
+
     parameter int DATA_WIDTH = 32,
     parameter int ADDR_WIDTH = 10,
 
@@ -24,45 +30,48 @@ module BRAM #(
 
     localparam int MEM_NUM_WORDS  = 2**ADDR_WIDTH,
     localparam int BYTES_PER_WORD = DATA_WIDTH / 8,
-    localparam int MEM_NUM_BYTES  = MEM_NUM_WORDS * BYTES_PER_WORD,
     localparam int MEM_NUM_BITS   = MEM_NUM_WORDS * DATA_WIDTH,
 
-    localparam type addr_t  = logic [ADDR_WIDTH - 1:0],
-    localparam type wrten_t = logic [BYTES_PER_WORD - 1:0],
-    localparam type word_t  = logic [DATA_WIDTH - 1:0],
-    localparam type view_t  = union packed {
+    localparam type raddr_t  = logic [ADDR_WIDTH - 1:0],
+    localparam type rwrten_t = logic [BYTES_PER_WORD - 1:0],
+    localparam type rword_t  = logic [DATA_WIDTH - 1:0],
+    localparam type rview_t  = union packed {
         i8 [BYTES_PER_WORD - 1:0] bytes;
-        word_t word;
+        rword_t word;
     }
 ) (
     input logic clk, resetn,
 
     // port 1
-    input  logic   en_1,
-    input  wrten_t write_en_1,
-    input  addr_t  addr_1,
-    input  word_t  data_in_1,
-    output word_t  data_out_1,
+    input  logic    en_1,
+    input  rwrten_t write_en_1,
+    input  raddr_t  addr_1,
+    input  rword_t  data_in_1,
+    output rword_t  data_out_1,
 
     // port 2
-    input  logic   en_2,
-    input  wrten_t write_en_2,
-    input  addr_t  addr_2,
-    input  word_t  data_in_2,
-    output word_t  data_out_2
+    input  logic    en_2,
+    input  rwrten_t write_en_2,
+    input  raddr_t  addr_2,
+    input  rword_t  data_in_2,
+    output rword_t  data_out_2
 );
-`ifdef VERILATOR
+    /* verilator tracing_off */
 
-    localparam word_t _RESET_VALUE = word_t'(RESET_VALUE.atohex());
-    localparam word_t DEADBEEF     = word_t'('hdeadbeef);
+    `ASSERT(BACKEND == "behavioral" || BACKEND == "xilinx_xpm");
+
+if (BACKEND == "behavioral") begin: behavioral
+
+    localparam rword_t _RESET_VALUE = rword_t'(RESET_VALUE.atohex());
+    localparam rword_t DEADBEEF     = rword_t'('hdeadbeef);
 
     // TODO: add support for "no_change" BRAM.
     // `ASSERT(WRITE_MODE == "write_first", "Only \"write_first\" mode is supported.");
 
     logic resetn_reg = 0;  // RST_MODE = "SYNC"
-    // addr_t addr_reg_1 = 0, addr_reg_2 = 0;
-    view_t data_out_reg_1 = 0, data_out_reg_2 = 0;
-    view_t [MEM_NUM_WORDS - 1:0] mem = 0;
+    // raddr_t addr_reg_1 = 0, addr_reg_2 = 0;
+    rview_t data_out_reg_1 = 0, data_out_reg_2 = 0;
+    rview_t [MEM_NUM_WORDS - 1:0] mem = 0;
 
     // detect read/write collision
     logic addr_eq, hazard_1, hazard_2;
@@ -83,7 +92,7 @@ module BRAM #(
         end
     end
 
-    view_t new_data_1, new_data_2;
+    rview_t new_data_1, new_data_2;
     for (genvar i = 0; i < BYTES_PER_WORD; i++) begin
         localparam int hi = 8 * i + 7;
         assign new_data_1.bytes[i] =
@@ -124,7 +133,10 @@ module BRAM #(
         end
     end
 
-`else
+end else begin: xilinx_xpm
+
+`ifdef ICS_WITH_XPM
+    // verilator lint_off PINMISSING
 
     // xpm_memory_tdpram: True Dual Port RAM
     // Xilinx Parameterized Macro, version 2019.2
@@ -163,7 +175,7 @@ module BRAM #(
         .sleep(0),
         .clka(clk), .clkb(clk),  // use the same clock
         .ena(en_1), .enb(en_2),
-        .rsta(reset), .rstb(reset),
+        .rsta(~resetn), .rstb(~resetn),
         .regcea(1), .regceb(1),
         .injectdbiterra(0),
         .injectdbiterrb(0),
@@ -184,5 +196,11 @@ module BRAM #(
     );
     // End of xpm_memory_tdpram_inst instantiation
 
+    // verilator lint_on PINMISSING
+`else
+    $error("XPM modules are disabled.");
 `endif
+
+end
+
 endmodule

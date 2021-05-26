@@ -26,6 +26,7 @@ help:
 	@echo '  VSIM_SANITIZE: set to 1 to enable address sanitizer and undefined behavior sanitizer.'
 	@echo '  SV_EXTRA_FLAGS: extra synthesis flags passed to Verilator.'
 	@echo '  CXX_EXTRA_FLAGS: extra compiler flags passed to C++ compiler.'
+	@echo '  WITH_XPM: compile with Xilinx XPM modules.'
 
 clean:
 	@rm -rf ./build/*
@@ -41,8 +42,9 @@ VSIM_OPT ?= 0
 VSIM_SANITIZE ?= 0
 SV_EXTRA_FLAGS ?=
 CXX_EXTRA_FLAGS ?=
+WITH_XPM ?= 0
 
-ifeq ($(USE_CLANG), 1)
+ifeq ($(USE_CLANG),1)
 ifeq ($(shell which 'clang++-10' 2> /dev/null),)
 CXX=clang++
 else
@@ -54,18 +56,22 @@ endif
 # determine build root
 BUILD_ROOT = build
 
-ifeq ($(USE_CLANG), 1)
+ifeq ($(USE_CLANG),1)
 BUILD_ROOT := $(BUILD_ROOT)/clang
 else
 BUILD_ROOT := $(BUILD_ROOT)/gcc
 endif
 
-ifeq ($(VSIM_OPT), 1)
+ifeq ($(VSIM_OPT),1)
 BUILD_ROOT := $(BUILD_ROOT)+optimized
 endif
 
-ifeq ($(VSIM_SANITIZE), 1)
+ifeq ($(VSIM_SANITIZE),1)
 BUILD_ROOT := $(BUILD_ROOT)+sanitizer
+endif
+
+ifeq ($(WITH_XPM),1)
+BUILD_ROOT := $(BUILD_ROOT)+xpm
 endif
 
 include verilate/Makefile.verilate.mk

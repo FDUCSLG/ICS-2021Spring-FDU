@@ -174,118 +174,106 @@
 <h3 id="添加指令"><a class="header" href="#添加指令">添加指令</a></h3>
 <p>为了启动操作系统，你的 CPU 需要支持额外的一些指令与功能：</p>
 <ul>
-<li>
-<p>算术指令：CLZ, CLO</p>
+<li>算术指令：<code>clz</code>、<code>clo</code>。</li>
+<li>乘法相关指令：<code>mul</code>、<code>madd</code>、<code>maddu</code>、<code>msub</code>、<code>msubu</code>。</li>
+<li>非对齐访存指令：<code>lwl</code>、<code>lwr</code>、<code>swl</code>、<code>swr</code>。
+<ul>
+<li>这类指令涉及到通用寄存器的部分写（可能只写某几个字节），可选择添加字节写使能，或将寄存器原有数据和新数据拼合作为写数据。</li>
+</ul>
 </li>
-<li>
-<p>乘法相关指令：MUL, MADD, MADDU, MSUB, MSUBU</p>
+<li>条件执行指令：<code>movn</code>、<code>movz</code>。</li>
+<li>TLB 类型指令：<code>tlbp</code>、<code>tlbr</code>、<code>tlbwi</code>、<code>tlbwr</code>。
+<ul>
+<li><code>tlbwr</code> 可不实现。</li>
+</ul>
 </li>
-<li>
-<p>非对齐访存指令：LWL, LWR, SWL, SWR</p>
-<blockquote>
-<p>这类指令涉及到通用寄存器的部分写（可能只写某几个字节），可选择添加字节写使能，或将寄存器原有数据和新数据拼合作为写数据。</p>
-</blockquote>
+<li>Trap 类型指令：<code>teq</code>、<code>teqi</code>、<code>tge</code>、<code>tgei</code>、<code>tgeiu</code>、<code>tgeu</code>、<code>tlt</code>、<code>tlti</code>、<code>tltiu</code>、<code>tltu</code>、<code>tne</code>、<code>tnei</code>。
+<ul>
+<li>可在 E 阶段检测是否需要 trap，检测逻辑与 branch 类指令、<code>slt</code> 指令基本一致。注意 <code>iu</code> 后缀的立即数仍为符号位扩展。</li>
+</ul>
 </li>
-<li>
-<p>条件执行指令：MOVN, MOVZ</p>
+<li>缓存相关指令：<code>cache</code>、<code>pref</code>。
+<ul>
+<li><code>pref</code> 可实现为 <code>nop</code>。</li>
+</ul>
 </li>
-<li>
-<p>TLB 类型指令：TLBP, TLBR, TLBWI, TLBWR</p>
-<blockquote>
-<p>TLBWR 可不实现</p>
-</blockquote>
+<li>多核同步指令：<code>ll</code>、<code>sc</code>、<code>sync</code>。
+<ul>
+<li><code>ll</code> 和 <code>sc</code> 可实现为 <code>lw</code> 和 <code>sw</code>。<code>sync</code> 可实现为 <code>nop</code>。</li>
+</ul>
 </li>
-<li>
-<p>TRAP 类型指令：TEQ, TEQI, TGE, TGEI, TGEIU, TGEU, TLT, TLTI, TLTIU, TLTU, TNE, TNEI</p>
-<blockquote>
-<p>可在 E 阶段检测是否需要 Trap，检测逻辑与 Branch 类指令、SLT指令基本一致，注意 IU 后缀的立即数仍为符号位扩展</p>
-</blockquote>
+<li>Branch likely 指令：<code>beql</code>、<code>bgezall</code>、<code>bgezl</code>、<code>bgtzl</code>、<code>blezl</code>、<code>bltzall</code>、<code>btlzl</code>、<code>bnel</code>。
+<ul>
+<li>这部分指令可通过修改软件代码的方式去除。</li>
+</ul>
 </li>
-<li>
-<p>缓存相关指令：CACHE, PREF</p>
-<blockquote>
-<p>PREF 可实现为 NOP</p>
-</blockquote>
-</li>
-<li>
-<p>多核同步指令：LL, SC, SYNC</p>
-<blockquote>
-<p>LL 和 SC 可实现为 LW 和 SW；SYNC 可实现为 NOP</p>
-</blockquote>
-</li>
-<li>
-<p>Branch-Likely 指令： BEQL, BGEZALL, BGEZL, BGTZL, BLEZL, BLTZALL, BTLZL, BNEL</p>
-<blockquote>
-<p>这部分指令可通过修改软件代码的方式去除</p>
-</blockquote>
-</li>
-<li>
-<p>等待中断指令： WAIT</p>
-<blockquote>
-<p>WAIT 可实现为阻塞所有流水线，只有中断使能为高时，才跳转到异常处理程序。</p>
-</blockquote>
+<li>等待中断指令：<code>wait</code>。
+<ul>
+<li><code>wait</code> 可实现为阻塞所有流水线，只有中断使能为高时，才跳转到异常处理程序。</li>
+</ul>
 </li>
 </ul>
 <h3 id="支持更多异常"><a class="header" href="#支持更多异常">支持更多异常</a></h3>
-<p>添加 TLB Modify (MOD), TLB Load (TLBL), TLB Save (TLBS), Coprocessor Unusable (CpU), Trap。</p>
+<p>添加 TLB Modify (<code>MOD</code>)、TLB Load (<code>TLBL</code>)、TLB Save (<code>TLBS</code>)、Coprocessor Unusable (<code>CpU</code>)、Trap。</p>
 <p>支持更多异常入口：</p>
 <ul>
-<li>两个 base： 0x8000_0000, 0xbfc0_0200</li>
-<li>三个 offset：0x0, 0x180, 0x200</li>
+<li>两个 base：<code>0x8000_0000</code>、<code>0xbfc0_0200</code>。</li>
+<li>三个 offset：<code>0x0</code>、<code>0x180</code>、<code>0x200</code>。</li>
 </ul>
 <h3 id="支持更多-cp0-寄存器"><a class="header" href="#支持更多-cp0-寄存器">支持更多 CP0 寄存器</a></h3>
-<p>TLB 相关： index, random, entrylo0, entrylo1, entryhi, context, pagemask, wired</p>
-<blockquote>
-<p>ramdom 和 pagemask 可设计为只读为0。</p>
-</blockquote>
-<p>地址映射相关：config</p>
-<p>缓存属性相关：config1</p>
-<p>处理器标识：prid （只读，reset 时复位为 <code>32'h4220</code>）。</p>
-<p>异常相关：</p>
 <ul>
-<li>status 的 CU, BEV 域</li>
-<li>cause 的 IV, CE 域</li>
+<li>TLB 相关：Index、Random、EntryLo0、EntryLo1、EntryHi、Context、PageMask、Wired。
+<ul>
+<li>Random 和 PageMask 可设计为只读为 0。</li>
+</ul>
+</li>
+<li>地址映射相关：Config。</li>
+<li>缓存属性相关：Config1。</li>
+<li>处理器标识：PRId （只读，reset 时复位为 <code>32'h4220</code>）。</li>
+<li>异常相关：
+<ul>
+<li>Status 的 <code>CU</code>、<code>BEV</code> 域。</li>
+<li>Cause 的 <code>IV</code>、<code>CE</code> 域。</li>
+</ul>
+</li>
 </ul>
 <h3 id="tlb"><a class="header" href="#tlb">TLB</a></h3>
-<p>Direct Mapping 不能满足操作系统的需求，需要添加 TLB 地址映射机制。</p>
-<p>在 MIPS 里， 虚拟地址空间的 <code>kseg0</code> 和 <code>kseg1</code> 段通过 Direct Mapping 进行翻译，其它部分都需要通过 TLB 进行地址翻译。</p>
-<p>MIPS 将32位的虚拟地址分成以下几个部分：</p>
+<p>Direct mapping 不能满足操作系统的需求，需要添加 TLB 地址映射机制。</p>
+<p>在 MIPS 里，虚拟地址空间的 <code>kseg0</code> 和 <code>kseg1</code> 段通过 direct mapping 进行翻译，其它部分都需要通过 TLB 进行地址翻译。</p>
+<p>MIPS 将 32 位的虚拟地址分成以下几个部分：</p>
 <table><thead><tr><th>[31:13]</th><th>12</th><th>[11:0]</th></tr></thead><tbody>
-<tr><td>Virtual Page Number</td><td>使用 pfn0/pfn1</td><td>Offset Within Page</td></tr>
+<tr><td>virtual page number</td><td>使用 pfn0/pfn1</td><td>offset within page</td></tr>
 </tbody></table>
-<p>类似地，32位的物理地址分为以下几个部分：</p>
+<p>类似地，32 位的物理地址分为以下几个部分：</p>
 <table><thead><tr><th>[31:12]</th><th>[11:0]</th></tr></thead><tbody>
-<tr><td>Physical Page Number</td><td>Offset Within Page</td></tr>
+<tr><td>physical page number</td><td>offset within page</td></tr>
 </tbody></table>
-<p>TLB 与 Cache 类似。TLB 翻译的过程，就是在表中查询 Virtual Page Number；如果命中，则转换为对应的 Physical Page Number，否则产生一个异常。</p>
-<blockquote>
-<p>TLB 的替换算法由 CP0.random 和软件共同维护，硬件层面无需关心。</p>
-</blockquote>
+<p>TLB 与 cache 类似。TLB 翻译的过程，就是在表中查询 virtual page number。如果命中，则转换为对应的 physical page number，否则产生一个异常。TLB 的替换算法由 CP0.Random 和软件共同维护，硬件层面无需关心。</p>
 <p>TLB 表项的结构为：</p>
 <pre><code class="language-verilog">typedef struct packed {
-    logic [18:0] vpn2; // virtual page number
-    logic [7:0] asid; // 资源拥有者标识符
-    logic G; // 映射是否为 Global
-    
-    // 以下每个属性都有两份，分别对应 vaddr[12] 为0或1两种情况
-    logic [19:0] pfn0, pfn1; // physical page number
-    logic [2:0] C0, C1; // cache flag, 标识 kseg0 段是否经过 Cache
-    logic V0, V1, D0, D1; // valid, dirty
+    logic [18:0] vpn2;  // virtual page number
+    logic [7:0] asid;   // 资源拥有者标识符
+    logic G;            // 映射是否为 global
+
+    // 以下每个属性都有两份，分别对应 vaddr[12] 为 0 或 1 两种情况
+    logic [19:0] pfn0, pfn1;  // physical page number
+    logic [2:0] C0, C1;       // cache flag，标识 kseg0 段是否经过 cache
+    logic V0, V1, D0, D1;     // valid、dirty
 } tlb_entry_t;
 </code></pre>
 <p>TLB 检索的代码为：</p>
 <pre><code class="language-verilog">module tlb_lut (
-    input tlb_table_t tlb_table, // global in hardware
+    input tlb_table_t tlb_table,  // global in hardware
     input word_t vaddr,
-    input logic[7:0] asid
+    input logic [7:0] asid
 );
     logic [TLB_ENTRIES-1:0] hit_mask;
     tlb_addr_t hit_addr;
 
     for (genvar i=0; i&lt;TLB_ENTRIES; i++) begin
-        assign hit_mask[i] = (tlb_table[i].vpn2 == vaddr[31:13]) &amp;&amp; 
-                             (tlb_table[i].asid == asid || tlb_table[i].G); 
-        					 /* 当前进程的表项 */				/* 全局表项 */
+        assign hit_mask[i] = (tlb_table[i].vpn2 == vaddr[31:13]) &amp;&amp;
+                             (tlb_table[i].asid == asid || tlb_table[i].G);
+                                /* 当前进程的表项 */          /* 全局表项 */
     end
 
     always_comb begin
@@ -301,31 +289,30 @@
         vaddr[12] ? tlb_table[hit_addr].pfn1 : tlb_table[hit_addr].pfn0,
         vaddr[11:0]
     };
-
 endmodule
 </code></pre>
-<p>以上 <code>tlb_lut</code> 模块需要例化三个：指令请求、数据请求和 TLBP 请求。</p>
-<p>TLBR 为读请求，用下标 CP0.index 索引，读取整个 TLB entry；TLBP 为读请求，用 CP0.entryhi 作为虚拟地址来查找相关信息；TLBWI 为写请求，用下标 CP0.index 索引，将 CP0.entrylo 等寄存器的信息写入 TLB。</p>
+<p>以上 <code>tlb_lut</code> 模块需要例化三个：指令请求、数据请求和 <code>tlbp</code> 请求。</p>
+<p><code>tlbr</code> 为读请求，用下标 CP0.Index 索引，读取整个 TLB entry。<code>tlbp</code> 为读请求，用 CP0.EntryHi 作为虚拟地址来查找相关信息。<code>tlbwi</code> 为写请求，用下标 CP0.Index 索引，将 CP0.EntryLo 等寄存器的信息写入 TLB。</p>
 <p>TLB 有三种可能的异常：</p>
 <ul>
-<li>TLB invalid：TLB 命中但 Valid 项为0，异常代码为 TLBL/TLBS</li>
-<li>TLB Modified：在写操作中，TLB 命中，Valid 项为 1, Dirty 项为 0，异常代码为 MOD</li>
-<li>TLB Refill：TLB 未命中，异常代码为 TLBL/TLBS，异常 offset 为 0 （可能跳转到 <code>0xbfc00200</code> 或 <code>0x80000000</code>）</li>
+<li>TLB Invalid：TLB 命中但 valid 项为 0，异常代码为 <code>TLBL</code>/<code>TLBS</code>。</li>
+<li>TLB Modified：在写操作中，TLB 命中，valid 项为 1, Dirty 项为 0，异常代码为 <code>MOD</code>。</li>
+<li>TLB Refill：TLB 未命中，异常代码为 <code>TLBL</code>/<code>TLBS</code>，异常 offset 为 0（可能跳转到 <code>0xbfc00200</code> 或 <code>0x80000000</code>）。</li>
 </ul>
 <p>你可以将 TLB 放在 <code>MyCore</code> 模块里，这样 <code>ireq.addr</code> 和 <code>dreq.addr</code> 都是物理地址；也可以放在 <code>MyCore</code> 外。你可以根据具体情况修改 <code>MyCore</code> 的接口。</p>
 <p>龙芯杯有提供 TLB 指令与功能的测试。</p>
-<h3 id="cache-指令"><a class="header" href="#cache-指令">CACHE 指令</a></h3>
-<p>不同进程有各自的地址空间，相同虚拟地址对应的代码可能会不同。当你运行新进程时，就进程的 ICache 应置为无效。</p>
-<p>操作系统使用 CACHE 指令来控制缓存，具体操作详见指令手册。</p>
+<h3 id="cache-指令"><a class="header" href="#cache-指令"><code>cache</code> 指令</a></h3>
+<p>不同进程有各自的地址空间，相同虚拟地址对应的代码可能会不同。当你运行新进程时，旧进程的指令缓存应置为无效。</p>
+<p>操作系统使用 <code>cache</code> 指令来控制缓存，具体操作详见指令手册。</p>
 <p>你可以根据具体情况修改 <code>MyCore</code> 的接口。</p>
 <h2 id="上板跑系统"><a class="header" href="#上板跑系统">上板跑系统</a></h2>
 <p>当你实现了上述功能、并通过测试后，你可以上板跑系统了。</p>
-<h3 id="soc"><a class="header" href="#soc">Soc</a></h3>
-<p>打开 Soc 的 Vivado 工程文件，将你的代码加入工程。</p>
-<h3 id="运行-pmon"><a class="header" href="#运行-pmon">运行 Pmon</a></h3>
+<h3 id="soc"><a class="header" href="#soc">SoC</a></h3>
+<p>打开 SoC 的 Vivado 工程文件，将你的代码加入工程。</p>
+<h3 id="运行-pmon"><a class="header" href="#运行-pmon">运行 PMon</a></h3>
 <p>将你的电脑和实验板用串口线连接。你可以在你的电脑上用串口软件运行控制台。</p>
 <h3 id="上传-linux-内核"><a class="header" href="#上传-linux-内核">上传 Linux 内核</a></h3>
-<p>建立 FTP 服务器，通过网口将 Linux 内核载入实验板。</p>
+<p>建立 TFTP 服务器，通过网口将 Linux 内核载入实验板。</p>
 <h3 id="启动-linux"><a class="header" href="#启动-linux">启动 Linux</a></h3>
 <p>通过控制台启动 Linux。</p>
 <h2 id="外设接口"><a class="header" href="#外设接口">外设接口</a></h2>

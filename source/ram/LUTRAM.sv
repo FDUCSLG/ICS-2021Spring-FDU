@@ -71,6 +71,10 @@ if (BACKEND == "behavioral") begin: behavioral
 
 end else begin: xilinx_xpm
 
+`ifndef VERILATOR
+`define ICS_WITH_XPM
+`endif
+
 `ifdef ICS_WITH_XPM
     // verilator lint_off PINMISSING
 
